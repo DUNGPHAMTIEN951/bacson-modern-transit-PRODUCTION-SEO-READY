@@ -31,6 +31,8 @@ export interface BookingLeadPayload extends BookingFormValues {
   source: BookingSource;
   page: string;
   submittedAt?: string | undefined;
+  formStartedAt?: string | undefined;
+  clientRequestId?: string | undefined;
 }
 
 export interface BookingApiResponse {
