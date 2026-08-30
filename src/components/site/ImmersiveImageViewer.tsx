@@ -436,11 +436,17 @@ export function ImmersiveViewerProvider({ children }: { children: ReactNode }) {
                 <span className="hidden text-white/25 sm:inline" aria-hidden="true">
                   •
                 </span>
-                <h2 id="viewer-image-title" className="truncate text-sm font-semibold text-white/95">
+                <h2
+                  id="viewer-image-title"
+                  className="truncate text-sm font-semibold text-white/95"
+                >
                   {currentItem.title}
                 </h2>
               </div>
-              <p id="viewer-image-description" className="mt-0.5 hidden truncate text-xs text-white/55 sm:block">
+              <p
+                id="viewer-image-description"
+                className="mt-0.5 hidden truncate text-xs text-white/55 sm:block"
+              >
                 {currentItem.subtitle ?? "Hình ảnh thực tế"}
               </p>
             </div>
