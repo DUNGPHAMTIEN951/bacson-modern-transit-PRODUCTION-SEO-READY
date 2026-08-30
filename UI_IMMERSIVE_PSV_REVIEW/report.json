@@ -1,0 +1,33 @@
+{
+  "timestamp": "2026-08-28T06:12:57.305Z",
+  "engine": "Photo Sphere Viewer v5",
+  "checks": [
+    {
+      "name": "Desktop modal opens on click",
+      "passed": true
+    },
+    {
+      "name": "Desktop modal closes",
+      "passed": true
+    },
+    {
+      "name": "Mobile modal opens full screen",
+      "passed": true
+    },
+    {
+      "name": "No mobile horizontal overflow",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "01-hero-normal.png",
+    "02-hero-viewer-open.png",
+    "03-hero-pan-left.png",
+    "04-hero-pan-right.png",
+    "05-interior-viewer.png",
+    "06-interior-max-left.png",
+    "07-interior-max-right.png",
+    "08-gallery-interaction.png",
+    "09-mobile-viewer.png"
+  ]
+}

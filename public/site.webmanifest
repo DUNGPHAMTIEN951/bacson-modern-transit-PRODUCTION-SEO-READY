@@ -1,0 +1,19 @@
+{
+  "name": "Xe khách Bắc Sơn Cường Nguyệt",
+  "short_name": "Bắc Sơn Cường Nguyệt",
+  "description": "Xe khách tuyến Hà Nội – Mộc Châu – Sơn La, hỗ trợ đặt vé và gửi hàng theo chuyến.",
+  "lang": "vi",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#F6F8FB",
+  "theme_color": "#0B1F33",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

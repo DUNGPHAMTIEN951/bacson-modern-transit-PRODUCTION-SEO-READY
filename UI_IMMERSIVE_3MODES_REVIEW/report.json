@@ -1,0 +1,54 @@
+{
+  "passed": 12,
+  "failed": 0,
+  "results": [
+    {
+      "name": "Dedicated sections (#kham-pha-360 & #kham-pha-xe) completely removed",
+      "status": "PASS"
+    },
+    {
+      "name": "Captured 01-desktop-hero-clean.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Clicked Hero coach image → Immersive Viewer modal opened",
+      "status": "PASS"
+    },
+    {
+      "name": "Captured 02-hero-immersive-modal.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Simulated pointer drag → captured 03-hero-modal-panned.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Zoom in clicked → captured 04-hero-modal-zoomed.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Escape key closed Immersive Viewer modal",
+      "status": "PASS"
+    },
+    {
+      "name": "Captured 05-gallery-grid-clean.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Clicked Gallery interior photo → captured 06-gallery-item-immersive.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Closed modal via close button",
+      "status": "PASS"
+    },
+    {
+      "name": "Captured 07-mobile-clean-homepage.png",
+      "status": "PASS"
+    },
+    {
+      "name": "Mobile click opens fullscreen modal → captured 08-mobile-immersive-modal.png",
+      "status": "PASS"
+    }
+  ]
+}

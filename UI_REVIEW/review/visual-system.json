@@ -1,0 +1,96 @@
+{
+  "brandIdentity": {
+    "slogan": "Sơn La những chuyến đi",
+    "supportingLine": "Nối Hà Nội – Mộc Châu – Sơn La trên từng hành trình trở về.",
+    "companyName": "Bắc Sơn Cường Nguyệt",
+    "semanticTokens": {
+      "--background": "#FBFAF7 (Warm natural base)",
+      "--surface": "#FFFFFF (Pure white content surface)",
+      "--surface-alt": "#F5F7F8 (Subtle grey-warm section surface)",
+      "--surface-soft": "#F6EDE7 (Terracotta soft CTA surface)",
+      "--mountain-teal": "#3F6670 (Reliable mountain forest teal)",
+      "--mist-blue": "#6E8FA3 (Atmospheric mist blue)",
+      "--sunset-terracotta": "#D97757 (Warm sunset terracotta primary CTA)",
+      "--sunset-terracotta-hover": "#C86547 (Hover state)",
+      "--cta-soft": "#F6E6DF (Warm soft chip/accent tint)",
+      "--text-primary": "#23313F (High contrast dark slate)",
+      "--text-secondary": "#5F6B76 (Readable muted slate)",
+      "--border": "#DFE5EA (Crisp subtle divider)"
+    }
+  },
+  "backgroundColors": [
+    "rgb(251, 250, 247)",
+    "rgb(245, 247, 248)",
+    "oklab(0.999994 0.0000455678 0.0000200868 / 0.98)",
+    "rgb(255, 255, 255)",
+    "rgb(217, 119, 87)",
+    "rgb(232, 242, 244)",
+    "rgb(232, 237, 240)",
+    "rgb(223, 229, 234)",
+    "rgb(110, 143, 163)",
+    "rgb(246, 237, 231)",
+    "rgb(240, 243, 245)",
+    "rgb(63, 102, 112)"
+  ],
+  "primaryColors": ["#D97757 (Sunset Terracotta)", "#3F6670 (Mountain Teal)"],
+  "accentColors": ["#6E8FA3 (Mist Blue)", "#F6EDE7 (Warm Soft)", "#E8F2F4 (Teal Soft)"],
+  "textColors": [
+    "rgb(0, 0, 0)",
+    "rgb(35, 49, 63)",
+    "rgb(95, 107, 118)",
+    "rgb(217, 119, 87)",
+    "rgb(63, 102, 112)",
+    "rgb(51, 65, 85)",
+    "rgb(255, 255, 255)",
+    "rgb(110, 143, 163)",
+    "oklab(0.632338 -0.0272776 -0.0391406 / 0.35)",
+    "rgb(134, 148, 160)"
+  ],
+  "borderColors": [
+    "rgb(232, 237, 240)",
+    "rgb(223, 229, 234)",
+    "rgb(205, 224, 229)",
+    "rgb(189, 214, 222)",
+    "rgb(63, 102, 112)",
+    "oklab(0.485253 -0.0379685 -0.027388 / 0.4)"
+  ],
+  "fonts": [
+    "\"Be Vietnam Pro\", ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+    "ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, \"Liberation Mono\", \"Courier New\", monospace"
+  ],
+  "headingSizes": [
+    "H1: 51.2px / line-height 57.344px",
+    "H2: 36px / line-height 40px",
+    "H3: 24px / line-height 32px",
+    "H4: 16px / line-height 24px",
+    "H3: 20px / line-height 28px",
+    "H2: 36px / line-height 45px",
+    "H3: 16px / line-height 24px",
+    "H3: 18px / line-height 28px",
+    "H2: 14px / line-height 20px"
+  ],
+  "bodySizes": [
+    "12px / line-height 16px",
+    "16px / line-height 20px",
+    "16px / line-height 24px",
+    "11.2px / line-height 14px",
+    "12px / line-height 18px",
+    "18px / line-height 24.75px",
+    "14px / line-height 20px",
+    "15.44px / line-height 25.09px",
+    "11.2px / line-height 16.8px",
+    "15.6px / line-height 25.35px"
+  ],
+  "buttonBorderRadius": ["12px", "16px"],
+  "cardBorderRadius": ["20px", "16px"],
+  "commonShadows": [
+    "rgba(217, 119, 87, 0.22) 0px 2px 8px 0px, rgba(217, 119, 87, 0) 0px 0px 0px 7.99675px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(35, 49, 63, 0.04) 0px 2px 8px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(35, 49, 63, 0.04) 0px 1px 3px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(35, 49, 63, 0.07) 0px 4px 20px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(35, 49, 63, 0.07) 0px 4px 16px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 1px 2px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(35, 49, 63, 0.04) 0px 1px 3px 0px, rgba(35, 49, 63, 0.04) 0px 4px 12px 0px",
+    "rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(217, 119, 87, 0.18) 0px 2px 6px 0px"
+  ]
+}

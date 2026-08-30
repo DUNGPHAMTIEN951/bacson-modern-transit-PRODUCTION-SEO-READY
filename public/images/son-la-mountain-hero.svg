@@ -1,0 +1,112 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 640" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FFE8C8"/>
+      <stop offset="40%" stop-color="#FFCF8A"/>
+      <stop offset="70%" stop-color="#F5B86E"/>
+      <stop offset="100%" stop-color="#E8A55C"/>
+    </linearGradient>
+    <linearGradient id="mtn-far" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#C8957A" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#B07A5E" stop-opacity="0.55"/>
+    </linearGradient>
+    <linearGradient id="mtn-mid" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8C6A4A" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#6B4E30" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="mtn-near" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A4028"/>
+      <stop offset="100%" stop-color="#3D2810"/>
+    </linearGradient>
+    <linearGradient id="valley" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4956A" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#C47A45" stop-opacity="0.7"/>
+    </linearGradient>
+    <filter id="haze">
+      <feGaussianBlur stdDeviation="3"/>
+    </filter>
+    <radialGradient id="sunlight" cx="72%" cy="28%" r="50%">
+      <stop offset="0%" stop-color="#FFE0A0" stop-opacity="0.7"/>
+      <stop offset="60%" stop-color="#FFD080" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#FFD080" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="road" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D4A870"/>
+      <stop offset="100%" stop-color="#C49060"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Sky background -->
+  <rect width="1440" height="640" fill="url(#sky)"/>
+
+  <!-- Atmospheric sunlight glow -->
+  <ellipse cx="1040" cy="180" rx="500" ry="300" fill="url(#sunlight)"/>
+
+  <!-- Far mountain range (hazy, desaturated) -->
+  <path
+    d="M0,320 Q120,210 200,240 Q280,270 350,200 Q420,130 500,180 Q560,220 620,170 Q700,110 780,160 Q850,200 920,145 Q990,90 1060,140 Q1120,180 1180,130 Q1250,80 1320,120 Q1380,150 1440,130 L1440,420 L0,420 Z"
+    fill="url(#mtn-far)"
+    filter="url(#haze)"
+  />
+
+  <!-- Mid mountain range -->
+  <path
+    d="M-20,380 Q80,290 160,320 Q230,345 310,270 Q390,195 470,250 Q530,290 600,240 Q680,185 760,230 Q830,268 900,210 Q975,148 1060,200 Q1130,242 1200,185 Q1280,122 1360,168 Q1410,196 1460,175 L1460,500 L-20,500 Z"
+    fill="url(#mtn-mid)"
+  />
+
+  <!-- Atmospheric valley mist -->
+  <ellipse cx="720" cy="440" rx="560" ry="60" fill="#FFD9A0" opacity="0.28" filter="url(#haze)"/>
+
+  <!-- Near mountain / foreground ridge left -->
+  <path
+    d="M-20,490 Q60,410 140,440 Q200,460 260,415 Q320,370 400,400 Q460,422 520,395 Q580,368 640,410 L640,640 L-20,640 Z"
+    fill="url(#mtn-near)"
+    opacity="0.85"
+  />
+
+  <!-- Near mountain / foreground ridge right -->
+  <path
+    d="M800,640 L800,430 Q870,395 940,415 Q1010,435 1080,390 Q1150,345 1230,375 Q1300,400 1370,360 Q1420,330 1460,348 L1460,640 Z"
+    fill="url(#mtn-near)"
+    opacity="0.80"
+  />
+
+  <!-- Winding mountain road -->
+  <path
+    d="M580,640 Q610,560 660,510 Q700,468 740,450 Q780,432 820,440 Q870,450 920,420"
+    fill="none"
+    stroke="url(#road)"
+    stroke-width="18"
+    stroke-linecap="round"
+    opacity="0.7"
+  />
+  <!-- Road center line -->
+  <path
+    d="M600,640 Q628,562 676,514 Q714,473 748,454 Q786,436 828,443 Q875,452 918,422"
+    fill="none"
+    stroke="#FFE8C0"
+    stroke-width="2"
+    stroke-dasharray="16,14"
+    stroke-linecap="round"
+    opacity="0.45"
+  />
+
+  <!-- Valley trees silhouettes (right side) -->
+  <g opacity="0.5">
+    <rect x="1050" y="490" width="6" height="45" fill="#3D2810" rx="2"/>
+    <ellipse cx="1053" cy="488" rx="14" ry="18" fill="#4A3218"/>
+    <rect x="1090" y="496" width="5" height="38" fill="#3D2810" rx="2"/>
+    <ellipse cx="1092" cy="494" rx="11" ry="15" fill="#4A3218"/>
+    <rect x="1120" y="500" width="6" height="34" fill="#3D2810" rx="2"/>
+    <ellipse cx="1123" cy="498" rx="13" ry="16" fill="#4A3218"/>
+    <rect x="1158" y="494" width="5" height="40" fill="#3D2810" rx="2"/>
+    <ellipse cx="1160" cy="492" rx="10" ry="14" fill="#4A3218"/>
+  </g>
+
+  <!-- Subtle foreground overlay on left (lighter for headline readability) -->
+  <rect x="0" y="0" width="680" height="640" fill="url(#sky)" opacity="0.22"/>
+
+  <!-- Bottom warm ground -->
+  <rect x="0" y="590" width="1440" height="50" fill="#C47A40" opacity="0.25"/>
+</svg>

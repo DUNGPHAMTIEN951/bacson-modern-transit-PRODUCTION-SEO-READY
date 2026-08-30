@@ -1,0 +1,24 @@
+{
+  "generatedAt": "2026-08-28T02:51:21.727Z",
+  "siteTitle": "Xe Hà Nội Sơn La – Lịch chạy & Giá vé | Bắc Sơn Cường Nguyệt",
+  "domain": "https://xebacsoncuongnguyet.com",
+  "previewUrl": "http://localhost:5173",
+  "brandDirection": "Sơn La những chuyến đi",
+  "palette": {
+    "background": "#FBFAF7",
+    "surface": "#FFFFFF",
+    "mountainTeal": "#3F6670",
+    "mistBlue": "#6E8FA3",
+    "sunsetTerracotta": "#D97757"
+  },
+  "routesFound": [
+    {
+      "path": "/",
+      "type": "public_homepage",
+      "title": "Trang chủ Xe khách Bắc Sơn Cường Nguyệt",
+      "status": "captured",
+      "viewportsCaptured": ["1920x1080", "1440x900", "1024x1366", "390x844", "360x800"]
+    }
+  ],
+  "totalScreenshots": 75
+}
