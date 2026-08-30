@@ -18,8 +18,36 @@ async function getServerEntry(): Promise<ServerEntry> {
   return serverEntryPromise;
 }
 
-// h3 swallows in-handler throws into a normal 500 Response with body
-// {"unhandled":true,"message":"HTTPError"} — try/catch alone never fires for those.
+function applyProductionHeaders(request: Request, response: Response): Response {
+  const headers = new Headers(response.headers);
+
+  if (!headers.has("x-content-type-options")) {
+    headers.set("x-content-type-options", "nosniff");
+  }
+  if (!headers.has("referrer-policy")) {
+    headers.set("referrer-policy", "strict-origin-when-cross-origin");
+  }
+  if (!headers.has("x-frame-options")) {
+    headers.set("x-frame-options", "SAMEORIGIN");
+  }
+  if (!headers.has("permissions-policy")) {
+    headers.set("permissions-policy", "camera=(), microphone=(), geolocation=()");
+  }
+
+  const requestUrl = new URL(request.url);
+  if (requestUrl.protocol === "https:" && !headers.has("strict-transport-security")) {
+    headers.set("strict-transport-security", "max-age=31536000; includeSubDomains");
+  }
+
+  return new Response(response.body, {
+    status: response.status,
+    statusText: response.statusText,
+    headers,
+  });
+}
+
+// h3 can normalize in-handler exceptions to a generic JSON 500 response.
+// Convert that response into a stable HTML error page without leaking internals.
 async function normalizeCatastrophicSsrResponse(response: Response): Promise<Response> {
   if (response.status < 500) return response;
   const contentType = response.headers.get("content-type") ?? "";
@@ -49,13 +77,15 @@ export default {
     try {
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-      return await normalizeCatastrophicSsrResponse(response);
+      const normalized = await normalizeCatastrophicSsrResponse(response);
+      return applyProductionHeaders(request, normalized);
     } catch (error) {
       console.error(error);
-      return new Response(renderErrorPage(), {
+      const response = new Response(renderErrorPage(), {
         status: 500,
         headers: { "content-type": "text/html; charset=utf-8" },
       });
+      return applyProductionHeaders(request, response);
     }
   },
 };
