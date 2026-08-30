@@ -3,6 +3,9 @@
  */
 
 function analyzeSubmission(ss, payload, registry, now) {
+  // Dùng trong writeRequestLog để không phải truyền lặp lại toàn bộ payload qua mọi nhánh.
+  globalThis.__BSCN_CURRENT_PAYLOAD = payload;
+
   let score = 0;
   const reasons = [];
   let hardBlock = false;
@@ -225,13 +228,19 @@ function getPhoneRegistryRecord(ss, phone) {
 }
 
 function upsertPhoneRegistry(ss, payload, registry, risk, now) {
-  const sheet = ss.getSheetByName(APP.SHEETS.PHONE_REGISTRY);
-  const type = registry ? String(registry.customerType || "MỚI") : "MỚI";
+  const previousType = registry ? String(registry.customerType || "MỚI") : "MỚI";
   const verification = registry ? String(registry.verification || "CHƯA_XÁC_MINH") : "CHƯA_XÁC_MINH";
-  const status = registry ? String(registry.status || "ACTIVE") : "ACTIVE";
   const submissions = (registry ? registry.submissions : 0) + 1;
   const spamStrike = risk.score >= APP.SPAM.QUARANTINE_SCORE ? 1 : 0;
   const spamStrikes = (registry ? registry.spamStrikes : 0) + spamStrike;
+
+  let type = previousType;
+  let status = registry ? String(registry.status || "ACTIVE") : "ACTIVE";
+  if (type === "MỚI" && spamStrikes >= 3) {
+    type = "SUSPECT";
+    status = "WATCH";
+  }
+
   const blockReason = registry && registry.blockReason
     ? registry.blockReason
     : risk.hardBlock
@@ -257,6 +266,7 @@ function upsertPhoneRegistry(ss, payload, registry, risk, now) {
     now,
   ];
 
+  const sheet = ss.getSheetByName(APP.SHEETS.PHONE_REGISTRY);
   let row;
   if (registry) {
     row = registry.row;
@@ -290,17 +300,18 @@ function upsertPhoneRegistry(ss, payload, registry, risk, now) {
 
 function writeRequestLog(ss, record) {
   const sheet = ss.getSheetByName(APP.SHEETS.REQUEST_LOG);
+  const payload = globalThis.__BSCN_CURRENT_PAYLOAD || {};
   sheet.appendRow([
     record.now,
     record.requestId,
-    record.phone || "",
-    record.payloadHash || "",
+    record.phone || payload.phone || "",
+    record.payloadHash || payload.payloadHash || "",
     record.outcome || "",
     Number(record.score) || 0,
     record.reasons || "",
-    record.source || "",
-    record.page || "",
-    record.name || "",
-    record.clientRequestId || "",
+    record.source || payload.source || "",
+    record.page || payload.page || "",
+    record.name || payload.name || "",
+    record.clientRequestId || payload.clientRequestId || "",
   ]);
 }
