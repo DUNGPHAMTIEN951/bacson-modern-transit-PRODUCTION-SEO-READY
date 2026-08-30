@@ -41,6 +41,12 @@ public/*source*.zip
 public/*.zip.b64
 public/export_chunks/
 
+# Root-level build/review archives must not be shipped as public assets
+/*.zip
+/*.7z
+/*.tar
+/*.tar.gz
+
 # Temporary connector transfer bundles
 transfer_export/
 transfer_assets/
