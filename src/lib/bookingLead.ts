@@ -1,45 +1,48 @@
-import type { BookingLeadPayload, BookingApiResponse } from "@/types/booking";
+import type { BookingApiResponse, BookingLeadPayload } from "@/types/booking";
 
-/**
- * Chuẩn hóa số điện thoại Việt Nam về dạng 0xxxxxxxxx (10 chữ số)
- */
+/** Chuẩn hóa số điện thoại Việt Nam về dạng 0xxxxxxxxx (10 chữ số). */
 export function normalizeVietnamesePhone(raw: string): string {
   if (!raw) return "";
+
   let cleaned = raw.replace(/[\s.\-()]/g, "");
   if (cleaned.startsWith("+84")) {
-    cleaned = "0" + cleaned.slice(3);
+    cleaned = `0${cleaned.slice(3)}`;
   } else if (cleaned.startsWith("84") && cleaned.length === 11) {
-    cleaned = "0" + cleaned.slice(2);
+    cleaned = `0${cleaned.slice(2)}`;
   }
+
   return cleaned;
 }
 
-/**
- * Kiểm tra định dạng số điện thoại Việt Nam hợp lệ
- * Chấp nhận các đầu số: 03, 05, 07, 08, 09 (10 chữ số)
- */
+/** Chấp nhận các đầu số di động Việt Nam 03, 05, 07, 08, 09. */
 export function isValidVietnamesePhone(phone: string): boolean {
-  const normalized = normalizeVietnamesePhone(phone);
-  const vnPhoneRegex = /^(03|05|07|08|09)[0-9]{8}$/;
-  return vnPhoneRegex.test(normalized);
+  return /^(03|05|07|08|09)[0-9]{8}$/.test(normalizeVietnamesePhone(phone));
 }
 
-/**
- * Kiểm tra định dạng email (nếu có nhập)
- */
+/** Email là optional; nếu có nhập thì phải đúng định dạng cơ bản. */
 export function isValidEmail(email?: string): boolean {
-  if (!email || email.trim() === "") return true; // Email là optional
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email.trim());
+  if (!email?.trim()) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
 }
 
 const STORAGE_KEY_PHONE = "bs_last_lead_phone";
 const STORAGE_KEY_TIME = "bs_last_lead_time";
 const COOLDOWN_SECONDS = 30;
+const REQUEST_TIMEOUT_MS = 12_000;
 
-/**
- * Kiểm tra xem có đang bị trùng lặp submission trong thời gian ngắn không
- */
+function getConfiguredEndpoint(): string | null {
+  const value = import.meta.env.VITE_BOOKING_FORM_ENDPOINT?.trim();
+  if (!value || value.includes("XXXXX") || value.includes("CI_PLACEHOLDER")) return null;
+
+  try {
+    const url = new URL(value);
+    if (url.protocol !== "https:" || url.hostname !== "script.google.com") return null;
+    return url.toString();
+  } catch {
+    return null;
+  }
+}
+
 export function checkDuplicateSubmission(phone: string): {
   isDuplicate: boolean;
   remainingSeconds: number;
@@ -48,75 +51,59 @@ export function checkDuplicateSubmission(phone: string): {
     if (typeof window === "undefined") return { isDuplicate: false, remainingSeconds: 0 };
 
     const lastPhone = sessionStorage.getItem(STORAGE_KEY_PHONE);
-    const lastTimeStr = sessionStorage.getItem(STORAGE_KEY_TIME);
-
-    if (lastPhone && lastTimeStr) {
-      const normalizedCurrent = normalizeVietnamesePhone(phone);
-      const normalizedLast = normalizeVietnamesePhone(lastPhone);
-
-      if (normalizedCurrent === normalizedLast) {
-        const lastTime = parseInt(lastTimeStr, 10);
-        const elapsed = (Date.now() - lastTime) / 1000;
-        if (elapsed < COOLDOWN_SECONDS) {
-          return {
-            isDuplicate: true,
-            remainingSeconds: Math.ceil(COOLDOWN_SECONDS - elapsed),
-          };
-        }
-      }
+    const lastTime = Number(sessionStorage.getItem(STORAGE_KEY_TIME));
+    if (!lastPhone || !Number.isFinite(lastTime)) {
+      return { isDuplicate: false, remainingSeconds: 0 };
     }
+
+    if (normalizeVietnamesePhone(phone) !== normalizeVietnamesePhone(lastPhone)) {
+      return { isDuplicate: false, remainingSeconds: 0 };
+    }
+
+    const elapsedSeconds = (Date.now() - lastTime) / 1000;
+    if (elapsedSeconds >= COOLDOWN_SECONDS) {
+      return { isDuplicate: false, remainingSeconds: 0 };
+    }
+
+    return {
+      isDuplicate: true,
+      remainingSeconds: Math.ceil(COOLDOWN_SECONDS - elapsedSeconds),
+    };
   } catch {
-    // Ignore storage restrictions
+    return { isDuplicate: false, remainingSeconds: 0 };
   }
-  return { isDuplicate: false, remainingSeconds: 0 };
 }
 
-/**
- * Lưu lịch sử submission gần nhất
- */
-export function recordSubmission(phone: string) {
+export function recordSubmission(phone: string): void {
   try {
-    if (typeof window !== "undefined") {
-      sessionStorage.setItem(STORAGE_KEY_PHONE, normalizeVietnamesePhone(phone));
-      sessionStorage.setItem(STORAGE_KEY_TIME, Date.now().toString());
-    }
+    if (typeof window === "undefined") return;
+    sessionStorage.setItem(STORAGE_KEY_PHONE, normalizeVietnamesePhone(phone));
+    sessionStorage.setItem(STORAGE_KEY_TIME, Date.now().toString());
   } catch {
-    // Ignore
+    // sessionStorage can be unavailable in restricted browser modes; submission should still work.
   }
 }
 
-const DEFAULT_ENDPOINT =
-  "https://script.google.com/macros/s/AKfycbxBmUCJZMnZP_e7wxo6l2VucDoJhold8SNfAB7ANwL-VBOzJCOl4C8CokSXjo-_BLGvpw/exec";
-
-/**
- * Gửi dữ liệu yêu cầu gọi lại / tư vấn đến Google Apps Script Web App
- */
 export async function submitBookingLead(payload: BookingLeadPayload): Promise<BookingApiResponse> {
-  const envEndpoint = import.meta.env.VITE_BOOKING_FORM_ENDPOINT;
-  const endpoint = envEndpoint && !envEndpoint.includes("XXXXX") ? envEndpoint : DEFAULT_ENDPOINT;
+  const endpoint = getConfiguredEndpoint();
 
-  // 1. Kiểm tra cấu hình endpoint
-  if (!endpoint || endpoint.trim() === "") {
-    console.warn(
-      "[BookingLead] VITE_BOOKING_FORM_ENDPOINT chưa được cấu hình. Xem docs/GOOGLE_SHEETS_LEADS_SETUP.md để thiết lập.",
-    );
+  if (!endpoint) {
+    if (import.meta.env.DEV) {
+      console.warn(
+        "[BookingLead] VITE_BOOKING_FORM_ENDPOINT is missing or invalid. See docs/GOOGLE_SHEETS_LEADS_SETUP.md.",
+      );
+    }
     return {
       success: false,
       message:
-        "Hệ thống đang hoàn tất cấu hình kết nối. Vui lòng gọi trực tiếp hotline nhà xe để được hỗ trợ nhanh nhất!",
+        "Biểu mẫu đang được cấu hình. Vui lòng gọi trực tiếp hotline nhà xe để được hỗ trợ nhanh nhất.",
     };
   }
 
-  // 2. Chống bot Spam qua Honeypot
-  if (payload.honeypot && payload.honeypot.trim() !== "") {
-    console.warn("[BookingLead] Spam bot detected via honeypot field.");
-    return {
-      success: false,
-      message: "Yêu cầu không hợp lệ.",
-    };
+  if (payload.honeypot?.trim()) {
+    return { success: false, message: "Yêu cầu không hợp lệ." };
   }
 
-  // 3. Chuẩn hóa & Validate dữ liệu cơ bản ở frontend
   const normalizedPhone = normalizeVietnamesePhone(payload.phone);
   if (!isValidVietnamesePhone(normalizedPhone)) {
     return {
@@ -125,106 +112,96 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     };
   }
 
-  if (payload.email && !isValidEmail(payload.email)) {
+  if (!isValidEmail(payload.email)) {
     return {
       success: false,
       message: "Email chưa đúng định dạng. Vui lòng kiểm tra lại hoặc để trống.",
     };
   }
 
-  if (!payload.name || payload.name.trim().length < 2) {
-    return {
-      success: false,
-      message: "Vui lòng nhập họ và tên của bạn.",
-    };
+  if (!payload.name?.trim() || payload.name.trim().length < 2) {
+    return { success: false, message: "Vui lòng nhập họ và tên của bạn." };
   }
 
   if (!payload.consent) {
-    return {
-      success: false,
-      message: "Vui lòng đồng ý để nhà xe liên hệ tư vấn.",
-    };
+    return { success: false, message: "Vui lòng đồng ý để nhà xe liên hệ tư vấn." };
   }
 
-  // 4. Kiểm tra chống gửi trùng lặp liên tục
-  const duplicateCheck = checkDuplicateSubmission(normalizedPhone);
-  if (duplicateCheck.isDuplicate) {
+  const duplicate = checkDuplicateSubmission(normalizedPhone);
+  if (duplicate.isDuplicate) {
     return {
       success: true,
-      message: `Yêu cầu của bạn đã được tiếp nhận. Nhà xe sẽ liên hệ sớm nhất! (Vui lòng chờ ${duplicateCheck.remainingSeconds}s trước khi gửi lại)`,
+      message: `Yêu cầu của bạn đã được tiếp nhận. Nhà xe sẽ liên hệ sớm nhất! (Vui lòng chờ ${duplicate.remainingSeconds}s trước khi gửi lại)`,
     };
   }
 
-  // 5. Chuẩn bị payload chuẩn gửi đi
   const formattedPayload = {
-    name: payload.name.trim(),
+    name: payload.name.trim().slice(0, 120),
     phone: normalizedPhone,
-    email: payload.email?.trim() || "",
+    email: payload.email?.trim().slice(0, 160) || "",
     route: payload.route || "Hà Nội → Sơn La",
     travelDate: payload.travelDate || "",
-    passengers: Number(payload.passengers) || 1,
-    pickup: payload.pickup?.trim() || "",
-    dropoff: payload.dropoff?.trim() || "",
-    note: payload.note?.trim() || "",
+    passengers: Math.max(1, Math.min(20, Number(payload.passengers) || 1)),
+    pickup: payload.pickup?.trim().slice(0, 180) || "",
+    dropoff: payload.dropoff?.trim().slice(0, 180) || "",
+    note: payload.note?.trim().slice(0, 500) || "",
     source: payload.source || "website",
     page: payload.page || (typeof window !== "undefined" ? window.location.pathname : "/"),
     consent: true,
     honeypot: "",
-    submittedAt: new Date().toISOString(),
   };
 
-  // 6. Thực hiện HTTP POST với timeout 12 giây
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 12000);
+  const timeoutId = window.setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
 
   try {
     const response = await fetch(endpoint, {
       method: "POST",
       headers: {
-        "Content-Type": "text/plain;charset=utf-8", // text/plain giúp tránh CORS preflight phức tạp trên Google Apps Script
+        "Content-Type": "text/plain;charset=utf-8",
       },
       body: JSON.stringify(formattedPayload),
       signal: controller.signal,
+      redirect: "follow",
     });
 
-    clearTimeout(timeoutId);
-
     if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      throw new Error(`Booking endpoint returned HTTP ${response.status}`);
     }
 
-    const data = await response.json();
-
-    if (data && data.success) {
-      recordSubmission(normalizedPhone);
-      return {
-        success: true,
-        leadId: data.leadId,
-        message: data.message || "Đã nhận yêu cầu thành công!",
-      };
-    } else {
+    const data = (await response.json()) as BookingApiResponse;
+    if (!data?.success) {
       return {
         success: false,
         message:
-          data.message || "Chưa gửi được yêu cầu. Vui lòng thử lại hoặc gọi trực tiếp cho nhà xe.",
+          data?.message || "Chưa gửi được yêu cầu. Vui lòng thử lại hoặc gọi trực tiếp cho nhà xe.",
       };
     }
-  } catch (error: unknown) {
-    clearTimeout(timeoutId);
 
+    recordSubmission(normalizedPhone);
+    return {
+      success: true,
+      leadId: data.leadId,
+      message: data.message || "Đã nhận yêu cầu thành công!",
+    };
+  } catch (error: unknown) {
     if (error instanceof Error && error.name === "AbortError") {
       return {
         success: false,
-        message:
-          "Kết nối quá thời gian quy định (12s). Vui lòng thử lại hoặc gọi trực tiếp hotline.",
+        message: "Kết nối quá thời gian quy định. Vui lòng thử lại hoặc gọi trực tiếp hotline.",
       };
     }
 
-    console.error("[BookingLead Error]", error);
+    if (import.meta.env.DEV) {
+      console.error("[BookingLead] request failed", error);
+    }
+
     return {
       success: false,
       message:
         "Chưa gửi được yêu cầu do sự cố mạng. Vui lòng thử lại hoặc gọi trực tiếp hotline nhà xe.",
     };
+  } finally {
+    window.clearTimeout(timeoutId);
   }
 }
