@@ -32,6 +32,19 @@ function refreshAccountingDaily(optionalSs) {
   ensureSystemSheets(ss);
   const daily = ss.getSheetByName(APP.SHEETS.ACCOUNTING_DAILY);
   const byDay = {};
+  const preserved = {};
+
+  // Các dòng lịch sử được copy sang khi rollover phải được giữ lại. Chỉ ngày nào có
+  // dữ liệu trong database active hiện tại mới được tính lại.
+  if (daily.getLastRow() > 1) {
+    const previous = daily
+      .getRange(2, 1, daily.getLastRow() - 1, ACCOUNTING_HEADERS.length)
+      .getValues();
+    previous.forEach(function (row) {
+      const d = parseDateSafe(row[0]);
+      if (d) preserved[dateKey(d)] = row;
+    });
+  }
 
   function bucket(key) {
     if (!byDay[key]) {
@@ -107,15 +120,14 @@ function refreshAccountingDaily(optionalSs) {
     });
   }
 
-  const keys = Object.keys(byDay).sort();
-  const output = keys.map(function (key) {
+  const recomputed = {};
+  Object.keys(byDay).forEach(function (key) {
     const b = byDay[key];
     const totalRequests = b.validLeads + b.spam;
     const spamRate = totalRequests > 0 ? (b.spam / totalRequests) * 100 : 0;
     const conversion = b.validLeads > 0 ? (b.bookings / b.validLeads) * 100 : 0;
-    const date = new Date(key + "T00:00:00+07:00");
-    return [
-      date,
+    recomputed[key] = [
+      new Date(key + "T00:00:00+07:00"),
       b.bookings,
       b.passengers,
       b.gross,
@@ -131,6 +143,20 @@ function refreshAccountingDaily(optionalSs) {
       b.returningCustomers,
     ];
   });
+
+  const merged = {};
+  Object.keys(preserved).forEach(function (key) {
+    merged[key] = preserved[key];
+  });
+  Object.keys(recomputed).forEach(function (key) {
+    merged[key] = recomputed[key];
+  });
+
+  const output = Object.keys(merged)
+    .sort()
+    .map(function (key) {
+      return merged[key];
+    });
 
   if (daily.getLastRow() > 1) {
     daily.getRange(2, 1, daily.getLastRow() - 1, ACCOUNTING_HEADERS.length).clearContent();
@@ -197,10 +223,15 @@ function refreshDashboard(optionalSs) {
   const monthSpamRate = monthRequests ? (monthAgg.spam / monthRequests) * 100 : 0;
   const monthConversion = monthAgg.validLeads ? (monthAgg.bookings / monthAgg.validLeads) * 100 : 0;
 
-  dashboard.clear();
   dashboard.getCharts().forEach(function (chart) {
     dashboard.removeChart(chart);
   });
+  try {
+    dashboard.getRange(1, 1, dashboard.getMaxRows(), dashboard.getMaxColumns()).breakApart();
+  } catch (error) {
+    // Không có merged range cũng không ảnh hưởng.
+  }
+  dashboard.clear();
 
   dashboard.getRange("A1:H1").merge();
   dashboard
@@ -253,12 +284,13 @@ function refreshDashboard(optionalSs) {
   const lastRow = accounting ? accounting.getLastRow() : 1;
   if (accounting && lastRow > 1) {
     const start = Math.max(2, lastRow - 30);
+    const length = lastRow - start + 1;
 
     const revenueChart = dashboard
       .newChart()
       .setChartType(Charts.ChartType.LINE)
-      .addRange(accounting.getRange(start, 1, lastRow - start + 1, 1))
-      .addRange(accounting.getRange(start, 7, lastRow - start + 1, 1))
+      .addRange(accounting.getRange(start, 1, length, 1))
+      .addRange(accounting.getRange(start, 7, length, 1))
       .setPosition(10, 1, 0, 0)
       .setOption("title", "Thu ròng theo ngày (31 ngày gần nhất)")
       .setOption("legend", { position: "bottom" })
@@ -269,8 +301,8 @@ function refreshDashboard(optionalSs) {
     const spamChart = dashboard
       .newChart()
       .setChartType(Charts.ChartType.LINE)
-      .addRange(accounting.getRange(start, 1, lastRow - start + 1, 1))
-      .addRange(accounting.getRange(start, 11, lastRow - start + 1, 1))
+      .addRange(accounting.getRange(start, 1, length, 1))
+      .addRange(accounting.getRange(start, 11, length, 1))
       .setPosition(10, 6, 0, 0)
       .setOption("title", "Tỷ lệ spam theo ngày")
       .setOption("legend", { position: "bottom" })
@@ -281,8 +313,8 @@ function refreshDashboard(optionalSs) {
     const conversionChart = dashboard
       .newChart()
       .setChartType(Charts.ChartType.LINE)
-      .addRange(accounting.getRange(start, 1, lastRow - start + 1, 1))
-      .addRange(accounting.getRange(start, 12, lastRow - start + 1, 1))
+      .addRange(accounting.getRange(start, 1, length, 1))
+      .addRange(accounting.getRange(start, 12, length, 1))
       .setPosition(28, 1, 0, 0)
       .setOption("title", "Tỷ lệ Lead → Booking")
       .setOption("legend", { position: "bottom" })
