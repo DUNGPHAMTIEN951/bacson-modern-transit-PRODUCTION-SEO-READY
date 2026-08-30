@@ -1,489 +1,402 @@
 ﻿/**
- * =========================================================================
- * GOOGLE APPS SCRIPT - BẮC SƠN CƯỜNG NGUYỆT LEAD MANAGEMENT (MINI CRM)
- * =========================================================================
+ * BẮC SƠN CƯỜNG NGUYỆT — BOOKING CRM / ANTI-SPAM API v2
  *
- * Mô tả:
- *   Nhận yêu cầu gọi lại / đặt tư vấn online từ website qua HTTP POST JSON.
- *   Xác thực dữ liệu, chống spam, tạo mã ID duy nhất và ghi vào Google Sheets "LEADS".
- *
- * Hướng dẫn nhanh:
- *   1. Chạy hàm `setupSheet()` một lần để tự động tạo cấu trúc bảng và định dạng.
- *   2. Deploy dạng "Web App" với quyền truy cập "Anyone" (Bất kỳ ai).
- *   3. Lấy URL Web App và gắn vào file `.env` của website (`VITE_BOOKING_FORM_ENDPOINT`).
+ * Các file .gs trong thư mục google-apps-script/ cùng thuộc một Apps Script project.
+ * Sau khi đồng bộ mã nguồn sang Apps Script, chạy setupSystem() một lần rồi deploy Web App.
  */
 
-// ── CẤU HÌNH CƠ BẢN ──
-const CONFIG = {
-  SHEET_NAME: "LEADS",
-  ENABLE_EMAIL_NOTIFICATION: false, // Đổi thành true nếu muốn nhận email báo lead mới
-  STAFF_EMAIL: "nhaxe.cuongnguyet@gmail.com", // Email nhận thông báo
+const APP = {
+  VERSION: "2.0.0",
+  TZ: "Asia/Ho_Chi_Minh",
+  STAFF_EMAIL: "nhaxe.cuongnguyet@gmail.com",
+  ENABLE_EMAIL_NOTIFICATION: false,
+  SHEETS: {
+    LEADS_RAW: "LEADS_RAW",
+    LEADS_VIEW: "LEADS_VIEW",
+    PHONE_REGISTRY: "PHONE_REGISTRY",
+    SPAM_QUARANTINE: "SPAM_QUARANTINE",
+    REQUEST_LOG: "REQUEST_LOG",
+    BOOKINGS: "BOOKINGS",
+    PAYMENTS: "PAYMENTS",
+    ACCOUNTING_DAILY: "ACCOUNTING_DAILY",
+    DASHBOARD: "DASHBOARD",
+    AUDIT_LOG: "AUDIT_LOG",
+    ARCHIVE_INDEX: "ARCHIVE_INDEX",
+    CONFIG: "CONFIG",
+  },
+  SPAM: {
+    QUARANTINE_SCORE: 50,
+    HARD_BLOCK_SCORE: 85,
+    WINDOW_MINUTES: 15,
+    MAX_PER_WINDOW: 3,
+    MAX_PER_DAY: 8,
+    LOG_SCAN_ROWS: 3000,
+  },
+  BACKUP: {
+    GOOGLE_SHEETS_CELL_LIMIT: 10000000,
+    ROLLOVER_RATIO: 0.72,
+    DAILY_RETENTION_DAYS: 30,
+    BACKUP_FOLDER_NAME: "BSCN_DATABASE_BACKUPS",
+  },
 };
 
-/**
- * Lấy đối tượng Spreadsheet
- * Ưu tiên: Script Properties (SPREADSHEET_ID) -> Active Spreadsheet nếu gắn liền Sheet
- */
 function getSpreadsheet() {
-  const scriptProperties = PropertiesService.getScriptProperties();
-  const spreadsheetId = scriptProperties.getProperty("SPREADSHEET_ID");
+  const props = PropertiesService.getScriptProperties();
+  const spreadsheetId = props.getProperty("ACTIVE_SPREADSHEET_ID") || props.getProperty("SPREADSHEET_ID");
 
-  if (spreadsheetId && spreadsheetId.trim() !== "") {
-    return SpreadsheetApp.openById(spreadsheetId.trim());
+  if (spreadsheetId && String(spreadsheetId).trim()) {
+    return SpreadsheetApp.openById(String(spreadsheetId).trim());
   }
 
+  const active = SpreadsheetApp.getActiveSpreadsheet();
+  if (active) return active;
+  throw new Error("Chưa cấu hình SPREADSHEET_ID hoặc ACTIVE_SPREADSHEET_ID trong Script Properties.");
+}
+
+function doGet() {
+  let spreadsheetId = "";
   try {
-    return SpreadsheetApp.getActiveSpreadsheet();
-  } catch (err) {
-    throw new Error("Chưa cấu hình SPREADSHEET_ID trong Script Properties.");
+    spreadsheetId = getSpreadsheet().getId();
+  } catch (error) {
+    spreadsheetId = "not-configured";
   }
+
+  return createJsonResponse({
+    status: "active",
+    service: "Bac Son Cuong Nguyet CRM API",
+    version: APP.VERSION,
+    spreadsheetId: spreadsheetId,
+    timestamp: new Date().toISOString(),
+  });
 }
 
-/**
- * Xử lý HTTP GET (Health check / Test endpoint)
- */
-function doGet(e) {
-  return ContentService.createTextOutput(
-    JSON.stringify({
-      status: "active",
-      service: "Bac Son Cuong Nguyet Booking Lead API",
-      timestamp: new Date().toISOString(),
-    }),
-  ).setMimeType(ContentService.MimeType.JSON);
-}
-
-/**
- * Xử lý HTTP POST - Nhận dữ liệu Lead từ Website
- */
 function doPost(e) {
   const lock = LockService.getScriptLock();
-
-  // Chờ lock tối đa 10 giây để tránh race condition khi nhiều khách gửi cùng lúc
-  const successLock = lock.tryLock(10000);
-  if (!successLock) {
+  if (!lock.tryLock(10000)) {
     return createJsonResponse({
       success: false,
-      message: "Hệ thống đang bận xử lý yêu cầu khác, vui lòng thử lại sau vài giây.",
+      message: "Hệ thống đang xử lý nhiều yêu cầu. Vui lòng thử lại sau ít giây.",
     });
   }
 
   try {
-    if (!e || !e.postData || !e.postData.contents) {
-      return createJsonResponse({
-        success: false,
-        message: "Không tìm thấy nội dung gửi lên (Empty payload).",
-      });
-    }
-
-    // Parse JSON
-    let data;
-    try {
-      data = JSON.parse(e.postData.contents);
-    } catch (parseErr) {
-      return createJsonResponse({
-        success: false,
-        message: "Dữ liệu JSON không hợp lệ.",
-      });
-    }
-
-    // 1. Chống Bot Spam qua Honeypot
-    if (data.honeypot && String(data.honeypot).trim() !== "") {
-      return createJsonResponse({
-        success: false,
-        message: "Yêu cầu bị từ chối do phát hiện spam bot.",
-      });
-    }
-
-    // 2. Validate các trường bắt buộc
-    const name = sanitizeInput(data.name, 100);
-    const phone = sanitizePhone(data.phone);
-    const route = sanitizeInput(data.route || "Hà Nội → Sơn La", 100);
-    const consent = Boolean(data.consent);
-
-    if (!name || name.length < 2) {
-      return createJsonResponse({
-        success: false,
-        message: "Vui lòng nhập họ và tên hợp lệ.",
-      });
-    }
-
-    if (!phone || !isValidVNPhone(phone)) {
-      return createJsonResponse({
-        success: false,
-        message: "Số điện thoại không hợp lệ (cần 10 chữ số).",
-      });
-    }
-
-    if (!consent) {
-      return createJsonResponse({
-        success: false,
-        message: "Chưa đồng ý điều khoản liên hệ.",
-      });
-    }
-
-    // 3. Xử lý các trường phụ
-    const email = sanitizeInput(data.email, 100);
-    if (email && !isValidEmail(email)) {
-      return createJsonResponse({
-        success: false,
-        message: "Định dạng email không hợp lệ.",
-      });
-    }
-
-    const travelDate = sanitizeInput(data.travelDate, 50);
-    const passengers = parseInt(data.passengers, 10) || 1;
-    const pickup = sanitizeInput(data.pickup, 200);
-    const dropoff = sanitizeInput(data.dropoff, 200);
-    const note = sanitizeInput(data.note, 500);
-    const source = sanitizeInput(data.source || "website", 50);
-    const page = sanitizeInput(data.page || "/", 100);
-
-    // 4. Mở Sheet LEADS
-    const ss = getSpreadsheet();
-    let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-    if (!sheet) {
-      sheet = setupSheet();
-    }
-
-    // 5. Tạo Lead ID và Timestamp
     const now = new Date();
-    const leadId = generateLeadId(now, sheet);
-    const formattedTimestamp = Utilities.formatDate(now, "Asia/Ho_Chi_Minh", "dd/MM/yyyy HH:mm:ss");
+    const ss = getSpreadsheet();
+    ensureSystemSheets(ss);
 
-    // 6. Ghi dòng dữ liệu vào Sheet
-    const newRow = [
-      leadId, // A: ID
-      formattedTimestamp, // B: Thời gian
-      name, // C: Họ tên
-      phone, // D: Số điện thoại (dạng text)
-      email, // E: Email
-      route, // F: Tuyến đi
-      travelDate, // G: Ngày đi
-      passengers, // H: Số hành khách
-      pickup, // I: Điểm đón mong muốn
-      dropoff, // J: Điểm trả mong muốn
-      note, // K: Ghi chú
-      source, // L: Nguồn
-      page, // M: Trang gửi form
-      "Mới", // N: Trạng thái (Default)
-      "", // O: Nhân viên phụ trách
-      "", // P: Ghi chú tư vấn
-    ];
+    if (!e || !e.postData || !e.postData.contents) {
+      return createJsonResponse({ success: false, message: "Không tìm thấy dữ liệu gửi lên." });
+    }
 
-    sheet.appendRow(newRow);
+    let raw;
+    try {
+      raw = JSON.parse(e.postData.contents);
+    } catch (error) {
+      return createJsonResponse({ success: false, message: "Dữ liệu gửi lên không hợp lệ." });
+    }
 
-    // Đảm bảo cột SĐT lưu dạng Text (tránh mất số 0 đầu)
-    const lastRow = sheet.getLastRow();
-    sheet.getRange(lastRow, 1).setNumberFormat("@"); // ID dạng Text
-    sheet.getRange(lastRow, 4).setNumberFormat("@"); // SĐT dạng Text
+    const requestId = generateId("RQ", now);
+    const payload = normalizeLeadPayload(raw, requestId, now);
+    const validation = validateLeadPayload(payload);
 
-    // 7. Gửi email thông báo nội bộ nếu bật cấu hình
-    if (CONFIG.ENABLE_EMAIL_NOTIFICATION && CONFIG.STAFF_EMAIL) {
+    if (!validation.ok) {
+      writeRequestLog(ss, {
+        now: now,
+        requestId: requestId,
+        phone: payload.phone,
+        payloadHash: payload.payloadHash,
+        outcome: "INVALID",
+        score: 0,
+        reasons: validation.reason,
+        source: payload.source,
+        page: payload.page,
+      });
+      return createJsonResponse({ success: false, message: validation.message });
+    }
+
+    const registry = getPhoneRegistryRecord(ss, payload.phone);
+    const risk = analyzeSubmission(ss, payload, registry, now);
+    const phoneProfile = upsertPhoneRegistry(ss, payload, registry, risk, now);
+
+    let outcome = "ACCEPTED";
+    if (risk.hardBlock || risk.score >= APP.SPAM.HARD_BLOCK_SCORE) {
+      outcome = "BLOCKED";
+    } else if (risk.score >= APP.SPAM.QUARANTINE_SCORE) {
+      outcome = "QUARANTINED";
+    }
+
+    writeRequestLog(ss, {
+      now: now,
+      requestId: requestId,
+      phone: payload.phone,
+      payloadHash: payload.payloadHash,
+      outcome: outcome,
+      score: risk.score,
+      reasons: risk.reasons.join(" | "),
+      source: payload.source,
+      page: payload.page,
+    });
+
+    if (outcome !== "ACCEPTED") {
+      writeSpamQuarantine(ss, payload, phoneProfile, risk, outcome, now);
+      refreshOperationalViews(ss);
+
+      // Soft-accept để người phá không biết chính xác rule nào đã chặn.
+      return createJsonResponse({
+        success: true,
+        leadId: requestId,
+        message: "Đã nhận yêu cầu. Nhà xe sẽ kiểm tra thông tin và liên hệ khi phù hợp.",
+      });
+    }
+
+    const leadId = generateId("LD", now);
+    writeLeadRaw(ss, payload, leadId, phoneProfile, risk, now);
+    refreshOperationalViews(ss);
+
+    if (APP.ENABLE_EMAIL_NOTIFICATION && APP.STAFF_EMAIL) {
       sendStaffNotificationEmail({
-        leadId,
-        time: formattedTimestamp,
-        name,
-        phone,
-        email,
-        route,
-        travelDate,
-        passengers,
-        pickup,
-        dropoff,
-        note,
-        source,
+        leadId: leadId,
+        time: formatDateTime(now),
+        name: payload.name,
+        phone: payload.phone,
+        email: payload.email,
+        route: payload.route,
+        travelDate: payload.travelDate,
+        passengers: payload.passengers,
+        pickup: payload.pickup,
+        dropoff: payload.dropoff,
+        note: payload.note,
+        source: payload.source,
       });
     }
 
     return createJsonResponse({
       success: true,
       leadId: leadId,
-      message: "Đã nhận yêu cầu gọi lại thành công! Nhà xe sẽ liên hệ trong ít phút.",
+      message: "Đã nhận yêu cầu thành công! Nhà xe sẽ liên hệ trong thời gian sớm nhất.",
     });
   } catch (error) {
-    Logger.log("Error in doPost: " + error.toString());
+    Logger.log("doPost error: " + error.stack);
     return createJsonResponse({
       success: false,
-      message: "Lỗi hệ thống khi lưu yêu cầu: " + error.toString(),
+      message: "Hệ thống tạm thời chưa lưu được yêu cầu. Vui lòng gọi trực tiếp hotline nhà xe.",
     });
   } finally {
     lock.releaseLock();
   }
 }
 
-/**
- * Sinh mã Lead ID duy nhất: LD-YYYYMMDD-XXXX
- */
-function generateLeadId(date, sheet) {
-  const dateStr = Utilities.formatDate(date, "Asia/Ho_Chi_Minh", "yyyyMMdd");
-  const randomSuffix = Math.floor(1000 + Math.random() * 9000); // 4 chữ số ngẫu nhiên
-  return "LD-" + dateStr + "-" + randomSuffix;
+function normalizeLeadPayload(raw, requestId, now) {
+  const name = sanitizeInput(raw.name, 120);
+  const phone = sanitizePhone(raw.phone);
+  const email = sanitizeInput(raw.email, 160);
+  const route = sanitizeInput(raw.route || "Hà Nội → Sơn La", 120);
+  const travelDate = sanitizeInput(raw.travelDate, 50);
+  const passengers = Math.max(1, Math.min(50, parseInt(raw.passengers, 10) || 1));
+  const pickup = sanitizeInput(raw.pickup, 220);
+  const dropoff = sanitizeInput(raw.dropoff, 220);
+  const note = sanitizeInput(raw.note, 700);
+  const source = sanitizeInput(raw.source || "website", 80);
+  const page = sanitizeInput(raw.page || "/", 180);
+  const submittedAt = sanitizeInput(raw.submittedAt, 80) || now.toISOString();
+  const formStartedAt = sanitizeInput(raw.formStartedAt, 80);
+  const clientRequestId = sanitizeInput(raw.clientRequestId, 100);
+
+  const hashInput = [
+    phone,
+    name.toLowerCase(),
+    route.toLowerCase(),
+    travelDate,
+    pickup.toLowerCase(),
+    dropoff.toLowerCase(),
+    note.toLowerCase(),
+  ].join("|");
+
+  return {
+    requestId: requestId,
+    name: name,
+    phone: phone,
+    email: email,
+    route: route,
+    travelDate: travelDate,
+    passengers: passengers,
+    pickup: pickup,
+    dropoff: dropoff,
+    note: note,
+    source: source,
+    page: page,
+    consent: Boolean(raw.consent),
+    honeypot: sanitizeInput(raw.honeypot, 200),
+    submittedAt: submittedAt,
+    formStartedAt: formStartedAt,
+    clientRequestId: clientRequestId,
+    payloadHash: sha256Hex(hashInput),
+  };
 }
 
-/**
- * Làm sạch chuỗi văn bản đầu vào
- */
-function sanitizeInput(str, maxLength) {
-  if (!str) return "";
-  let clean = String(str)
-    .replace(/<[^>]*>?/gm, "") // Bỏ HTML tags
-    .replace(/[\r\n\t]+/g, " ") // Chuẩn hóa xuống dòng
-    .trim();
-  if (maxLength && clean.length > maxLength) {
-    clean = clean.substring(0, maxLength);
+function validateLeadPayload(payload) {
+  if (!payload.name || payload.name.length < 2) {
+    return { ok: false, reason: "INVALID_NAME", message: "Vui lòng nhập họ và tên hợp lệ." };
   }
+  if (!payload.phone || !isValidVNPhone(payload.phone)) {
+    return {
+      ok: false,
+      reason: "INVALID_PHONE_FORMAT",
+      message: "Số điện thoại chưa đúng định dạng Việt Nam (10 số).",
+    };
+  }
+  if (payload.email && !isValidEmail(payload.email)) {
+    return { ok: false, reason: "INVALID_EMAIL", message: "Email chưa đúng định dạng." };
+  }
+  if (!payload.consent) {
+    return { ok: false, reason: "NO_CONSENT", message: "Vui lòng đồng ý để nhà xe liên hệ." };
+  }
+  return { ok: true, reason: "", message: "" };
+}
+
+function setupSystem() {
+  const ss = getSpreadsheet();
+  const props = PropertiesService.getScriptProperties();
+  if (!props.getProperty("ACTIVE_SPREADSHEET_ID")) {
+    props.setProperty("ACTIVE_SPREADSHEET_ID", ss.getId());
+  }
+
+  setupSystemForSpreadsheet(ss);
+  refreshAccountingDaily(ss);
+  refreshDashboard(ss);
+  Logger.log("✅ CRM v" + APP.VERSION + " đã được khởi tạo: " + ss.getUrl());
+  return ss.getUrl();
+}
+
+// Giữ tương thích với hướng dẫn / phiên bản cũ.
+function setupSheet() {
+  setupSystem();
+  return getSpreadsheet().getSheetByName(APP.SHEETS.LEADS_RAW);
+}
+
+function onOpen() {
+  const ui = SpreadsheetApp.getUi();
+  ui.createMenu("🚍 BSCN CRM")
+    .addItem("Khởi tạo / nâng cấp hệ thống", "setupSystem")
+    .addItem("Làm mới Dashboard & Kế toán", "refreshAllReports")
+    .addSeparator()
+    .addItem("Tạo Booking từ Lead đang chọn", "createBookingFromSelectedLead")
+    .addItem("Ghi khoản thu cho Booking đang chọn", "recordPaymentForSelectedBooking")
+    .addSeparator()
+    .addItem("Backup ngay", "createDailyBackup")
+    .addItem("Kiểm tra dung lượng / rollover", "checkAndRolloverDatabase")
+    .addItem("Cài trigger bảo trì tự động", "installMaintenanceTriggers")
+    .addToUi();
+}
+
+function onEdit(e) {
+  if (!e || !e.range) return;
+  try {
+    handleCrmEdit(e);
+  } catch (error) {
+    Logger.log("onEdit error: " + error.toString());
+  }
+}
+
+function refreshAllReports() {
+  const ss = getSpreadsheet();
+  refreshAccountingDaily(ss);
+  refreshDashboard(ss);
+  refreshOperationalViews(ss);
+  SpreadsheetApp.getActive().toast("Đã làm mới Dashboard, kế toán và bảng hiển thị.", "BSCN CRM", 4);
+}
+
+function createJsonResponse(data) {
+  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(ContentService.MimeType.JSON);
+}
+
+function sanitizeInput(value, maxLength) {
+  if (value === null || value === undefined) return "";
+  let clean = String(value)
+    .replace(/<[^>]*>?/gm, "")
+    .replace(/[\r\n\t]+/g, " ")
+    .replace(/^[=+@]+/, "'") // giảm rủi ro formula injection khi ghi vào Sheet
+    .trim();
+  if (maxLength && clean.length > maxLength) clean = clean.substring(0, maxLength);
   return clean;
 }
 
-/**
- * Chuẩn hóa số điện thoại Việt Nam
- */
 function sanitizePhone(phone) {
   if (!phone) return "";
   let clean = String(phone).replace(/[\s.\-()]/g, "");
-  if (clean.startsWith("+84")) {
-    clean = "0" + clean.slice(3);
-  } else if (clean.startsWith("84") && clean.length === 11) {
-    clean = "0" + clean.slice(2);
-  }
+  if (clean.startsWith("+84")) clean = "0" + clean.slice(3);
+  else if (clean.startsWith("84") && clean.length === 11) clean = "0" + clean.slice(2);
   return clean;
 }
 
-/**
- * Kiểm tra định dạng số điện thoại Việt Nam
- */
 function isValidVNPhone(phone) {
-  const regex = /^(03|05|07|08|09)[0-9]{8}$/;
-  return regex.test(phone);
+  return /^(03|05|07|08|09)[0-9]{8}$/.test(phone);
 }
 
-/**
- * Kiểm tra định dạng email
- */
 function isValidEmail(email) {
-  if (!email || email.trim() === "") return true;
-  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return regex.test(email.trim());
+  if (!email) return true;
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).trim());
 }
 
-/**
- * Helper tạo JSON Response chuẩn
- */
-function createJsonResponse(data) {
-  return ContentService.createTextOutput(JSON.stringify(data)).setMimeType(
-    ContentService.MimeType.JSON,
+function sha256Hex(text) {
+  const bytes = Utilities.computeDigest(
+    Utilities.DigestAlgorithm.SHA_256,
+    String(text),
+    Utilities.Charset.UTF_8,
   );
+  return bytes
+    .map(function (b) {
+      const v = b < 0 ? b + 256 : b;
+      return ("0" + v.toString(16)).slice(-2);
+    })
+    .join("");
 }
 
-/**
- * Gửi email thông báo cho điều hành nhà xe
- */
+function generateId(prefix, date) {
+  const day = Utilities.formatDate(date || new Date(), APP.TZ, "yyyyMMdd");
+  const time = Utilities.formatDate(date || new Date(), APP.TZ, "HHmmss");
+  const random = Math.floor(1000 + Math.random() * 9000);
+  return prefix + "-" + day + "-" + time + "-" + random;
+}
+
+function formatDateTime(date) {
+  return Utilities.formatDate(date, APP.TZ, "dd/MM/yyyy HH:mm:ss");
+}
+
+function dateKey(date) {
+  return Utilities.formatDate(date, APP.TZ, "yyyy-MM-dd");
+}
+
+function parseDateSafe(value) {
+  if (value instanceof Date && !isNaN(value.getTime())) return value;
+  if (!value) return null;
+  const parsed = new Date(value);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
+
 function sendStaffNotificationEmail(lead) {
   try {
-    const subject =
-      "🔥 [KHÁCH MỚI CẦN GỌI LẠI] " + lead.name + " (" + lead.phone + ") – " + lead.route;
-
-    const body =
-      "KÍNH GỬI ĐIỀU HÀNH NHÀ XE BẮC SƠN CƯỜNG NGUYỆT,\n\n" +
-      "Có khách hàng vừa để lại thông tin cần tư vấn trên website:\n\n" +
-      "--------------------------------------------------\n" +
-      "Mã yêu cầu:    " +
-      lead.leadId +
-      "\n" +
-      "Thời gian:     " +
-      lead.time +
-      "\n" +
-      "Họ và tên:     " +
-      lead.name +
-      "\n" +
-      "Số điện thoại: " +
-      lead.phone +
-      "\n" +
-      "Email:         " +
-      (lead.email || "Không có") +
-      "\n" +
-      "Tuyến xe:      " +
-      lead.route +
-      "\n" +
-      "Ngày đi:       " +
-      (lead.travelDate || "Chưa xác định") +
-      "\n" +
-      "Số khách:      " +
-      lead.passengers +
-      " người\n" +
-      "Điểm đón:      " +
-      (lead.pickup || "Chưa ghi") +
-      "\n" +
-      "Điểm trả:      " +
-      (lead.dropoff || "Chưa ghi") +
-      "\n" +
-      "Ghi chú:       " +
-      (lead.note || "Không có") +
-      "\n" +
-      "Nguồn:         " +
-      lead.source +
-      "\n" +
-      "--------------------------------------------------\n\n" +
-      "👉 Vui lòng mở Google Sheets và gọi điện hỗ trợ khách sớm nhất có thể.\n\n" +
-      "Trân trọng,\n" +
-      "Hệ thống Website Tự động";
-
-    MailApp.sendEmail(CONFIG.STAFF_EMAIL, subject, body);
-  } catch (err) {
-    Logger.log("Failed to send staff email: " + err.toString());
+    const subject = "🔥 [KHÁCH MỚI] " + lead.name + " (" + lead.phone + ") – " + lead.route;
+    const body = [
+      "BẮC SƠN CƯỜNG NGUYỆT — KHÁCH CẦN TƯ VẤN",
+      "",
+      "Mã yêu cầu: " + lead.leadId,
+      "Thời gian: " + lead.time,
+      "Họ tên: " + lead.name,
+      "SĐT: " + lead.phone,
+      "Email: " + (lead.email || "Không có"),
+      "Tuyến: " + lead.route,
+      "Ngày đi: " + (lead.travelDate || "Chưa xác định"),
+      "Số khách: " + lead.passengers,
+      "Điểm đón: " + (lead.pickup || "Chưa ghi"),
+      "Điểm trả: " + (lead.dropoff || "Chưa ghi"),
+      "Ghi chú: " + (lead.note || "Không có"),
+      "Nguồn: " + lead.source,
+      "",
+      "Vui lòng mở Google Sheets CRM để xử lý.",
+    ].join("\n");
+    MailApp.sendEmail(APP.STAFF_EMAIL, subject, body);
+  } catch (error) {
+    Logger.log("sendStaffNotificationEmail error: " + error.toString());
   }
-}
-
-/**
- * =========================================================================
- * SETUP HELPER - CHẠY HÀM NÀY 1 LẦN KHI KHỞI TẠO BẢNG TÍNH
- * =========================================================================
- */
-function setupSheet() {
-  const ss = getSpreadsheet();
-  let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-
-  if (!sheet) {
-    sheet = ss.insertSheet(CONFIG.SHEET_NAME);
-  }
-
-  // 1. Tiêu đề 16 cột
-  const headers = [
-    "Mã yêu cầu (ID)",
-    "Thời gian",
-    "Họ tên khách",
-    "Số điện thoại",
-    "Email",
-    "Tuyến đi",
-    "Ngày đi",
-    "Số khách",
-    "Điểm đón mong muốn",
-    "Điểm trả mong muốn",
-    "Ghi chú khách hàng",
-    "Nguồn gửi",
-    "Trang gửi form",
-    "Trạng thái",
-    "Nhân viên phụ trách",
-    "Ghi chú tư vấn",
-  ];
-
-  sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-
-  // 2. Định dạng Header
-  const headerRange = sheet.getRange(1, 1, 1, headers.length);
-  headerRange
-    .setFontWeight("bold")
-    .setBackground("#3A211B")
-    .setFontColor("#FFFFFF")
-    .setHorizontalAlignment("center")
-    .setVerticalAlignment("middle")
-    .setWrap(true);
-
-  sheet.setRowHeight(1, 38);
-  sheet.setFrozenRows(1); // Cố định dòng 1
-
-  // 3. Đặt độ rộng các cột tối ưu
-  sheet.setColumnWidth(1, 150); // ID
-  sheet.setColumnWidth(2, 140); // Thời gian
-  sheet.setColumnWidth(3, 170); // Họ tên
-  sheet.setColumnWidth(4, 130); // SĐT
-  sheet.setColumnWidth(5, 180); // Email
-  sheet.setColumnWidth(6, 170); // Tuyến đi
-  sheet.setColumnWidth(7, 110); // Ngày đi
-  sheet.setColumnWidth(8, 90); // Số khách
-  sheet.setColumnWidth(9, 180); // Điểm đón
-  sheet.setColumnWidth(10, 180); // Điểm trả
-  sheet.setColumnWidth(11, 220); // Ghi chú
-  sheet.setColumnWidth(12, 110); // Nguồn
-  sheet.setColumnWidth(13, 110); // Trang
-  sheet.setColumnWidth(14, 150); // Trạng thái
-  sheet.setColumnWidth(15, 150); // NV phụ trách
-  sheet.setColumnWidth(16, 200); // Ghi chú tư vấn
-
-  // 4. Định dạng cột SĐT thành Plain Text để không mất số 0
-  sheet.getRange("D2:D").setNumberFormat("@");
-  sheet.getRange("A2:A").setNumberFormat("@");
-
-  // 5. Cấu hình Dropdown Data Validation & Conditional Formatting
-  setupSheetFormatting(sheet);
-
-  Logger.log("✅ Đã hoàn tất khởi tạo sheet LEADS thành công!");
-  return sheet;
-}
-
-/**
- * Cấu hình Dropdown Trạng Thái & Màu Sắc Tự Động
- */
-function setupSheetFormatting(sheet) {
-  if (!sheet) {
-    const ss = getSpreadsheet();
-    sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
-  }
-  if (!sheet) return;
-
-  // 1. Data Validation cho Cột N (Trạng thái)
-  const statusValues = ["Mới", "Đã gọi", "Đã xác nhận", "Hẹn gọi lại", "Không liên hệ được", "Hủy"];
-
-  const statusRule = SpreadsheetApp.newDataValidation()
-    .requireValueInList(statusValues, true)
-    .setAllowInvalid(false)
-    .build();
-
-  sheet.getRange("N2:N5000").setDataValidation(statusRule);
-
-  // 2. Conditional Formatting (Tô màu tự động theo trạng thái)
-  const range = sheet.getRange("N2:N5000");
-
-  const ruleNew = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Mới")
-    .setBackground("#FFF2C9") // Vàng nhạt
-    .setFontColor("#B71F1F")
-    .setRanges([range])
-    .build();
-
-  const ruleCalled = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Đã gọi")
-    .setBackground("#D4EAF7") // Xanh dương nhạt
-    .setFontColor("#0C5460")
-    .setRanges([range])
-    .build();
-
-  const ruleConfirmed = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Đã xác nhận")
-    .setBackground("#D1E7DD") // Xanh lá nhạt
-    .setFontColor("#0F5132")
-    .setRanges([range])
-    .build();
-
-  const ruleCallback = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Hẹn gọi lại")
-    .setBackground("#E8DAEF") // Tím nhạt
-    .setFontColor("#4A235A")
-    .setRanges([range])
-    .build();
-
-  const ruleFailed = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Không liên hệ được")
-    .setBackground("#FFE5D0") // Cam nhạt
-    .setFontColor("#A04000")
-    .setRanges([range])
-    .build();
-
-  const ruleCancelled = SpreadsheetApp.newConditionalFormatRule()
-    .whenTextEqualTo("Hủy")
-    .setBackground("#E2E3E5") // Xám nhạt
-    .setFontColor("#383D41")
-    .setRanges([range])
-    .build();
-
-  sheet.setConditionalFormatRules([
-    ruleNew,
-    ruleCalled,
-    ruleConfirmed,
-    ruleCallback,
-    ruleFailed,
-    ruleCancelled,
-  ]);
-
-  Logger.log("✅ Đã thiết lập Dropdown và Tô màu Trạng thái thành công!");
 }
