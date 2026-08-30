@@ -1,0 +1,9 @@
+# Cloudflare Workers static asset exclusions
+# Prevent accidental deployment of source/export archives and oversized bundles.
+*.zip
+*.7z
+*.tar
+*.tar.gz
+*.zip.b64
+*source*.zip
+export_chunks/
