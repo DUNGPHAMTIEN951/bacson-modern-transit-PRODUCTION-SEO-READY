@@ -36,10 +36,12 @@ dist-ssr
 *.sln
 *.sw?
 
-# Temporary source export artifacts (never commit / never serve publicly)
-public/*source*.zip
+# Temporary source/export artifacts — never ship in production
+public/*.zip
 public/*.zip.b64
+public/*source*.zip
 public/export_chunks/
+src/data/ui-review-chunks.json
 
 # Root-level build/review archives must not be shipped as public assets
 /*.zip
