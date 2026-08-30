@@ -1,0 +1,5 @@
+Cloudflare production redeploy trigger.
+
+Created to force a fresh build from the current main branch after switching the Cloudflare build command from `bun run build` to `npm run build`.
+
+Safe to keep or delete later.
