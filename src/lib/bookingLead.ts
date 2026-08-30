@@ -43,6 +43,17 @@ function getConfiguredEndpoint(): string | null {
   }
 }
 
+function createClientRequestId(): string {
+  try {
+    if (typeof crypto !== "undefined" && typeof crypto.randomUUID === "function") {
+      return crypto.randomUUID();
+    }
+  } catch {
+    // Fallback bên dưới cho browser cũ / môi trường hạn chế.
+  }
+  return `web-${Date.now()}-${Math.random().toString(36).slice(2, 12)}`;
+}
+
 export function checkDuplicateSubmission(phone: string): {
   isDuplicate: boolean;
   remainingSeconds: number;
@@ -80,7 +91,7 @@ export function recordSubmission(phone: string): void {
     sessionStorage.setItem(STORAGE_KEY_PHONE, normalizeVietnamesePhone(phone));
     sessionStorage.setItem(STORAGE_KEY_TIME, Date.now().toString());
   } catch {
-    // sessionStorage can be unavailable in restricted browser modes; submission should still work.
+    // sessionStorage có thể bị chặn; submission vẫn phải hoạt động.
   }
 }
 
@@ -149,6 +160,9 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     page: payload.page || (typeof window !== "undefined" ? window.location.pathname : "/"),
     consent: true,
     honeypot: "",
+    submittedAt: payload.submittedAt || new Date().toISOString(),
+    formStartedAt: payload.formStartedAt || "",
+    clientRequestId: payload.clientRequestId || createClientRequestId(),
   };
 
   const controller = new AbortController();
