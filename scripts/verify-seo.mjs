@@ -11,10 +11,11 @@ const index = read("src/routes/index.tsx");
 const robots = read("public/robots.txt");
 const sitemap = read("public/sitemap.xml");
 
-const domain = "https://xebacsoncuongnguyet.com";
+const domain = "https://xekhachbaccuongnguyet.com";
 const canonical = `${domain}/`;
 
 check("canonical is production root", business.includes(`canonical: "${canonical}"`));
+check("production domain is configured", business.includes(`domain: "${domain}"`));
 check("index emits canonical", index.includes('rel: "canonical"'));
 check("index emits meta description", index.includes('name: "description"'));
 check("index emits index/follow robots", index.includes("index,follow"));
@@ -36,6 +37,7 @@ check(
   index.includes("application/ld+json") && index.includes('"@type": "LocalBusiness"'),
 );
 check("legacy green/gold canonical absent", !business.includes("/xe-khach-ha-noi-son-la-bac-son/"));
+check("old production domain absent", !business.includes("xebacsoncuongnguyet.com"));
 
 let failed = 0;
 for (const c of checks) {
