@@ -61,15 +61,15 @@ export const legalInfo = {
   scope: "vận tải hành khách theo hợp đồng và vận tải hàng hóa bằng xe ô tô",
 } as const;
 
-/** Canonical production URL - tách riêng để dễ đổi domain sau này. */
+/** Canonical production URL - nguồn duy nhất cho SEO URL tuyệt đối. */
 export const siteConfig = {
-  domain: "https://xebacsoncuongnguyet.com",
-  canonical: "https://xebacsoncuongnguyet.com/",
+  domain: "https://xekhachbaccuongnguyet.com",
+  canonical: "https://xekhachbaccuongnguyet.com/",
   title: "Xe Hà Nội Sơn La – Lịch chạy & Giá vé | Bắc Sơn Cường Nguyệt",
   description:
     "Xe Bắc Sơn Cường Nguyệt tuyến Hà Nội – Mộc Châu – Sơn La. Xem lịch xe, giá vé, điểm đón trả và dịch vụ gửi hàng. Đặt vé nhanh qua hotline 0848.755.766 - 0384.755.766.",
   /** Nguồn ảnh hiện tại của project. Có thể thay bằng /images khi đã self-host đủ WebP. */
   assetOrigin: "https://bacson-modern-transit.lovable.app",
   /** Ảnh Open Graph tự host trên domain production để tránh canonical/share phụ thuộc preview. */
-  ogImage: "https://xebacsoncuongnguyet.com/og-bac-son-cuong-nguyet.png",
+  ogImage: "https://xekhachbaccuongnguyet.com/og-bac-son-cuong-nguyet.png",
 } as const;
