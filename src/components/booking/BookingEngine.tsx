@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { TripSearch } from "./TripSearch";
 import { SeatMap34 } from "./SeatMap34";
+import { BookingSummary } from "./BookingSummary";
+import { PaymentQR } from "./PaymentQR";
 
 export function BookingEngine(){
   const [step,setStep] = useState("SEARCH");
@@ -23,38 +25,37 @@ export function BookingEngine(){
           vehicle={trip.vehicle}
           onSelect={(selectedSeat)=>{
             setSeat(selectedSeat);
-            setStep("CUSTOMER");
+            setStep("SUMMARY");
           }}
         />
       )}
 
-      {step === "CUSTOMER" && (
-        <div className="space-y-4">
-          <h3 className="text-xl font-black">
-            Thông tin hành khách
-          </h3>
-
-          <div className="rounded-xl bg-[#FFF4E8] p-4">
-            <p>Xe: {trip?.vehicle}</p>
-            <p>Ghế: {seat}</p>
-            <p>Giá vé: {trip?.price?.toLocaleString()}đ</p>
-          </div>
-
-          <button
-            className="rounded-xl bg-[#D51F26] px-5 py-3 font-bold text-white"
-            onClick={()=>setStep("PAYMENT")}
-          >
-            Tiếp tục thanh toán
-          </button>
-        </div>
+      {step === "SUMMARY" && trip && (
+        <BookingSummary
+          vehicle={trip.vehicle}
+          route={trip.route}
+          date={trip.date}
+          seat={seat}
+          price={trip.price}
+          onContinue={()=>setStep("PAYMENT")}
+        />
       )}
 
-      {step === "PAYMENT" && (
-        <div className="space-y-4 text-center">
-          <h3 className="text-xl font-black">
-            Thanh toán
-          </h3>
-          <p>Quét QR để chuyển khoản</p>
+      {step === "PAYMENT" && trip && (
+        <PaymentQR
+          amount={trip.price}
+          bookingCode={`BS-${trip.vehicle}-${seat}`}
+          onUploadComplete={()=>setStep("SUCCESS")}
+        />
+      )}
+
+      {step === "SUCCESS" && (
+        <div className="rounded-3xl bg-gradient-to-br from-red-50 to-yellow-50 p-8 text-center">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-green-500 text-4xl text-white">
+            ✓
+          </div>
+          <h3 className="text-2xl font-black">Đã nhận thanh toán</h3>
+          <p className="mt-2">Nhà xe sẽ xác nhận vé sớm nhất.</p>
         </div>
       )}
     </div>
