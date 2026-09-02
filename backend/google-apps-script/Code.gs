@@ -1,7 +1,8 @@
 const SHEETS = {
   TRIPS: 'TRIPS',
   SEATS: 'SEATS',
-  BOOKINGS: 'BOOKINGS'
+  BOOKINGS: 'BOOKINGS',
+  PAYMENTS: 'PAYMENTS'
 };
 
 function doPost(e) {
@@ -9,27 +10,15 @@ function doPost(e) {
   let result;
 
   switch (body.action) {
-    case 'GET_TRIPS':
-      result = getTrips(body);
-      break;
-    case 'GET_SEATS':
-      result = getSeats(body);
-      break;
-    case 'HOLD_SEAT':
-      result = holdSeat(body);
-      break;
-    case 'CREATE_BOOKING':
-      result = createBooking(body);
-      break;
-    case 'CONFIRM_SEAT':
-      result = confirmSeat(body);
-      break;
-    default:
-      result = { success:false, message:'INVALID_ACTION' };
+    case 'GET_TRIPS': result = getTrips(body); break;
+    case 'GET_SEATS': result = getSeats(body); break;
+    case 'HOLD_SEAT': result = holdSeat(body); break;
+    case 'CREATE_BOOKING': result = createBooking(body); break;
+    case 'CONFIRM_SEAT': result = confirmSeat(body); break;
+    default: result = {success:false,message:'INVALID_ACTION'};
   }
 
-  return ContentService
-    .createTextOutput(JSON.stringify(result))
+  return ContentService.createTextOutput(JSON.stringify(result))
     .setMimeType(ContentService.MimeType.JSON);
 }
 
@@ -44,27 +33,22 @@ function getTrips(data){
 }
 
 function getSeats(data){
-  const ss = SpreadsheetApp.getActive();
-  const sheet = ss.getSheetByName(SHEETS.SEATS);
+  const sheet = SpreadsheetApp.getActive().getSheetByName(SHEETS.SEATS);
   const result = {};
-
   if (!sheet) return {success:false,message:'SEATS_SHEET_MISSING'};
 
   const rows = sheet.getDataRange().getValues();
   const now = new Date();
 
-  for (let i = 1; i < rows.length; i++) {
-    if (String(rows[i][0]) !== String(data.tripId)) continue;
+  for(let i=1;i<rows.length;i++){
+    if(String(rows[i][0]) !== String(data.tripId)) continue;
 
     let status = rows[i][2];
-    const expire = rows[i][3];
-
-    if (status === 'HOLD' && expire && new Date(expire) < now) {
-      status = 'AVAILABLE';
-      sheet.getRange(i + 1, 3).setValue('AVAILABLE');
-      sheet.getRange(i + 1, 4).clearContent();
+    if(status === 'HOLD' && rows[i][3] && new Date(rows[i][3]) < now){
+      status='AVAILABLE';
+      sheet.getRange(i+1,3).setValue(status);
+      sheet.getRange(i+1,4).clearContent();
     }
-
     result[rows[i][1]] = status;
   }
 
@@ -72,28 +56,19 @@ function getSeats(data){
 }
 
 function holdSeat(data){
-  const ss = SpreadsheetApp.getActive();
-  const sheet = ss.getSheetByName(SHEETS.SEATS);
-
-  if (!sheet) return {success:false,message:'SEATS_SHEET_MISSING'};
+  const sheet = SpreadsheetApp.getActive().getSheetByName(SHEETS.SEATS);
+  if(!sheet) return {success:false,message:'SEATS_SHEET_MISSING'};
 
   const rows = sheet.getDataRange().getValues();
-  const expire = new Date(Date.now() + 5 * 60 * 1000);
+  const expire = new Date(Date.now()+300000);
 
-  for (let i = 1; i < rows.length; i++) {
-    if (String(rows[i][0]) === String(data.tripId) && String(rows[i][1]) === String(data.seat)) {
+  for(let i=1;i<rows.length;i++){
+    if(rows[i][0]==data.tripId && rows[i][1]==data.seat){
+      if(rows[i][2]=='BOOKED') return {success:false,message:'SEAT_BOOKED'};
+      if(rows[i][2]=='HOLD' && new Date(rows[i][3])>new Date()) return {success:false,message:'SEAT_HELD'};
 
-      if (rows[i][2] === 'BOOKED') {
-        return {success:false,message:'SEAT_BOOKED'};
-      }
-
-      if (rows[i][2] === 'HOLD' && new Date(rows[i][3]) > new Date()) {
-        return {success:false,message:'SEAT_HELD'};
-      }
-
-      sheet.getRange(i + 1, 3).setValue('HOLD');
-      sheet.getRange(i + 1, 4).setValue(expire);
-
+      sheet.getRange(i+1,3).setValue('HOLD');
+      sheet.getRange(i+1,4).setValue(expire);
       return {success:true,status:'HOLD',expireMinutes:5};
     }
   }
@@ -101,13 +76,39 @@ function holdSeat(data){
   return {success:false,message:'SEAT_NOT_FOUND'};
 }
 
-function confirmSeat(data){
+function createBooking(data){
   const ss = SpreadsheetApp.getActive();
-  const sheet = ss.getSheetByName(SHEETS.SEATS);
+  const sheet = ss.getSheetByName(SHEETS.BOOKINGS);
+  const bookingId = 'BS' + Utilities.formatDate(new Date(),'GMT+7','yyyyMMddHHmmss');
+
+  if(!sheet) return {success:false,message:'BOOKINGS_SHEET_MISSING'};
+
+  sheet.appendRow([
+    bookingId,
+    data.name || '',
+    data.phone || '',
+    data.tripId || '',
+    data.vehicle || '',
+    data.seat || '',
+    data.route || '',
+    data.price || 0,
+    'WAIT_PAYMENT',
+    new Date()
+  ]);
+
+  return {
+    success:true,
+    bookingId:bookingId,
+    status:'WAIT_PAYMENT'
+  };
+}
+
+function confirmSeat(data){
+  const sheet = SpreadsheetApp.getActive().getSheetByName(SHEETS.SEATS);
   const rows = sheet.getDataRange().getValues();
 
   for(let i=1;i<rows.length;i++){
-    if(rows[i][0] == data.tripId && rows[i][1] == data.seat){
+    if(rows[i][0]==data.tripId && rows[i][1]==data.seat){
       sheet.getRange(i+1,3).setValue('BOOKED');
       sheet.getRange(i+1,4).clearContent();
       return {success:true,status:'BOOKED'};
@@ -115,12 +116,4 @@ function confirmSeat(data){
   }
 
   return {success:false,message:'SEAT_NOT_FOUND'};
-}
-
-function createBooking(data){
-  return {
-    success:true,
-    bookingId:'BS-'+Date.now(),
-    status:'WAIT_PAYMENT'
-  };
 }
