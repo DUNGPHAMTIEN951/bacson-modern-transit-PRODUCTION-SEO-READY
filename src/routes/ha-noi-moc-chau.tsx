@@ -4,6 +4,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { RouteLanding } from "@/components/routes/RouteLanding";
 import { transportRoutes } from "@/data/routes";
 import { createFaqSchema } from "@/data/seo-schema";
+import { createBreadcrumbSchema } from "@/components/seo/BreadcrumbJsonLd";
 import { siteConfig } from "@/data/business";
 
 export const Route = createFileRoute("/ha-noi-moc-chau")({
@@ -26,6 +27,13 @@ function RoutePage() {
   return (
     <>
       <JsonLd data={createFaqSchema(transportRoutes.haNoiMocChau.faq)} />
+      <JsonLd
+        data={createBreadcrumbSchema([
+          { name: "Trang chủ", url: siteConfig.domain },
+          { name: "Tuyến xe", url: `${siteConfig.domain}/` },
+          { name: transportRoutes.haNoiMocChau.title, url: `${siteConfig.domain}/ha-noi-moc-chau` },
+        ])}
+      />
       <JsonLd
         data={{
           "@context": "https://schema.org",
