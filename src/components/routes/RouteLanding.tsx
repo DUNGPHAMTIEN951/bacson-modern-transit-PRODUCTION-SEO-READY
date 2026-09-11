@@ -1,8 +1,8 @@
 import { Link } from "@tanstack/react-router";
 
-import type { RouteData } from "@/data/routes";
+import type { TransportRoute } from "@/data/routes";
 
-export function RouteLanding({ route }: { route: RouteData }) {
+export function RouteLanding({ route }: { route: TransportRoute }) {
   return (
     <main className="mx-auto max-w-6xl px-4 py-10 text-[#2b1b12]">
       <section className="rounded-3xl bg-gradient-to-br from-[#fff7ed] to-white p-8 shadow-sm">
@@ -15,27 +15,22 @@ export function RouteLanding({ route }: { route: RouteData }) {
           <div className="rounded-2xl bg-white p-5 shadow">📍 {route.stops.join(" → ")}</div>
         </div>
       </section>
-
       <section className="mt-8 rounded-3xl bg-white p-8 shadow-sm">
         <h2 className="text-2xl font-bold">Lộ trình</h2>
         <p className="mt-3">{route.stops.join(" → ")}</p>
       </section>
-
       <section className="mt-8 rounded-3xl bg-white p-8 shadow-sm">
         <h2 className="text-2xl font-bold">Câu hỏi thường gặp</h2>
         <div className="mt-4 space-y-4">
           {route.faq.map((item) => (
-            <div key={item.q}>
-              <h3 className="font-semibold">{item.q}</h3>
-              <p className="text-neutral-700">{item.a}</p>
+            <div key={item.question}>
+              <h3 className="font-semibold">{item.question}</h3>
+              <p className="text-neutral-700">{item.answer}</p>
             </div>
           ))}
         </div>
       </section>
-
-      <div className="mt-8">
-        <Link to="/" className="font-bold text-[#D62828]">← Về trang chủ</Link>
-      </div>
+      <Link to="/" className="mt-8 inline-block font-bold text-[#D62828]">← Về trang chủ</Link>
     </main>
   );
 }
