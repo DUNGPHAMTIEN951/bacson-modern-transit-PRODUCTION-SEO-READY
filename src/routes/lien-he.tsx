@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { JsonLd } from "@/components/seo/JsonLd";
-import { localBusinessSchema } from "@/data/seo-schema";
+import { localBusinessSchema, organizationSchema } from "@/data/seo-schema";
 import { siteConfig } from "@/data/business";
 
 export const Route = createFileRoute("/lien-he")({
@@ -24,6 +24,7 @@ function RoutePage() {
   return (
     <main className="mx-auto max-w-5xl px-6 py-16 text-[#3b1f14]">
       <JsonLd data={localBusinessSchema} />
+      <JsonLd data={organizationSchema} />
       <section className="rounded-3xl bg-gradient-to-br from-[#fff7ed] to-white p-8 shadow-sm">
         <h1 className="text-4xl font-black">Liên hệ Bắc Sơn Cường Nguyệt</h1>
         <p className="mt-6 text-lg leading-8 text-neutral-700">
