@@ -1,5 +1,24 @@
 import { businessInfo, legalInfo, siteConfig } from "@/data/business";
 
+export const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: legalInfo.company,
+  brand: businessInfo.shortName,
+  url: siteConfig.domain,
+  logo: siteConfig.ogImage,
+  description: businessInfo.description,
+  telephone: businessInfo.phoneE164,
+  contactPoint: {
+    "@type": "ContactPoint",
+    telephone: businessInfo.phoneE164,
+    contactType: "customer service",
+    areaServed: "VN",
+    availableLanguage: "Vietnamese",
+  },
+  areaServed: businessInfo.areaServed,
+};
+
 export const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "LocalBusiness",
