@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { RouteLanding } from "@/components/routes/RouteLanding";
 import { transportRoutes } from "@/data/routes";
+import { createFaqSchema } from "@/data/seo-schema";
 
 export const Route = createFileRoute("/son-la-ha-noi")({
   head: () => ({
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/son-la-ha-noi")({
 function RoutePage() {
   return (
     <>
+      <JsonLd data={createFaqSchema(transportRoutes.sonLaHaNoi.faq)} />
       <JsonLd
         data={{
           "@context": "https://schema.org",
