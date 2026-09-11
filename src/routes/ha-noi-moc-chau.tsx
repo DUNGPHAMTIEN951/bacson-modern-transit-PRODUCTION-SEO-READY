@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { JsonLd } from "@/components/seo/JsonLd";
 import { RouteLanding } from "@/components/routes/RouteLanding";
 import { transportRoutes } from "@/data/routes";
 import { siteConfig } from "@/data/business";
@@ -21,5 +22,21 @@ export const Route = createFileRoute("/ha-noi-moc-chau")({
 });
 
 function RoutePage() {
-  return <RouteLanding route={transportRoutes.haNoiMocChau} />;
+  return (
+    <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Service",
+          name: transportRoutes.haNoiMocChau.title,
+          provider: {
+            "@type": "Organization",
+            name: "Bắc Sơn Cường Nguyệt",
+          },
+          description: transportRoutes.haNoiMocChau.description,
+        }}
+      />
+      <RouteLanding route={transportRoutes.haNoiMocChau} />
+    </>
+  );
 }
