@@ -44,7 +44,7 @@ export function BookingEngine(){
       {step === "PAYMENT" && trip && (
         <PaymentQR
           amount={trip.price}
-          bookingCode={`BS-${trip.vehicle}-${seat}`}
+          bookingId={`BS-${trip.vehicle}-${seat}`}
           onUploadComplete={()=>setStep("SUCCESS")}
         />
       )}

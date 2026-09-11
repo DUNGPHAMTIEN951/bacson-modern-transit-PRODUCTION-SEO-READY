@@ -1,4 +1,4 @@
-const BOOKING_API_URL = import.meta.env.VITE_BOOKING_API_URL || "";
+const BOOKING_API_URL = (import.meta.env["VITE_BOOKING_API_URL"] as string | undefined) || "";
 
 export type SeatStatus =
   | "AVAILABLE"

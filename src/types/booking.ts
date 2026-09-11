@@ -11,6 +11,7 @@ export type BookingSource =
   | "inline_section"
   | "mobile_sticky"
   | "final_cta"
+  | "route_landing"
   | "direct";
 
 export interface BookingFormValues {
