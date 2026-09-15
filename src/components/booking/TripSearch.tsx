@@ -10,6 +10,7 @@ export interface Trip {
   route: string;
   time: string;
   price: number;
+  date?: string;
 }
 
 const trips: Trip[] = [
@@ -51,9 +52,7 @@ export function TripSearch({ onSelectTrip }: TripSearchProps) {
 
   return (
     <section className="rounded-3xl border border-[#EAD9C6] bg-white p-6 shadow-lg">
-      <h2 className="text-xl font-black text-[#2B2B2B]">
-        Tìm chuyến xe
-      </h2>
+      <h2 className="text-xl font-black text-[#2B2B2B]">Tìm chuyến xe</h2>
 
       <div className="mt-4 grid gap-4 sm:grid-cols-2">
         <select
@@ -77,7 +76,7 @@ export function TripSearch({ onSelectTrip }: TripSearchProps) {
         {results.map((trip) => (
           <button
             key={trip.id}
-            onClick={() => onSelectTrip?.(trip)}
+            onClick={() => onSelectTrip?.({ ...trip, date })}
             className="flex w-full items-center justify-between rounded-2xl border p-4 text-left transition hover:border-[#D51F26]"
           >
             <div>
@@ -85,9 +84,7 @@ export function TripSearch({ onSelectTrip }: TripSearchProps) {
               <div className="text-sm text-gray-600">{trip.route}</div>
               <div className="text-sm">Giờ chạy: {trip.time}</div>
             </div>
-            <div className="font-black text-[#D51F26]">
-              {trip.price.toLocaleString("vi-VN")}đ
-            </div>
+            <div className="font-black text-[#D51F26]">{trip.price.toLocaleString("vi-VN")}đ</div>
           </button>
         ))}
       </div>

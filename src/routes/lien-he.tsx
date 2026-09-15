@@ -59,7 +59,10 @@ function LienHePage() {
       <main className="flex-1">
         <div className="container-page py-6 sm:py-10">
           {/* Breadcrumb điều hướng */}
-          <nav aria-label="Đường dẫn trang" className="mb-6 flex items-center gap-2 text-xs sm:text-sm text-[#795F55]">
+          <nav
+            aria-label="Đường dẫn trang"
+            className="mb-6 flex items-center gap-2 text-xs sm:text-sm text-[#795F55]"
+          >
             <Link
               to="/"
               className="inline-flex items-center gap-1 font-semibold text-[#3A211B] hover:text-[#D51F26] transition"
@@ -227,7 +230,8 @@ function LienHePage() {
                   Mạng lưới văn phòng trên trục Quốc lộ 6
                 </h2>
                 <p className="mt-2 text-sm sm:text-base text-[#795F55] max-w-2xl">
-                  Quý khách có thể mua vé trực tiếp, gửi nhận hàng hóa và đón xe tại các điểm cố định sau:
+                  Quý khách có thể mua vé trực tiếp, gửi nhận hàng hóa và đón xe tại các điểm cố
+                  định sau:
                 </p>
               </div>
 

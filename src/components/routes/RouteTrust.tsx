@@ -68,7 +68,8 @@ export function RouteTrust() {
           </p>
 
           <p className="mt-3 text-sm sm:text-base text-[#795F55] leading-relaxed">
-            Chúng tôi hiểu rằng sự an tâm của hành khách là ưu tiên số một. Mọi phương tiện, tuyến đường và lịch trình đều được đăng ký minh bạch với cơ quan quản lý nhà nước.
+            Chúng tôi hiểu rằng sự an tâm của hành khách là ưu tiên số một. Mọi phương tiện, tuyến
+            đường và lịch trình đều được đăng ký minh bạch với cơ quan quản lý nhà nước.
           </p>
 
           {/* 4 Tiêu chí uy tín theo đúng yêu cầu */}
@@ -82,9 +83,7 @@ export function RouteTrust() {
                   <Check className="size-4 stroke-[3]" aria-hidden="true" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-[#3A211B]">
-                    {point.title}
-                  </h3>
+                  <h3 className="text-sm sm:text-base font-bold text-[#3A211B]">{point.title}</h3>
                   <p className="mt-0.5 text-xs sm:text-sm text-[#795F55] leading-relaxed">
                     {point.desc}
                   </p>
@@ -153,7 +152,8 @@ export function RouteTrust() {
             </div>
 
             <div className="mt-5 rounded-xl bg-[#FFF8EE] border border-[#EAD9C6]/60 p-3 text-center text-xs text-[#795F55]">
-              🔒 Bản gốc các văn bản pháp lý được lưu trữ tại văn phòng nhà xe và xuất trình khi hành khách có nhu cầu kiểm tra.
+              🔒 Bản gốc các văn bản pháp lý được lưu trữ tại văn phòng nhà xe và xuất trình khi
+              hành khách có nhu cầu kiểm tra.
             </div>
           </div>
         </div>

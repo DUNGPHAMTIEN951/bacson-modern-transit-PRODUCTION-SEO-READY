@@ -39,9 +39,7 @@ export const localBusinessSchema = {
   },
 };
 
-export function createFaqSchema(
-  items: readonly { question: string; answer: string }[],
-) {
+export function createFaqSchema(items: readonly { question: string; answer: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "FAQPage",

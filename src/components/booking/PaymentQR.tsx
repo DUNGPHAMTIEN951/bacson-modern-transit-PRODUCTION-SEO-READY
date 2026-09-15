@@ -6,11 +6,7 @@ interface PaymentQRProps {
   onUploadComplete?: (file: File) => void;
 }
 
-export function PaymentQR({
-  amount,
-  bookingId,
-  onUploadComplete,
-}: PaymentQRProps) {
+export function PaymentQR({ amount, bookingId, onUploadComplete }: PaymentQRProps) {
   const [fileName, setFileName] = useState("");
 
   const transferContent = `BS-${bookingId}`;
@@ -18,12 +14,8 @@ export function PaymentQR({
   return (
     <div className="rounded-3xl border bg-white p-6 shadow-xl">
       <div className="text-center">
-        <h3 className="text-2xl font-bold text-red-700">
-          Thanh toán đặt vé
-        </h3>
-        <p className="mt-2 text-gray-600">
-          Quét mã QR hoặc chuyển khoản trực tiếp
-        </p>
+        <h3 className="text-2xl font-bold text-red-700">Thanh toán đặt vé</h3>
+        <p className="mt-2 text-gray-600">Quét mã QR hoặc chuyển khoản trực tiếp</p>
       </div>
 
       <div className="mx-auto mt-6 flex h-52 w-52 items-center justify-center rounded-2xl bg-gray-100">
@@ -62,11 +54,7 @@ export function PaymentQR({
           />
         </label>
 
-        {fileName && (
-          <p className="mt-3 text-center text-sm text-green-700">
-            Đã chọn: {fileName}
-          </p>
-        )}
+        {fileName && <p className="mt-3 text-center text-sm text-green-700">Đã chọn: {fileName}</p>}
       </div>
     </div>
   );

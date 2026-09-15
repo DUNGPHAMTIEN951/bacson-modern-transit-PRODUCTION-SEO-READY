@@ -34,9 +34,7 @@ export function RouteFAQ({
           >
             {title}
           </h2>
-          <p className="mt-2 text-sm sm:text-base text-[#795F55] max-w-2xl">
-            {subtitle}
-          </p>
+          <p className="mt-2 text-sm sm:text-base text-[#795F55] max-w-2xl">{subtitle}</p>
         </div>
 
         <div className="inline-flex items-center gap-1.5 self-start md:self-auto text-xs font-bold text-[#8C6D58] bg-[#FFF0C3] border border-[#EAB83E]/40 px-4 py-2 rounded-full shadow-2xs">

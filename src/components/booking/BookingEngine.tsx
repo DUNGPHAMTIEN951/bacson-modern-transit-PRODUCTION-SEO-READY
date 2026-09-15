@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { TripSearch } from "./TripSearch";
+import { TripSearch, type Trip } from "./TripSearch";
 import { SeatMap34 } from "./SeatMap34";
 import { BookingSummary } from "./BookingSummary";
 import { PaymentQR } from "./PaymentQR";
 
-export function BookingEngine(){
-  const [step,setStep] = useState("SEARCH");
-  const [trip,setTrip] = useState<any>(null);
-  const [seat,setSeat] = useState<string>("");
+export function BookingEngine() {
+  const [step, setStep] = useState("SEARCH");
+  const [trip, setTrip] = useState<Trip | null>(null);
+  const [seat, setSeat] = useState<string>("");
 
   return (
     <div className="rounded-3xl bg-white p-5 shadow-xl">
       {step === "SEARCH" && (
         <TripSearch
-          onSelectTrip={(selected)=>{
+          onSelectTrip={(selected) => {
             setTrip(selected);
             setStep("SEAT");
           }}
@@ -23,7 +23,7 @@ export function BookingEngine(){
       {step === "SEAT" && trip && (
         <SeatMap34
           vehicle={trip.vehicle}
-          onSelect={(selectedSeat)=>{
+          onSelect={(selectedSeat) => {
             setSeat(selectedSeat);
             setStep("SUMMARY");
           }}
@@ -37,7 +37,7 @@ export function BookingEngine(){
           date={trip.date}
           seat={seat}
           price={trip.price}
-          onContinue={()=>setStep("PAYMENT")}
+          onContinue={() => setStep("PAYMENT")}
         />
       )}
 
@@ -45,7 +45,7 @@ export function BookingEngine(){
         <PaymentQR
           amount={trip.price}
           bookingId={`BS-${trip.vehicle}-${seat}`}
-          onUploadComplete={()=>setStep("SUCCESS")}
+          onUploadComplete={() => setStep("SUCCESS")}
         />
       )}
 

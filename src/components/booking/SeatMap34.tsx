@@ -33,9 +33,7 @@ export function SeatMap34({
     const status = getStatus(seat);
     if (status === "BOOKED" || status === "HELD_5_MIN") return;
 
-    setSelected((prev) =>
-      prev.includes(seat) ? prev.filter((x) => x !== seat) : [...prev, seat],
-    );
+    setSelected((prev) => (prev.includes(seat) ? prev.filter((x) => x !== seat) : [...prev, seat]));
     onSelect?.(seat);
   };
 

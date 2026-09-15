@@ -117,7 +117,8 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
           </h2>
 
           <p className="mt-3 text-sm sm:text-base text-[#795F55] leading-relaxed">
-            Điền thông tin bên dưới để nhà xe liên hệ kiểm tra chỗ trống, hỗ trợ chọn giường tầng dưới êm ái và xác nhận điểm đón thuận tiện nhất.
+            Điền thông tin bên dưới để nhà xe liên hệ kiểm tra chỗ trống, hỗ trợ chọn giường tầng
+            dưới êm ái và xác nhận điểm đón thuận tiện nhất.
           </p>
 
           <div className="mt-6 rounded-2xl border border-[#EAD9C6] bg-[#FFF8EE] p-5 shadow-2xs">
@@ -168,7 +169,8 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                   Đăng ký thành công!
                 </h3>
                 <p className="mt-2 text-sm sm:text-base text-[#795F55] max-w-md mx-auto leading-relaxed">
-                  Nhà xe Bắc Sơn Cường Nguyệt đã nhận thông tin chuyến đi của bạn. Đội ngũ điều hành sẽ gọi điện thoại trực tiếp để xác nhận giờ xuất bến và điểm đón.
+                  Nhà xe Bắc Sơn Cường Nguyệt đã nhận thông tin chuyến đi của bạn. Đội ngũ điều hành
+                  sẽ gọi điện thoại trực tiếp để xác nhận giờ xuất bến và điểm đón.
                 </p>
                 <button
                   type="button"
@@ -202,7 +204,9 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                 {/* Tuyến đường đang đăng ký */}
                 <div className="rounded-xl bg-[#FFF8EE] border border-[#EAD9C6] px-4 py-2.5 flex items-center justify-between text-xs sm:text-sm shadow-2xs">
                   <span className="font-semibold text-[#795F55]">Tuyến đăng ký:</span>
-                  <span className="font-extrabold text-[#D51F26] text-sm sm:text-base">{routeTitle}</span>
+                  <span className="font-extrabold text-[#D51F26] text-sm sm:text-base">
+                    {routeTitle}
+                  </span>
                 </div>
 
                 {/* 1. Họ tên */}

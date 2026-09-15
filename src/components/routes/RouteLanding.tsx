@@ -25,7 +25,10 @@ export function RouteLanding({ route }: Props) {
       <main className="flex-1">
         <div className="container-page py-6 sm:py-10">
           {/* Breadcrumb điều hướng đầu trang */}
-          <nav aria-label="Đường dẫn trang" className="mb-6 flex items-center gap-2 text-xs sm:text-sm text-[#795F55]">
+          <nav
+            aria-label="Đường dẫn trang"
+            className="mb-6 flex items-center gap-2 text-xs sm:text-sm text-[#795F55]"
+          >
             <Link
               to="/"
               className="inline-flex items-center gap-1 font-semibold text-[#3A211B] hover:text-[#D51F26] transition"
@@ -51,19 +54,13 @@ export function RouteLanding({ route }: Props) {
           />
 
           {/* 4. Gallery Ảnh xe thực tế (1 lớn + 2 nhỏ) */}
-          <RouteGallery
-            gallery={route.gallery}
-            title={`Hình ảnh dàn xe phục vụ ${route.title}`}
-          />
+          <RouteGallery gallery={route.gallery} title={`Hình ảnh dàn xe phục vụ ${route.title}`} />
 
           {/* 5. Trust Section: Uy tín & 2 ảnh giấy tờ pháp lý thật */}
           <RouteTrust />
 
           {/* 6. Form Giữ chỗ gửi trực tiếp về Google Sheets */}
-          <RouteBooking
-            routeTitle={route.title}
-            defaultPickup={route.departure}
-          />
+          <RouteBooking routeTitle={route.title} defaultPickup={route.departure} />
 
           {/* 7. FAQ Accordion chuẩn SEO */}
           <RouteFAQ faq={route.faq} />

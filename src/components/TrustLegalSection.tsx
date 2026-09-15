@@ -25,20 +25,15 @@ export default function TrustLegalSection() {
       <div className="trust-legal-header">
         <h2>Thông tin doanh nghiệp</h2>
         <p>
-          Bắc Sơn Cường Nguyệt hoạt động trong lĩnh vực vận tải hành khách với
-          thông tin doanh nghiệp minh bạch, phục vụ các tuyến Hà Nội - Mộc Châu
-          - Sơn La.
+          Bắc Sơn Cường Nguyệt hoạt động trong lĩnh vực vận tải hành khách với thông tin doanh
+          nghiệp minh bạch, phục vụ các tuyến Hà Nội - Mộc Châu - Sơn La.
         </p>
       </div>
 
       <div className="trust-legal-grid">
         {documents.map((document) => (
           <article key={document.title} className="trust-legal-card">
-            <img
-              src={document.image}
-              loading="lazy"
-              alt={document.alt}
-            />
+            <img src={document.image} loading="lazy" alt={document.alt} />
             <h3>{document.title}</h3>
           </article>
         ))}

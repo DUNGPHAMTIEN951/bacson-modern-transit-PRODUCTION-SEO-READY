@@ -1,12 +1,12 @@
 import React from "react";
 
 type BookingSummaryProps = {
-  vehicle?: string;
-  route?: string;
-  date?: string;
-  seat?: string;
-  price?: number;
-  onContinue?: () => void;
+  vehicle?: string | undefined;
+  route?: string | undefined;
+  date?: string | undefined;
+  seat?: string | undefined;
+  price?: number | undefined;
+  onContinue?: (() => void) | undefined;
 };
 
 export function BookingSummary({
@@ -19,9 +19,7 @@ export function BookingSummary({
 }: BookingSummaryProps) {
   return (
     <div className="rounded-3xl border bg-white p-6 shadow-xl">
-      <h3 className="mb-5 text-xl font-bold text-red-800">
-        Xác nhận đặt vé
-      </h3>
+      <h3 className="mb-5 text-xl font-bold text-red-800">Xác nhận đặt vé</h3>
 
       <div className="space-y-3 text-sm">
         <div className="flex justify-between">
@@ -46,9 +44,7 @@ export function BookingSummary({
 
         <div className="mt-4 flex justify-between border-t pt-4 text-lg">
           <span>Tổng tiền</span>
-          <strong className="text-red-700">
-            {price.toLocaleString("vi-VN")}đ
-          </strong>
+          <strong className="text-red-700">{price.toLocaleString("vi-VN")}đ</strong>
         </div>
       </div>
 

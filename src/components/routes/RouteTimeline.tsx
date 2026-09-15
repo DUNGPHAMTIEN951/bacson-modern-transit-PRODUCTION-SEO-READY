@@ -7,14 +7,24 @@ interface Props {
   title?: string;
 }
 
-export function RouteTimeline({ stops, detailedStops, title = "Hành trình & Lộ trình di chuyển" }: Props) {
-  const items = detailedStops && detailedStops.length > 0
-    ? detailedStops
-    : stops.map((stop, i) => ({
-        name: stop,
-        desc: i === 0 ? "Điểm xuất phát" : i === stops.length - 1 ? "Điểm đến an toàn" : "Điểm dừng đón trả cố định",
-        timeEstimate: i === 0 ? "Bắt đầu" : undefined,
-      }));
+export function RouteTimeline({
+  stops,
+  detailedStops,
+  title = "Hành trình & Lộ trình di chuyển",
+}: Props) {
+  const items =
+    detailedStops && detailedStops.length > 0
+      ? detailedStops
+      : stops.map((stop, i) => ({
+          name: stop,
+          desc:
+            i === 0
+              ? "Điểm xuất phát"
+              : i === stops.length - 1
+                ? "Điểm đến an toàn"
+                : "Điểm dừng đón trả cố định",
+          timeEstimate: i === 0 ? "Bắt đầu" : undefined,
+        }));
 
   return (
     <section className="mt-12 sm:mt-16 rounded-[32px] sm:rounded-[40px] border border-[#EAD9C6] bg-gradient-to-b from-white via-[#FFFDF9] to-[#FFF8EE] p-6 sm:p-8 md:p-12 shadow-[0_12px_36px_rgba(58,33,27,0.05)]">
@@ -33,7 +43,8 @@ export function RouteTimeline({ stops, detailedStops, title = "Hành trình & L�
             {title}
           </h2>
           <p className="mt-2 text-sm sm:text-base text-[#795F55] max-w-2xl">
-            Di chuyển thông suốt trên trục Quốc lộ 6 huyết mạch với các điểm đón trả cố định, đúng giờ, an toàn và thuận tiện.
+            Di chuyển thông suốt trên trục Quốc lộ 6 huyết mạch với các điểm đón trả cố định, đúng
+            giờ, an toàn và thuận tiện.
           </p>
         </div>
 
@@ -176,7 +187,8 @@ export function RouteTimeline({ stops, detailedStops, title = "Hành trình & L�
             <CheckCircle2 className="size-5 stroke-[2.5]" aria-hidden="true" />
           </div>
           <p className="text-xs sm:text-sm font-semibold text-[#3A211B] leading-relaxed">
-            Xe chạy đúng biểu đồ giờ đăng ký với Sở Giao thông Vận tải. Không dừng đón khách tùy tiện kéo dài thời gian di chuyển của hành khách.
+            Xe chạy đúng biểu đồ giờ đăng ký với Sở Giao thông Vận tải. Không dừng đón khách tùy
+            tiện kéo dài thời gian di chuyển của hành khách.
           </p>
         </div>
 

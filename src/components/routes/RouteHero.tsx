@@ -1,4 +1,12 @@
-import { PhoneCall, CalendarCheck, ShieldCheck, Bus, MapPin, Sparkles, CheckCircle2 } from "lucide-react";
+import {
+  PhoneCall,
+  CalendarCheck,
+  ShieldCheck,
+  Bus,
+  MapPin,
+  Sparkles,
+  CheckCircle2,
+} from "lucide-react";
 import { businessInfo } from "@/data/business";
 import type { TransportRoute } from "@/data/routes";
 

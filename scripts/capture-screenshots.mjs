@@ -3,7 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 
 const targetDir = "D:\\bacson-modern-transit-PRODUCTION-SEO-READY\\screenshots";
-const artifactDir = "C:\\Users\\phaml\\.gemini\\antigravity-ide\\brain\\5f70c84a-b7bf-4ea5-b46b-c70ba795c315\\screenshots";
+const artifactDir =
+  "C:\\Users\\phaml\\.gemini\\antigravity-ide\\brain\\5f70c84a-b7bf-4ea5-b46b-c70ba795c315\\screenshots";
 
 fs.mkdirSync(targetDir, { recursive: true });
 fs.mkdirSync(artifactDir, { recursive: true });
@@ -81,7 +82,7 @@ async function capture() {
             // Timeout dự phòng
             setTimeout(resolve, 5000);
           });
-        })
+        }),
       );
     });
 
