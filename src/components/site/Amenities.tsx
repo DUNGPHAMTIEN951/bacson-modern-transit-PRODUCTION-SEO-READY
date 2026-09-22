@@ -17,7 +17,7 @@ export function Amenities() {
       <SectionHead
         eyebrow="Phục vụ chu đáo"
         title="Tiện ích trên mỗi chuyến xe"
-        sub="Các tiện ích cơ bản được nhà xe chuẩn bị cho hành trình Hà Nội – Sơn La dịp Quốc khánh."
+        sub="Các tiện ích cơ bản được nhà xe chuẩn bị cho hành trình Hà Nội – Mộc Châu – Sơn La."
       />
       <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {amenities.map((a) => {
@@ -42,3 +42,4 @@ export function Amenities() {
     </Section>
   );
 }
+
