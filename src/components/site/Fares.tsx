@@ -85,4 +85,3 @@ export function Fares() {
     </Section>
   );
 }
-
