@@ -11,7 +11,7 @@ export function Faq() {
     <Section id="faq" tone="white">
       <SectionHead
         eyebrow="Câu hỏi thường gặp"
-        title="Đi xe Hà Nội – Sơn La dịp 2/9 cần biết gì?"
+        title="Đi xe Hà Nội – Sơn La cần biết gì?"
         sub="Những câu hỏi khách hay gọi hỏi nhà xe nhất trước khi đặt vé và gửi hàng."
       />
 
@@ -55,3 +55,4 @@ export function Faq() {
     </Section>
   );
 }
+
