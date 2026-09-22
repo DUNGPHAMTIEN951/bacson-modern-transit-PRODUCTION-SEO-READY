@@ -207,7 +207,7 @@ const stages = [
   {
     step: "04",
     title: "Tiếp tục đồng hành",
-    desc: "Qua mỗi mùa Quốc khánh, mỗi chuyến xe lại đưa thêm nhiều người gần hơn với quê nhà.",
+    desc: "Qua mỗi hành trình, mỗi chuyến xe lại đưa thêm nhiều người gần hơn với quê nhà.",
     Illustration: CoachContinuingIllustration,
   },
 ];
@@ -274,7 +274,7 @@ export function BrandStory() {
                 những chuyến đi bắt đầu từ nỗi nhớ nhà.
               </p>
               <p className="text-[#795F55]">
-                Mỗi dịp Quốc khánh 2/9, trên hành trình{" "}
+                Mỗi ngày, trên hành trình{" "}
                 <b className="text-[#3A211B]">Hà Nội – Mộc Châu – Sơn La</b>, nhiều hành khách lại
                 trở về với gia đình, với những cuộc gặp gỡ, với nhịp sống thân quen nơi quê nhà.
               </p>
@@ -417,3 +417,4 @@ export function BrandStory() {
     </section>
   );
 }
+
