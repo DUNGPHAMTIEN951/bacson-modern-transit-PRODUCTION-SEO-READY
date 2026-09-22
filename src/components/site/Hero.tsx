@@ -36,8 +36,8 @@ function VietnamFlagBadge() {
   );
 }
 
-/** Hexagonal 2/9 badge — decorative, near coach with slow floating animation */
-function NationalDayBadge() {
+/** Hexagonal route badge — decorative, near coach with slow floating animation */
+function RouteBadge() {
   return (
     <div
       className="relative flex flex-col items-center justify-center text-center badge-float select-none"
@@ -64,9 +64,9 @@ function NationalDayBadge() {
         >
           MỪNG
           <br />
-          QUỐC KHÁNH
+          CHUYÊN TUYẾN
         </span>
-        <span className="text-[#F4C84A] text-sm font-black leading-none mt-0.5">2/9</span>
+        <span className="text-[#F4C84A] text-sm font-black leading-none mt-0.5">TÂY BẮC</span>
       </div>
     </div>
   );
@@ -177,7 +177,7 @@ export function Hero() {
                   className="text-[0.68rem] font-black text-white uppercase tracking-widest"
                   style={{ fontFamily: "var(--font-sans)" }}
                 >
-                  Chào mừng Quốc khánh 2/9
+                  Chuyên tuyến Tây Bắc
                 </span>
               </div>
               <div
@@ -226,7 +226,7 @@ export function Hero() {
               className="mt-4 max-w-xl text-base leading-snug text-[#5A3828] sm:text-lg intro-slogan-2"
               style={{ fontFamily: "var(--font-sans)", fontWeight: 500 }}
             >
-              Chào mừng Quốc khánh 2/9 – đồng hành cùng những hành trình trở về quê nhà.
+              Đồng hành mỗi ngày trên hành trình Hà Nội – Mộc Châu – Sơn La.
             </p>
             <p
               className="mt-1.5 max-w-xl text-sm leading-relaxed text-[#795F55] intro-slogan-2"
@@ -276,7 +276,7 @@ export function Hero() {
                   aria-hidden="true"
                 />
                 <span>
-                  GỌI ĐẶT VÉ 2/9
+                  GỌI ĐẶT VÉ
                   <span className="block text-[0.65rem] font-semibold opacity-90">
                     {businessInfo.phone}
                   </span>
@@ -385,9 +385,9 @@ export function Hero() {
                 </div>
               </div>
 
-              {/* 2/9 Hexagonal badge — overlapping coach top-right */}
+              {/* Route badge — overlapping coach top-right */}
               <div className="absolute -right-3 top-4 z-20 drop-shadow-xl pointer-events-none">
-                <NationalDayBadge />
+                <RouteBadge />
               </div>
 
               {/* Route info floating card at bottom with subtle parallax */}
@@ -404,7 +404,7 @@ export function Hero() {
                     style={{ fontFamily: "var(--font-sans)" }}
                   >
                     <span className="text-[#EAB83E] star-twinkle">★</span>
-                    Dịp lễ 2/9
+                    Chạy mỗi ngày
                   </span>
                 </div>
                 <p
@@ -430,3 +430,4 @@ export function Hero() {
     </section>
   );
 }
+
