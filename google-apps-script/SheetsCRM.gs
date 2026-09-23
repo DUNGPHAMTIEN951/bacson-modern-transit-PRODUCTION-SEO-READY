@@ -9,6 +9,8 @@ const CRM_HEADERS = {
     "Trang gửi form", "Trạng thái", "Nhân viên phụ trách", "Ghi chú tư vấn",
     "Phân loại SĐT", "Xác minh SĐT", "Spam score", "Cờ spam", "Lý do rủi ro",
     "Số lần/15 phút", "Số lần/ngày", "Payload hash", "Booking ID", "Cập nhật lúc",
+    "Landing page", "Referrer", "GCLID", "GBRAID", "WBRAID", "UTM source",
+    "UTM medium", "UTM campaign", "UTM term", "UTM content",
   ],
   PHONE_REGISTRY: [
     "Số điện thoại", "Phân loại", "Xác minh", "Trạng thái", "Lần đầu thấy",
@@ -46,6 +48,11 @@ const CRM_HEADERS = {
     "Số Lead", "Số Request", "Lý do",
   ],
   CONFIG: ["Khóa", "Giá trị", "Mô tả"],
+  ADS_CONVERSIONS: [
+    "Google Click ID", "GBRAID", "WBRAID", "Conversion Name", "Conversion Time",
+    "Conversion Value", "Conversion Currency", "Order ID", "Lead ID",
+    "Lifecycle Stage", "Upload Status", "Queued At",
+  ],
 };
 
 function ensureSystemSheets(ss) {
@@ -62,11 +69,13 @@ function setupSystemForSpreadsheet(ss) {
   setupStructuredSheet(ss, APP.SHEETS.AUDIT_LOG, CRM_HEADERS.AUDIT_LOG, "#455A64");
   setupStructuredSheet(ss, APP.SHEETS.ARCHIVE_INDEX, CRM_HEADERS.ARCHIVE_INDEX, "#455A64");
   setupStructuredSheet(ss, APP.SHEETS.CONFIG, CRM_HEADERS.CONFIG, "#795548");
+  setupStructuredSheet(ss, APP.SHEETS.ADS_CONVERSIONS, CRM_HEADERS.ADS_CONVERSIONS, "#1A73E8");
 
   setupLeadFormatting(ss.getSheetByName(APP.SHEETS.LEADS_RAW));
   setupPhoneRegistryFormatting(ss.getSheetByName(APP.SHEETS.PHONE_REGISTRY));
   setupBookingFormatting(ss.getSheetByName(APP.SHEETS.BOOKINGS));
   setupPaymentFormatting(ss.getSheetByName(APP.SHEETS.PAYMENTS));
+  setupAdsConversionFormatting(ss.getSheetByName(APP.SHEETS.ADS_CONVERSIONS));
   setupConfigDefaults(ss);
   setupLeadsView(ss);
   setupAccountingSheets(ss);
@@ -178,6 +187,22 @@ function setupPaymentFormatting(sheet) {
   );
 }
 
+function setupAdsConversionFormatting(sheet) {
+  if (!sheet) return;
+  columnBodyRange(sheet, 1).setNumberFormat("@");
+  columnBodyRange(sheet, 2).setNumberFormat("@");
+  columnBodyRange(sheet, 3).setNumberFormat("@");
+  columnBodyRange(sheet, 8).setNumberFormat("@");
+  columnBodyRange(sheet, 9).setNumberFormat("@");
+  columnBodyRange(sheet, 12).setNumberFormat("dd/MM/yyyy HH:mm:ss");
+  columnBodyRange(sheet, 11).setDataValidation(
+    SpreadsheetApp.newDataValidation()
+      .requireValueInList(["READY", "NO_CLICK_ID", "UPLOADED", "ERROR"], true)
+      .setAllowInvalid(true)
+      .build(),
+  );
+}
+
 function conditionalTextRule(range, text, background, fontColor) {
   return SpreadsheetApp.newConditionalFormatRule()
     .whenTextEqualTo(text).setBackground(background).setFontColor(fontColor).setRanges([range]).build();
@@ -198,6 +223,8 @@ function setupConfigDefaults(ss) {
     ["MAX_PHONE_DAY", APP.SPAM.MAX_PER_DAY, "Tối đa request cùng SĐT mỗi ngày"],
     ["ROLLOVER_RATIO", APP.BACKUP.ROLLOVER_RATIO, "Tỷ lệ cell để tự tạo database mới"],
     ["BACKUP_RETENTION_DAYS", APP.BACKUP.DAILY_RETENTION_DAYS, "Số ngày giữ daily backup"],
+    ["GOOGLE_ADS_QUALIFIED_LEAD_ACTION", "Qualified lead", "Tên conversion action cho lead đã xác nhận"],
+    ["GOOGLE_ADS_CONVERTED_LEAD_ACTION", "Converted lead", "Tên conversion action cho khách đã đi hoặc thanh toán"],
   ].forEach(function (row) { if (!existing[String(row[0])]) sheet.appendRow(row); });
 }
 
@@ -205,9 +232,9 @@ function setupLeadsView(ss) {
   let sheet = ss.getSheetByName(APP.SHEETS.LEADS_VIEW);
   if (!sheet) sheet = ss.insertSheet(APP.SHEETS.LEADS_VIEW, 0);
   sheet.clear();
-  sheet.getRange("A1").setFormula('=QUERY(LEADS_RAW!A:Z,"select * where A is not null order by B desc",1)');
+  sheet.getRange("A1").setFormula('=QUERY(LEADS_RAW!A:AJ,"select * where A is not null order by B desc",1)');
   sheet.setFrozenRows(1);
-  sheet.getRange("A1:Z1").setFontWeight("bold").setBackground("#1F4E5F").setFontColor("#FFFFFF");
+  sheet.getRange("A1:AJ1").setFontWeight("bold").setBackground("#1F4E5F").setFontColor("#FFFFFF");
   columnBodyRange(sheet, 1).setNumberFormat("@");
   columnBodyRange(sheet, 4).setNumberFormat("@");
   columnBodyRange(sheet, 2).setNumberFormat("dd/MM/yyyy HH:mm:ss");
@@ -228,6 +255,8 @@ function writeLeadRaw(ss, payload, leadId, phoneProfile, risk, now) {
     risk.score >= APP.SPAM.QUARANTINE_SCORE ? "CẦN KIỂM TRA" : "OK",
     risk.reasons.join(" | "), risk.stats.samePhoneWindow, risk.stats.samePhoneDay,
     payload.payloadHash, "", now,
+    payload.landingPage, payload.referrer, payload.gclid, payload.gbraid, payload.wbraid,
+    payload.utmSource, payload.utmMedium, payload.utmCampaign, payload.utmTerm, payload.utmContent,
   ];
   const row = sheet.getLastRow() + 1;
   sheet.getRange(row, 1).setNumberFormat("@");
@@ -265,13 +294,19 @@ function handleCrmEdit(e) {
     sheet.getRange(row, 26).setValue(new Date());
     const leadId = String(sheet.getRange(row, 1).getValue() || "");
     logAuditEdit(e, leadId, "LEAD_UPDATE");
-    if (col === 14 && String(e.value || "") === "Đã xác nhận") ensureBookingFromLeadRow(getSpreadsheet(), row);
+    if (col === 14 && String(e.value || "") === "Đã xác nhận") {
+      const ss = getSpreadsheet();
+      ensureBookingFromLeadRow(ss, row);
+      queueGoogleAdsLifecycleConversion(ss, String(sheet.getRange(row, 1).getValue() || ""), "QUALIFIED_LEAD", 0);
+    }
   }
 
   if (sheetName === APP.SHEETS.BOOKINGS && col >= 11 && col <= 20) {
     sheet.getRange(row, 21).setValue(new Date());
     applyBookingFormulas(sheet, row);
     logAuditEdit(e, String(sheet.getRange(row, 1).getValue() || ""), "BOOKING_UPDATE");
+    SpreadsheetApp.flush();
+    maybeQueueConvertedLeadFromBookingRow(getSpreadsheet(), row);
   }
 
   if (sheetName === APP.SHEETS.PAYMENTS && col >= 2 && col <= 11) {
@@ -311,6 +346,68 @@ function ensureBookingFromLeadRow(ss, leadRow) {
   leads.getRange(leadRow, 25).setValue(bookingId);
   updateRegistryBookingCount(ss, String(values[3] || ""), 1);
   return bookingId;
+}
+
+function getConfigValue(ss, key, fallback) {
+  const sheet = ss.getSheetByName(APP.SHEETS.CONFIG);
+  if (!sheet || sheet.getLastRow() <= 1) return fallback;
+  const match = sheet.getRange(2, 1, sheet.getLastRow() - 1, 2)
+    .getValues()
+    .find(function (row) { return String(row[0] || "") === key; });
+  return match && String(match[1] || "").trim() ? String(match[1]).trim() : fallback;
+}
+
+function findLeadRowById(ss, leadId) {
+  const sheet = ss.getSheetByName(APP.SHEETS.LEADS_RAW);
+  if (!sheet || !leadId || sheet.getLastRow() <= 1) return 0;
+  const match = sheet.getRange(2, 1, sheet.getLastRow() - 1, 1)
+    .createTextFinder(leadId)
+    .matchEntireCell(true)
+    .findNext();
+  return match ? match.getRow() : 0;
+}
+
+function queueGoogleAdsLifecycleConversion(ss, leadId, stage, value) {
+  const leadRow = findLeadRowById(ss, leadId);
+  if (!leadRow) return "";
+
+  const leads = ss.getSheetByName(APP.SHEETS.LEADS_RAW);
+  const values = leads.getRange(leadRow, 1, 1, CRM_HEADERS.LEADS_RAW.length).getValues()[0];
+  const gclid = String(values[28] || "");
+  const gbraid = String(values[29] || "");
+  const wbraid = String(values[30] || "");
+  const actionName = stage === "CONVERTED_LEAD"
+    ? getConfigValue(ss, "GOOGLE_ADS_CONVERTED_LEAD_ACTION", "Converted lead")
+    : getConfigValue(ss, "GOOGLE_ADS_QUALIFIED_LEAD_ACTION", "Qualified lead");
+  const orderId = leadId + "-" + stage;
+  const output = ss.getSheetByName(APP.SHEETS.ADS_CONVERSIONS);
+
+  if (output.getLastRow() > 1) {
+    const existing = output.getRange(2, 8, output.getLastRow() - 1, 1)
+      .createTextFinder(orderId)
+      .matchEntireCell(true)
+      .findNext();
+    if (existing) return orderId;
+  }
+
+  const now = new Date();
+  const conversionTime = Utilities.formatDate(now, APP.TZ, "yyyy-MM-dd HH:mm:ssXXX");
+  output.appendRow([
+    gclid, gbraid, wbraid, actionName, conversionTime, Number(value) || 0, "VND",
+    orderId, leadId, stage, gclid || gbraid || wbraid ? "READY" : "NO_CLICK_ID", now,
+  ]);
+  return orderId;
+}
+
+function maybeQueueConvertedLeadFromBookingRow(ss, bookingRow) {
+  const bookings = ss.getSheetByName(APP.SHEETS.BOOKINGS);
+  if (!bookings || bookingRow <= 1) return "";
+  const values = bookings.getRange(bookingRow, 1, 1, CRM_HEADERS.BOOKINGS.length).getValues()[0];
+  const leadId = String(values[1] || "");
+  const bookingStatus = String(values[10] || "");
+  const paymentStatus = String(values[17] || "");
+  if (bookingStatus !== "ĐÃ ĐI" && paymentStatus !== "ĐÃ THANH TOÁN") return "";
+  return queueGoogleAdsLifecycleConversion(ss, leadId, "CONVERTED_LEAD", Number(values[14]) || 0);
 }
 
 function applyBookingFormulas(sheet, row) {
@@ -402,6 +499,7 @@ function recordPaymentForSelectedBooking() {
   updateRegistryPaidTotal(ss, phone, type === "REFUND" ? -amount : amount);
   applyBookingFormulas(sheet, row);
   SpreadsheetApp.flush();
+  maybeQueueConvertedLeadFromBookingRow(ss, row);
   refreshAccountingDaily(ss);
   refreshDashboard(ss);
   ui.alert("Đã ghi giao dịch " + paymentId + ".");

@@ -95,7 +95,7 @@ export function ContactDock() {
   return (
     <aside
       aria-label="Liên hệ nhanh nổi bên phải màn hình"
-      className="fixed right-3 sm:right-4 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-3 select-none"
+      className="fixed right-4 top-1/2 z-40 hidden -translate-y-1/2 flex-col gap-3 select-none md:flex"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >

@@ -34,11 +34,22 @@ export interface BookingLeadPayload extends BookingFormValues {
   submittedAt?: string | undefined;
   formStartedAt?: string | undefined;
   clientRequestId?: string | undefined;
+  landingPage?: string | undefined;
+  referrer?: string | undefined;
+  gclid?: string | undefined;
+  gbraid?: string | undefined;
+  wbraid?: string | undefined;
+  utmSource?: string | undefined;
+  utmMedium?: string | undefined;
+  utmCampaign?: string | undefined;
+  utmTerm?: string | undefined;
+  utmContent?: string | undefined;
 }
 
 export interface BookingApiResponse {
   success: boolean;
   leadId?: string | undefined;
+  conversionEligible?: boolean | undefined;
   message?: string | undefined;
 }
 

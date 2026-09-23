@@ -29,6 +29,70 @@ const STORAGE_KEY_PHONE = "bs_last_lead_phone";
 const STORAGE_KEY_TIME = "bs_last_lead_time";
 const COOLDOWN_SECONDS = 30;
 const REQUEST_TIMEOUT_MS = 12_000;
+const ATTRIBUTION_STORAGE_KEY = "bscn_lead_attribution_v1";
+
+type LeadAttribution = Pick<
+  BookingLeadPayload,
+  | "landingPage"
+  | "referrer"
+  | "gclid"
+  | "gbraid"
+  | "wbraid"
+  | "utmSource"
+  | "utmMedium"
+  | "utmCampaign"
+  | "utmTerm"
+  | "utmContent"
+>;
+
+function readLeadAttribution(): LeadAttribution {
+  if (typeof window === "undefined") return {};
+
+  const params = new URLSearchParams(window.location.search);
+  const current: LeadAttribution = {
+    landingPage: window.location.pathname,
+    referrer: (() => {
+      try {
+        return document.referrer ? new URL(document.referrer).origin : "";
+      } catch {
+        return "";
+      }
+    })(),
+    gclid: params.get("gclid") || "",
+    gbraid: params.get("gbraid") || "",
+    wbraid: params.get("wbraid") || "",
+    utmSource: params.get("utm_source") || "",
+    utmMedium: params.get("utm_medium") || "",
+    utmCampaign: params.get("utm_campaign") || "",
+    utmTerm: params.get("utm_term") || "",
+    utmContent: params.get("utm_content") || "",
+  };
+
+  const hasCampaignData = Boolean(
+    current.gclid ||
+    current.gbraid ||
+    current.wbraid ||
+    current.utmSource ||
+    current.utmMedium ||
+    current.utmCampaign,
+  );
+
+  try {
+    if (hasCampaignData) {
+      localStorage.setItem(ATTRIBUTION_STORAGE_KEY, JSON.stringify(current));
+      return current;
+    }
+
+    const stored = localStorage.getItem(ATTRIBUTION_STORAGE_KEY);
+    if (stored) {
+      return { ...current, ...(JSON.parse(stored) as LeadAttribution) };
+    }
+  } catch {
+    // Tracking storage may be unavailable; submitting a lead must still work.
+  }
+
+  return current;
+}
 
 function getConfiguredEndpoint(): string | null {
   const value = import.meta.env.VITE_BOOKING_FORM_ENDPOINT?.trim();
@@ -146,6 +210,7 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     };
   }
 
+  const attribution = readLeadAttribution();
   const formattedPayload = {
     name: payload.name.trim().slice(0, 120),
     phone: normalizedPhone,
@@ -163,6 +228,16 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     submittedAt: payload.submittedAt || new Date().toISOString(),
     formStartedAt: payload.formStartedAt || "",
     clientRequestId: payload.clientRequestId || createClientRequestId(),
+    landingPage: payload.landingPage || attribution.landingPage || "",
+    referrer: payload.referrer || attribution.referrer || "",
+    gclid: payload.gclid || attribution.gclid || "",
+    gbraid: payload.gbraid || attribution.gbraid || "",
+    wbraid: payload.wbraid || attribution.wbraid || "",
+    utmSource: payload.utmSource || attribution.utmSource || "",
+    utmMedium: payload.utmMedium || attribution.utmMedium || "",
+    utmCampaign: payload.utmCampaign || attribution.utmCampaign || "",
+    utmTerm: payload.utmTerm || attribution.utmTerm || "",
+    utmContent: payload.utmContent || attribution.utmContent || "",
   };
 
   const controller = new AbortController();
@@ -193,9 +268,13 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     }
 
     recordSubmission(normalizedPhone);
+    const conversionEligible =
+      data.conversionEligible === true ||
+      (data.conversionEligible === undefined && /^LD-/.test(data.leadId || ""));
     return {
       success: true,
       leadId: data.leadId,
+      conversionEligible,
       message: data.message || "Đã nhận yêu cầu thành công!",
     };
   } catch (error: unknown) {

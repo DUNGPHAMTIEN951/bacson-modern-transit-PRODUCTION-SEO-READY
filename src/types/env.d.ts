@@ -10,14 +10,24 @@ interface ImportMeta {
 
 interface Window {
   dataLayer?: unknown[];
-  gtag?: (
-    command: "event",
-    eventName: "conversion",
-    parameters: {
-      send_to: string;
-      value: number;
-      currency: "VND";
-      transaction_id: string;
-    },
-  ) => void;
+  gtag?: {
+    (
+      command: "event",
+      eventName: "conversion",
+      parameters: {
+        send_to: string;
+        value: number;
+        currency: "VND";
+        transaction_id: string;
+      },
+    ): void;
+    (
+      command: "set",
+      target: "user_data",
+      parameters: {
+        email?: string;
+        phone_number?: string;
+      },
+    ): void;
+  };
 }

@@ -6,7 +6,10 @@ import {
   Route,
   Package,
   MapPin,
+  CalendarDays,
+  ArrowRight,
 } from "lucide-react";
+import { useState, type FormEvent } from "react";
 import { businessInfo } from "@/data/business";
 import { images } from "@/data/images";
 import { image360Registry } from "@/data/image360";
@@ -85,6 +88,17 @@ function LocationLabel() {
 export function Hero() {
   const { openImmersive } = useImmersiveViewer();
   const { openBookingModal } = useBookingModal();
+  const [quickRoute, setQuickRoute] = useState("Hà Nội → Sơn La");
+  const [quickDate, setQuickDate] = useState("");
+
+  const handleQuickBooking = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    openBookingModal({
+      prefillRoute: quickRoute,
+      prefillDate: quickDate || undefined,
+      source: "hero_callback",
+    });
+  };
 
   // Parallax offsets on scroll
   const bgParallax = useScrollParallax(0.18, 35);
@@ -105,13 +119,20 @@ export function Hero() {
       }}
     >
       {/* ── LAYER 1: Mountain landscape background with slow scroll parallax ── */}
-      <div
+      <img
+        src="/images/son-la-mountain-hero.svg"
+        alt=""
+        width={1440}
+        height={640}
+        loading="eager"
+        fetchPriority="high"
         className="pointer-events-none absolute inset-0 z-0 will-change-transform"
         aria-hidden="true"
         style={{
-          backgroundImage: `url(/images/son-la-mountain-hero.svg)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center right",
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center right",
           opacity: 0.82,
           transform: `translate3d(${mouseTilt.x * -0.6}px, ${bgParallax + mouseTilt.y * -0.6}px, 0)`,
           transition: "transform 250ms cubic-bezier(0.22, 1, 0.36, 1)",
@@ -198,26 +219,24 @@ export function Hero() {
             </div>
 
             {/* Main editorial typography — 2 tiers with staggered intro */}
-            <h1 className="mt-4 leading-none" style={{ fontFamily: "var(--font-serif)" }}>
+            <h1 className="mt-4 leading-[1.02]" style={{ fontFamily: "var(--font-serif)" }}>
               <span
                 className="block font-bold text-[#3A211B] intro-slogan-1"
                 style={{
-                  fontSize: "clamp(3rem, 7vw, 5.5rem)",
+                  fontSize: "clamp(2.25rem, 5.7vw, 4.7rem)",
                   letterSpacing: "-0.02em",
-                  lineHeight: 1,
                 }}
               >
-                Sơn La
+                Xe Hà Nội – Mộc Châu
               </span>
               <span
-                className="block font-semibold italic text-[#D51F26] intro-slogan-2"
+                className="block font-semibold text-[#D51F26] intro-slogan-2"
                 style={{
-                  fontSize: "clamp(2.1rem, 5vw, 3.8rem)",
+                  fontSize: "clamp(2rem, 5vw, 4rem)",
                   letterSpacing: "-0.01em",
-                  lineHeight: 1.08,
                 }}
               >
-                những chuyến đi
+                – Sơn La mỗi ngày
               </span>
             </h1>
 
@@ -226,18 +245,67 @@ export function Hero() {
               className="mt-4 max-w-xl text-base leading-snug text-[#5A3828] sm:text-lg intro-slogan-2"
               style={{ fontFamily: "var(--font-sans)", fontWeight: 500 }}
             >
-              Đồng hành mỗi ngày trên hành trình Hà Nội – Mộc Châu – Sơn La.
+              Xe giường nằm, đón trả dọc Quốc lộ 6. Chọn tuyến và ngày đi để nhà xe kiểm tra chỗ.
             </p>
             <p
               className="mt-1.5 max-w-xl text-sm leading-relaxed text-[#795F55] intro-slogan-2"
               style={{ fontFamily: "var(--font-sans)" }}
             >
-              Mỗi chuyến xe đưa khoảng cách ngắn lại, để những cuộc gặp gỡ đến gần hơn.
+              Gọi trực tiếp hoặc gửi yêu cầu — không cần thanh toán trước.
             </p>
+
+            <form
+              onSubmit={handleQuickBooking}
+              className="intro-cta mt-4 max-w-[540px] rounded-2xl border border-[#E4CDB5] bg-white/95 p-3 shadow-[0_8px_26px_rgba(58,33,27,0.12)] backdrop-blur-sm"
+              aria-label="Chọn nhanh tuyến và ngày đi"
+            >
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto]">
+                <label className="sr-only" htmlFor="hero-quick-route">
+                  Tuyến đi
+                </label>
+                <select
+                  id="hero-quick-route"
+                  name="route"
+                  value={quickRoute}
+                  onChange={(event) => setQuickRoute(event.target.value)}
+                  autoComplete="off"
+                  className="min-h-11 rounded-xl border border-[#E5D7C7] bg-white px-3 text-sm font-bold text-[#3A211B] outline-none focus:border-[#D51F26] focus:ring-2 focus:ring-[#D51F26]/20"
+                >
+                  <option>Hà Nội → Sơn La</option>
+                  <option>Hà Nội → Mộc Châu</option>
+                  <option>Sơn La → Hà Nội</option>
+                  <option>Mộc Châu → Hà Nội</option>
+                </select>
+                <label className="relative" htmlFor="hero-quick-date">
+                  <span className="sr-only">Ngày đi</span>
+                  <CalendarDays
+                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#D51F26]"
+                    aria-hidden="true"
+                  />
+                  <input
+                    id="hero-quick-date"
+                    name="travel_date"
+                    type="date"
+                    min={new Date().toISOString().split("T")[0]}
+                    value={quickDate}
+                    onChange={(event) => setQuickDate(event.target.value)}
+                    autoComplete="off"
+                    className="min-h-11 w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-2 text-sm font-semibold text-[#3A211B] outline-none focus:border-[#D51F26] focus:ring-2 focus:ring-[#D51F26]/20"
+                  />
+                </label>
+                <button
+                  type="submit"
+                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#D51F26] px-4 text-sm font-black text-white shadow-[0_3px_12px_rgba(213,31,38,0.28)] transition hover:bg-[#A8171D] active:scale-[0.98]"
+                >
+                  Đặt nhanh
+                  <ArrowRight className="size-4" aria-hidden="true" />
+                </button>
+              </div>
+            </form>
 
             {/* Compact benefit row — 4 items with unified icon containers */}
             <div
-              className="mt-5 grid grid-cols-2 gap-2.5 rounded-xl border border-[#EAD9C6] bg-white/80 p-3 backdrop-blur-sm sm:grid-cols-4 intro-cta"
+              className="mt-5 hidden grid-cols-2 gap-2.5 rounded-xl border border-[#EAD9C6] bg-white/80 p-3 backdrop-blur-sm sm:grid sm:grid-cols-4 intro-cta"
               style={{ maxWidth: 540 }}
             >
               {[
@@ -264,7 +332,7 @@ export function Hero() {
             </div>
 
             {/* CTA group — 3 actions with balanced hierarchy */}
-            <div className="mt-6 flex flex-wrap items-center gap-3 intro-cta">
+            <div className="mt-4 flex flex-wrap items-center gap-2.5 intro-cta sm:mt-6 sm:gap-3">
               {/* Primary: Hotline */}
               <a
                 href={businessInfo.phoneTel}

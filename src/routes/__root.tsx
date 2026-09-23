@@ -11,7 +11,7 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { businessInfo, siteConfig } from "../data/business";
+import { businessInfo } from "../data/business";
 
 function NotFoundComponent() {
   return (
@@ -89,7 +89,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "manifest", href: "/site.webmanifest" },
-      { rel: "preconnect", href: siteConfig.assetOrigin },
     ],
     scripts: [
       {

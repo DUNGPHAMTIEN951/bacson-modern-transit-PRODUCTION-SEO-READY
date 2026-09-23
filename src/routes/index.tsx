@@ -23,7 +23,6 @@ import { Faq } from "@/components/site/Faq";
 import { FinalCta } from "@/components/site/FinalCta";
 import { Footer } from "@/components/site/Footer";
 import { StickyCta } from "@/components/site/StickyCta";
-import { VietnamLoadingScreen } from "@/components/site/VietnamLoadingScreen";
 import { BookingModalProvider } from "@/components/site/BookingModalContext";
 import { BookingConsultationSection } from "@/components/site/BookingConsultationSection";
 import { BookingModal } from "@/components/site/BookingModal";
@@ -145,9 +144,9 @@ export const Route = createFileRoute("/")({
       { rel: "canonical", href: siteConfig.canonical },
       {
         rel: "preload",
-        href: "/images/vietnamese-crane-loading.webp",
+        href: "/images/son-la-mountain-hero.svg",
         as: "image",
-        type: "image/webp",
+        type: "image/svg+xml",
       },
     ],
     scripts: [{ type: "application/ld+json", children: JSON.stringify(jsonLd) }],
@@ -169,26 +168,27 @@ function Index() {
         <main id="main">
           <Hero />
           <QuickBar />
-          <BrandStory />
           <Schedule />
           <Fares />
           <BookingConsultationSection />
-          <RouteTimeline />
-          <SonLaStory />
-          <Gallery />
-          <Amenities />
-          <Cargo />
-          <WhyUs />
-          <Offices />
-          <Credentials />
-          <Faq />
-          <FinalCta />
+          <div className="deferred-home-content">
+            <BrandStory />
+            <RouteTimeline />
+            <SonLaStory />
+            <Gallery />
+            <Amenities />
+            <Cargo />
+            <WhyUs />
+            <Offices />
+            <Credentials />
+            <Faq />
+            <FinalCta />
+          </div>
         </main>
         <Footer />
         <ContactDock />
         <StickyCta />
         <BookingModal />
-        <VietnamLoadingScreen />
       </BookingModalProvider>
     </ImmersiveViewerProvider>
   );

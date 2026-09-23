@@ -19,6 +19,7 @@ import {
   isValidVietnamesePhone,
   normalizeVietnamesePhone,
 } from "@/lib/bookingLead";
+import { trackGoogleAdsLeadConversion } from "@/lib/googleAds";
 
 interface Props {
   routeTitle: string;
@@ -80,6 +81,12 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
       });
 
       if (res.success) {
+        if (res.conversionEligible) {
+          trackGoogleAdsLeadConversion({
+            leadId: res.leadId,
+            phone: cleanPhone,
+          });
+        }
         setSuccess(true);
         setName("");
         setPhone("");
@@ -223,7 +230,9 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                     </div>
                     <input
                       id={`${formId}-name`}
+                      name="name"
                       type="text"
+                      autoComplete="name"
                       required
                       placeholder="Ví dụ: Nguyễn Văn A"
                       value={name}
@@ -260,8 +269,11 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                     </div>
                     <input
                       id={`${formId}-phone`}
+                      name="phone"
                       ref={phoneRef}
                       type="tel"
+                      inputMode="tel"
+                      autoComplete="tel"
                       required
                       placeholder="Ví dụ: 0848 755 766"
                       value={phone}
@@ -299,7 +311,9 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                       </div>
                       <input
                         id={`${formId}-date`}
+                        name="travel_date"
                         type="date"
+                        autoComplete="off"
                         value={travelDate}
                         onChange={(e) => setTravelDate(e.target.value)}
                         className="w-full rounded-xl border border-[#EAD9C6] bg-white py-3 pl-10 pr-4 text-sm text-[#3A211B] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition"
@@ -320,7 +334,9 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                       </div>
                       <input
                         id={`${formId}-pickup`}
+                        name="pickup"
                         type="text"
+                        autoComplete="street-address"
                         placeholder="VD: Bến xe Mỹ Đình / Mộc Châu"
                         value={pickup}
                         onChange={(e) => setPickup(e.target.value)}
@@ -344,6 +360,8 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                     </div>
                     <textarea
                       id={`${formId}-note`}
+                      name="note"
+                      autoComplete="off"
                       rows={2}
                       placeholder="VD: Muốn nằm tầng dưới cho người lớn tuổi / Có kèm thùng nông sản..."
                       value={note}

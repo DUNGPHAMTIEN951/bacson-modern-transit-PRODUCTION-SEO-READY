@@ -6,7 +6,7 @@
  */
 
 const APP = {
-  VERSION: "2.0.1",
+  VERSION: "2.1.0",
   TZ: "Asia/Ho_Chi_Minh",
   STAFF_EMAIL: "nhaxe.cuongnguyet@gmail.com",
   ENABLE_EMAIL_NOTIFICATION: false,
@@ -23,6 +23,7 @@ const APP = {
     AUDIT_LOG: "AUDIT_LOG",
     ARCHIVE_INDEX: "ARCHIVE_INDEX",
     CONFIG: "CONFIG",
+    ADS_CONVERSIONS: "ADS_CONVERSIONS",
   },
   SPAM: {
     QUARANTINE_SCORE: 50,
@@ -145,6 +146,7 @@ function doPost(e) {
       return createJsonResponse({
         success: true,
         leadId: requestId,
+        conversionEligible: false,
         message: "Đã nhận yêu cầu. Nhà xe sẽ kiểm tra thông tin và liên hệ khi phù hợp.",
       });
     }
@@ -173,6 +175,7 @@ function doPost(e) {
     return createJsonResponse({
       success: true,
       leadId: leadId,
+      conversionEligible: true,
       message: "Đã nhận yêu cầu thành công! Nhà xe sẽ liên hệ trong thời gian sớm nhất.",
     });
   } catch (error) {
@@ -201,6 +204,16 @@ function normalizeLeadPayload(raw, requestId, now) {
   const submittedAt = sanitizeInput(raw.submittedAt, 80) || now.toISOString();
   const formStartedAt = sanitizeInput(raw.formStartedAt, 80);
   const clientRequestId = sanitizeInput(raw.clientRequestId, 100);
+  const landingPage = sanitizeInput(raw.landingPage, 180);
+  const referrer = sanitizeInput(raw.referrer, 220);
+  const gclid = sanitizeInput(raw.gclid, 220);
+  const gbraid = sanitizeInput(raw.gbraid, 220);
+  const wbraid = sanitizeInput(raw.wbraid, 220);
+  const utmSource = sanitizeInput(raw.utmSource, 120);
+  const utmMedium = sanitizeInput(raw.utmMedium, 120);
+  const utmCampaign = sanitizeInput(raw.utmCampaign, 180);
+  const utmTerm = sanitizeInput(raw.utmTerm, 180);
+  const utmContent = sanitizeInput(raw.utmContent, 180);
 
   const hashInput = [
     phone,
@@ -230,6 +243,16 @@ function normalizeLeadPayload(raw, requestId, now) {
     submittedAt: submittedAt,
     formStartedAt: formStartedAt,
     clientRequestId: clientRequestId,
+    landingPage: landingPage,
+    referrer: referrer,
+    gclid: gclid,
+    gbraid: gbraid,
+    wbraid: wbraid,
+    utmSource: utmSource,
+    utmMedium: utmMedium,
+    utmCampaign: utmCampaign,
+    utmTerm: utmTerm,
+    utmContent: utmContent,
     payloadHash: sha256Hex(hashInput),
   };
 }

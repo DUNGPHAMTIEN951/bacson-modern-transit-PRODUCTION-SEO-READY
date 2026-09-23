@@ -271,7 +271,13 @@ export function BookingConsultationForm({
       setFormState("success");
       setLeadId(res.leadId || "");
       setServerMessage(res.message || "");
-      trackGoogleAdsLeadConversion(res.leadId);
+      if (res.conversionEligible) {
+        trackGoogleAdsLeadConversion({
+          leadId: res.leadId,
+          email: values.email,
+          phone: values.phone,
+        });
+      }
       if (onSuccess) {
         onSuccess();
       }
@@ -474,7 +480,9 @@ export function BookingConsultationForm({
               <input
                 ref={nameRef}
                 id={`${formId}-name`}
+                name="name"
                 type="text"
+                autoComplete="name"
                 required
                 value={values.name}
                 onChange={(e) => handleChange("name", e.target.value)}
@@ -512,6 +520,7 @@ export function BookingConsultationForm({
               <input
                 ref={phoneRef}
                 id={`${formId}-phone`}
+                name="phone"
                 type="tel"
                 inputMode="tel"
                 autoComplete="tel"
@@ -551,6 +560,8 @@ export function BookingConsultationForm({
             <div className="relative mt-1.5">
               <select
                 id={`${formId}-route`}
+                name="route"
+                autoComplete="off"
                 value={values.route}
                 onChange={(e) => handleChange("route", e.target.value)}
                 className="w-full appearance-none rounded-xl border border-[#E5D7C7] bg-white px-3.5 py-2.5 text-sm font-semibold text-[#2B2B2B] shadow-xs outline-none transition-all focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
@@ -582,7 +593,9 @@ export function BookingConsultationForm({
               </div>
               <input
                 id={`${formId}-passengers`}
+                name="passengers"
                 type="number"
+                autoComplete="off"
                 min={1}
                 max={20}
                 value={values.passengers}
@@ -610,7 +623,9 @@ export function BookingConsultationForm({
               </div>
               <input
                 id={`${formId}-date`}
+                name="travel_date"
                 type="date"
+                autoComplete="off"
                 min={todayStr}
                 value={values.travelDate || ""}
                 onChange={(e) => handleChange("travelDate", e.target.value)}
@@ -636,7 +651,9 @@ export function BookingConsultationForm({
               <input
                 ref={emailRef}
                 id={`${formId}-email`}
+                name="email"
                 type="email"
+                autoComplete="email"
                 value={values.email || ""}
                 onChange={(e) => handleChange("email", e.target.value)}
                 onBlur={() => handleBlur("email")}
@@ -697,7 +714,9 @@ export function BookingConsultationForm({
               </div>
               <input
                 id={`${formId}-pickup`}
+                name="pickup"
                 type="text"
+                autoComplete="street-address"
                 value={values.pickup || ""}
                 onChange={(e) => handleChange("pickup", e.target.value)}
                 placeholder="Ví dụ: Bến xe Mỹ Đình / Ngã tư..."
@@ -740,7 +759,9 @@ export function BookingConsultationForm({
               </div>
               <input
                 id={`${formId}-dropoff`}
+                name="dropoff"
                 type="text"
+                autoComplete="off"
                 value={values.dropoff || ""}
                 onChange={(e) => handleChange("dropoff", e.target.value)}
                 placeholder="Ví dụ: TP Sơn La / Mộc Châu..."
@@ -763,6 +784,8 @@ export function BookingConsultationForm({
           <div className="relative mt-1.5">
             <textarea
               id={`${formId}-note`}
+              name="note"
+              autoComplete="off"
               rows={2}
               maxLength={500}
               value={values.note || ""}
@@ -778,6 +801,7 @@ export function BookingConsultationForm({
           <label className="flex items-start gap-2.5 cursor-pointer select-none">
             <input
               ref={consentRef}
+              name="contact_consent"
               type="checkbox"
               required
               checked={values.consent}
