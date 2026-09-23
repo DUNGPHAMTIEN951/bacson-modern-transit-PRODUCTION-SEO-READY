@@ -6,7 +6,7 @@
  */
 
 const APP = {
-  VERSION: "2.0.0",
+  VERSION: "2.0.1",
   TZ: "Asia/Ho_Chi_Minh",
   STAFF_EMAIL: "nhaxe.cuongnguyet@gmail.com",
   ENABLE_EMAIL_NOTIFICATION: false,
