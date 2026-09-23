@@ -25,6 +25,7 @@ import {
   isValidEmail,
   normalizeVietnamesePhone,
 } from "@/lib/bookingLead";
+import { trackGoogleAdsLeadConversion } from "@/lib/googleAds";
 import type { BookingFormValues, BookingSource, FormState } from "@/types/booking";
 
 const ROUTE_OPTIONS = [
@@ -270,6 +271,7 @@ export function BookingConsultationForm({
       setFormState("success");
       setLeadId(res.leadId || "");
       setServerMessage(res.message || "");
+      trackGoogleAdsLeadConversion(res.leadId);
       if (onSuccess) {
         onSuccess();
       }

@@ -12,7 +12,7 @@ export function Fares() {
       <SectionHead
         eyebrow="Bảng giá niêm yết"
         title="Giá vé xe Hà Nội – Sơn La"
-        sub="Mức giá dưới đây theo nội dung niêm yết hiện tại của nhà xe. Gọi trước để xác nhận giá, chỗ trống và chính sách dịp Quốc khánh 2/9."
+        sub="Mức giá dưới đây theo nội dung niêm yết hiện tại của nhà xe. Gọi trước để xác nhận giá và chỗ trống."
       />
 
       <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -71,7 +71,7 @@ export function Fares() {
       </p>
 
       <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-        <CallButton label="Kiểm tra giá & giữ chỗ dịp 2/9" />
+        <CallButton label="Kiểm tra giá & giữ chỗ" />
         <button
           type="button"
           onClick={() => openBookingModal({ source: "fares_callback" })}

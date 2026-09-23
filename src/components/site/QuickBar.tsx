@@ -6,7 +6,7 @@ const items = [
   { icon: Route, label: "Hành trình", value: "Qua Mộc Châu" },
   { icon: MapPin, label: "Bến Hà Nội", value: "Bến xe Mỹ Đình" },
   { icon: Clock, label: "Thời gian", value: "Khoảng 7 giờ" },
-  { icon: PhoneCall, label: "Đặt vé 2/9", value: businessInfo.phone, tel: true },
+  { icon: PhoneCall, label: "Đặt vé", value: businessInfo.phone, tel: true },
 ];
 
 export function QuickBar() {

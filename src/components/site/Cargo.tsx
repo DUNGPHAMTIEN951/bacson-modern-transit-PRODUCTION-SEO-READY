@@ -8,9 +8,9 @@ export function Cargo() {
   return (
     <Section id="gui-hang" tone="white">
       <SectionHead
-        eyebrow="Kết nối gửi trao dịp 2/9"
+        eyebrow="Kết nối gửi trao mỗi ngày"
         title="Gửi hàng Hà Nội ⇄ Sơn La theo chuyến xe"
-        sub="Không chỉ chở người — những kiện hàng quà quê dịp Tết Độc lập cũng mang theo cả sự mong chờ và ân cần."
+        sub="Không chỉ chở người — những kiện hàng, quà quê cũng mang theo cả sự mong chờ và ân cần."
       />
 
       <div className="mt-8 grid gap-8 lg:grid-cols-[1fr_1.05fr] lg:items-start">
@@ -50,8 +50,7 @@ export function Cargo() {
 
           <p className="mt-5 rounded-xl border border-[#E8DDD0] bg-[#FFF4E8] p-4 text-sm leading-relaxed text-[#6B635B]">
             Nhà xe nhận giấy tờ, bưu kiện, hàng tiêu dùng, nông sản và một số hàng cồng kềnh theo
-            chuyến. Trong dịp lễ 2/9, quý khách nên liên hệ trước để xác nhận vị trí khoang chứa
-            hàng.
+            chuyến. Quý khách nên liên hệ trước để xác nhận vị trí khoang chứa hàng.
           </p>
 
           <div className="mt-5 flex flex-col gap-3 sm:flex-row">

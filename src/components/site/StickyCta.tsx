@@ -66,10 +66,10 @@ export function StickyCta() {
         <PhoneCall className="size-4 shrink-0 stroke-[2] text-white" aria-hidden="true" />
         <span>
           {contextAction === "reserve"
-            ? "GỌI GIỮ CHỖ 2/9"
+            ? "GỌI GIỮ CHỖ"
             : contextAction === "directions"
               ? "GỌI NHÀ XE"
-              : "GỌI ĐẶT VÉ 2/9"}
+              : "GỌI ĐẶT VÉ"}
         </span>
       </a>
 

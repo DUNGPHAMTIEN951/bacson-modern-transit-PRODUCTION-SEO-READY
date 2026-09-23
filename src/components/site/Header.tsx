@@ -55,7 +55,7 @@ export function Header() {
         />
       </div>
 
-      {/* 2/9 Seasonal Announcement Top Bar */}
+      {/* Evergreen route announcement top bar */}
       <div
         className="relative overflow-hidden border-b border-[#A8171D] py-2 text-center text-xs font-semibold text-white intro-topbar select-none"
         style={{ background: "linear-gradient(90deg, #C41820 0%, #D51F26 45%, #C41820 100%)" }}
@@ -114,7 +114,7 @@ export function Header() {
             ★
           </span>
           <span className="tracking-wide" style={{ letterSpacing: "0.03em" }}>
-            CHÀO MỪNG QUỐC KHÁNH 2/9 – ĐỒNG HÀNH CÙNG NHỮNG CHUYẾN TRỞ VỀ SƠN LA
+            HÀ NỘI – MỘC CHÂU – SƠN LA • NHIỀU CHUYẾN MỖI NGÀY
           </span>
           <span
             className="text-[#F4C84A] text-base leading-none star-twinkle hidden sm:inline"

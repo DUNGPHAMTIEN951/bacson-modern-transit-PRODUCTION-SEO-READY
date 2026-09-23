@@ -11,7 +11,7 @@ export function Schedule() {
   return (
     <Section id="lich-chay" tone="white">
       <SectionHead
-        eyebrow="Chuyến xe dịp lễ Quốc khánh 2/9"
+        eyebrow="Nhiều chuyến mỗi ngày"
         title="Lịch xe Hà Nội – Sơn La hôm nay"
         sub="Các chuyến xuất bến cố định hai chiều Mỹ Đình ⇄ Sơn La"
       />

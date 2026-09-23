@@ -11,7 +11,7 @@ export function WhyUs() {
           <SectionHead
             eyebrow="Tận tâm trên từng cây số"
             title="Vì sao khách hàng chọn Bắc Sơn Cường Nguyệt?"
-            sub="Nhà xe tập trung khai thác chuyên tuyến Tây Bắc, ưu tiên sự an toàn, chu đáo và thuận tiện khi đặt vé dịp Quốc khánh."
+            sub="Nhà xe tập trung khai thác chuyên tuyến Tây Bắc, ưu tiên sự an toàn, chu đáo và thuận tiện khi đặt vé."
           />
           <ul className="mt-7 grid gap-3 sm:grid-cols-2">
             {whyUs.map((w) => (

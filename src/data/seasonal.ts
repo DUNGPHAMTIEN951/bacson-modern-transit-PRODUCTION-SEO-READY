@@ -1,12 +1,12 @@
 /**
  * Cấu hình chủ đề theo mùa (Seasonal Theme Configuration)
- * Có thể bật/tắt dễ dàng sau dịp lễ Quốc khánh 2/9 mà không ảnh hưởng đến dữ liệu gốc.
+ * Chủ đề theo mùa hiện đã tắt để nội dung sản xuất luôn phù hợp quanh năm.
  */
 export const seasonalConfig = {
-  active: true,
-  themeId: "national-day-2-9",
-  themeName: "Chào mừng Quốc khánh 2/9 – Sơn La những chuyến đi",
-  themeConcept: "Chuyến trở về mùa Quốc khánh",
+  active: false,
+  themeId: "evergreen-route",
+  themeName: "Hà Nội – Mộc Châu – Sơn La",
+  themeConcept: "Chuyến đi Tây Bắc mỗi ngày",
   slogan: "Sơn La những chuyến đi",
-  subtitle: "Chào mừng Quốc khánh 2/9 – đồng hành cùng những hành trình trở về quê nhà.",
+  subtitle: "Đồng hành mỗi ngày trên hành trình Hà Nội – Mộc Châu – Sơn La.",
 } as const;

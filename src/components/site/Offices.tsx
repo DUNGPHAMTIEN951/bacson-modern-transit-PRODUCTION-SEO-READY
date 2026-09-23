@@ -34,7 +34,7 @@ export function Offices() {
       <SectionHead
         eyebrow="Điểm đón đưa thuận tiện"
         title="Điểm đón và văn phòng nhà xe"
-        sub="Hai đầu tuyến đều xuất phát tại các vị trí quen thuộc. Trong dịp lễ 2/9, hãy gọi trước để được tư vấn điểm đón thuận tiện nhất."
+        sub="Hai đầu tuyến đều xuất phát tại các vị trí quen thuộc. Hãy gọi trước để được tư vấn điểm đón thuận tiện nhất."
       />
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">

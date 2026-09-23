@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 /* ══════════════════════════════════════════════════════════
-   Chào mừng Quốc khánh 2/9 — "Sơn La những chuyến đi"
+   Bắc Sơn Cường Nguyệt — "Sơn La những chuyến đi"
    Premium Festive Design System · v3 (Cinematic Motion Upgrade)
    Palette: #FFF8EE base · #D51F26 festival red · #EAB83E gold
    Ratio: 65–70% warm cream · 20–25% red · 5–10% gold
@@ -44,7 +44,7 @@
   --color-ring: var(--ring);
   --color-ring-offset-background: var(--background);
 
-  /* ── 2/9 National Day Semantic Brand Palette (v2) ── */
+  /* ── Route-focused semantic brand palette (v2) ── */
   /* Page backgrounds */
   --color-page-bg: #fff8ee;
   --color-surface: #fffdf9;

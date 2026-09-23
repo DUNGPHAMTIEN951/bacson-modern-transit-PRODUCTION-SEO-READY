@@ -31,7 +31,7 @@ export function FinalCta() {
             className="text-[0.7rem] font-extrabold uppercase tracking-widest text-[#A8171D]"
             style={{ fontFamily: "var(--font-sans)" }}
           >
-            Nghỉ lễ Quốc khánh 2/9
+            Tuyến Hà Nội – Sơn La
           </span>
         </div>
 
@@ -41,7 +41,7 @@ export function FinalCta() {
           style={{ fontFamily: "var(--font-serif)" }}
         >
           Bạn đang chuẩn bị <br className="hidden sm:inline" />
-          <span className="text-[#D51F26]">trở về Sơn La dịp 2/9?</span>
+          <span className="text-[#D51F26]">đi Sơn La trong chuyến tới?</span>
         </h2>
 
         {/* Subtitle */}
@@ -61,7 +61,7 @@ export function FinalCta() {
             style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.02em" }}
           >
             <PhoneCall className="size-5 stroke-[2]" aria-hidden="true" />
-            GỌI ĐẶT VÉ 2/9: {businessInfo.phone}
+            GỌI ĐẶT VÉ: {businessInfo.phone}
           </a>
 
           <a
