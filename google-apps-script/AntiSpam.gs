@@ -272,8 +272,9 @@ function upsertPhoneRegistry(ss, payload, registry, risk, now) {
     row = registry.row;
     sheet.getRange(row, 1, 1, values.length).setValues([values]);
   } else {
-    sheet.appendRow(values);
-    row = sheet.getLastRow();
+    row = sheet.getLastRow() + 1;
+    sheet.getRange(row, 1).setNumberFormat("@");
+    sheet.getRange(row, 1, 1, values.length).setValues([values]);
   }
   sheet.getRange(row, 1).setNumberFormat("@");
 
@@ -301,7 +302,7 @@ function upsertPhoneRegistry(ss, payload, registry, risk, now) {
 function writeRequestLog(ss, record) {
   const sheet = ss.getSheetByName(APP.SHEETS.REQUEST_LOG);
   const payload = globalThis.__BSCN_CURRENT_PAYLOAD || {};
-  sheet.appendRow([
+  const values = [
     record.now,
     record.requestId,
     record.phone || payload.phone || "",
@@ -313,5 +314,8 @@ function writeRequestLog(ss, record) {
     record.page || payload.page || "",
     record.name || payload.name || "",
     record.clientRequestId || payload.clientRequestId || "",
-  ]);
+  ];
+  const row = sheet.getLastRow() + 1;
+  sheet.getRange(row, 3).setNumberFormat("@");
+  sheet.getRange(row, 1, 1, values.length).setValues([values]);
 }
