@@ -1,31 +1,23 @@
 import { createFileRoute } from "@tanstack/react-router";
 
+import { lazy, Suspense } from "react";
 import { businessInfo, legalInfo, siteConfig } from "@/data/business";
 import { priceRange } from "@/data/fares";
 import { faqs } from "@/data/content";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
 import { QuickBar } from "@/components/site/QuickBar";
-import { BrandStory } from "@/components/site/BrandStory";
 import { Schedule } from "@/components/site/Schedule";
 import { Fares } from "@/components/site/Fares";
-import { RouteTimeline } from "@/components/site/RouteTimeline";
-import { SonLaStory } from "@/components/site/SonLaStory";
-import { Gallery } from "@/components/site/Gallery";
 import { ImmersiveViewerProvider } from "@/components/site/ImmersiveImageViewer";
 import { ContactDock } from "@/components/site/ContactDock";
-import { Amenities } from "@/components/site/Amenities";
-import { Cargo } from "@/components/site/Cargo";
-import { WhyUs } from "@/components/site/WhyUs";
-import { Offices } from "@/components/site/Offices";
-import { Credentials } from "@/components/site/Credentials";
-import { Faq } from "@/components/site/Faq";
-import { FinalCta } from "@/components/site/FinalCta";
 import { Footer } from "@/components/site/Footer";
 import { StickyCta } from "@/components/site/StickyCta";
 import { BookingModalProvider } from "@/components/site/BookingModalContext";
 import { BookingConsultationSection } from "@/components/site/BookingConsultationSection";
 import { BookingModal } from "@/components/site/BookingModal";
+
+const DeferredHomeContent = lazy(() => import("@/components/site/DeferredHomeContent"));
 
 const businessId = `${siteConfig.domain}/#business`;
 
@@ -171,19 +163,9 @@ function Index() {
           <Schedule />
           <Fares />
           <BookingConsultationSection />
-          <div className="deferred-home-content">
-            <BrandStory />
-            <RouteTimeline />
-            <SonLaStory />
-            <Gallery />
-            <Amenities />
-            <Cargo />
-            <WhyUs />
-            <Offices />
-            <Credentials />
-            <Faq />
-            <FinalCta />
-          </div>
+          <Suspense fallback={<div className="min-h-[1200px] bg-[#FFF8EE]" aria-hidden="true" />}>
+            <DeferredHomeContent />
+          </Suspense>
         </main>
         <Footer />
         <ContactDock />
