@@ -220,7 +220,7 @@ function refreshOperationalViews(ss) {
 
 function writeLeadRaw(ss, payload, leadId, phoneProfile, risk, now) {
   const sheet = ss.getSheetByName(APP.SHEETS.LEADS_RAW);
-  sheet.appendRow([
+  const values = [
     leadId, now, payload.name, payload.phone, payload.email, payload.route, payload.travelDate,
     payload.passengers, payload.pickup, payload.dropoff, payload.note, payload.source, payload.page,
     "Mới", "", "", phoneProfile.customerType || "MỚI",
@@ -228,23 +228,25 @@ function writeLeadRaw(ss, payload, leadId, phoneProfile, risk, now) {
     risk.score >= APP.SPAM.QUARANTINE_SCORE ? "CẦN KIỂM TRA" : "OK",
     risk.reasons.join(" | "), risk.stats.samePhoneWindow, risk.stats.samePhoneDay,
     payload.payloadHash, "", now,
-  ]);
-  const row = sheet.getLastRow();
+  ];
+  const row = sheet.getLastRow() + 1;
   sheet.getRange(row, 1).setNumberFormat("@");
   sheet.getRange(row, 4).setNumberFormat("@");
+  sheet.getRange(row, 1, 1, values.length).setValues([values]);
 }
 
 function writeSpamQuarantine(ss, payload, phoneProfile, risk, outcome, now) {
   const sheet = ss.getSheetByName(APP.SHEETS.SPAM_QUARANTINE);
-  sheet.appendRow([
+  const values = [
     payload.requestId, now, payload.name, payload.phone, payload.email, payload.route,
     payload.travelDate, payload.passengers, payload.pickup, payload.dropoff, payload.note,
     payload.source, payload.page, risk.score, risk.reasons.join(" | "),
     phoneProfile.customerType || "MỚI", outcome, "CHƯA", "", "", payload.payloadHash,
-  ]);
-  const row = sheet.getLastRow();
+  ];
+  const row = sheet.getLastRow() + 1;
   sheet.getRange(row, 1).setNumberFormat("@");
   sheet.getRange(row, 4).setNumberFormat("@");
+  sheet.getRange(row, 1, 1, values.length).setValues([values]);
 }
 
 function handleCrmEdit(e) {
