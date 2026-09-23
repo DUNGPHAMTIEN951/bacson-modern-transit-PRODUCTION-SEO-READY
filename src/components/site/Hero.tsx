@@ -418,6 +418,8 @@ export function Hero() {
               >
                 <img
                   src={images.heroBus.src}
+                  srcSet="/images/optimized/hero-bus-480.webp 480w, /images/optimized/hero-bus-800.webp 800w, /images/optimized/hero-bus.webp 1200w"
+                  sizes="(max-width: 639px) calc(100vw - 36px), (max-width: 1023px) calc(100vw - 64px), 520px"
                   alt="Xe khách giường nằm Bắc Sơn Cường Nguyệt tuyến Hà Nội – Mộc Châu – Sơn La"
                   width={images.heroBus.width}
                   height={images.heroBus.height}
