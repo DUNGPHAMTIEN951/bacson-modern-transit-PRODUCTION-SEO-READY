@@ -33,6 +33,7 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
   const [pickup, setPickup] = useState(defaultPickup);
   const [note, setNote] = useState("");
   const [honeypot, setHoneypot] = useState("");
+  const [consent, setConsent] = useState(false);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -61,6 +62,11 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
       return;
     }
 
+    if (!consent) {
+      setErrorMsg("Vui lòng đồng ý để nhà xe liên hệ xác nhận yêu cầu.");
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -74,7 +80,7 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
         note: note.trim(),
         source: "route_landing",
         page: typeof window !== "undefined" ? window.location.pathname : "",
-        consent: true,
+        consent,
         honeypot,
         submittedAt: new Date().toISOString(),
       });
@@ -86,6 +92,7 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
         setTravelDate("");
         setPickup("");
         setNote("");
+        setConsent(false);
       } else {
         setErrorMsg(res.message || "Có lỗi xảy ra, vui lòng liên hệ hotline.");
       }
@@ -137,7 +144,7 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
               </li>
               <li className="flex items-center gap-2">
                 <CheckCircle2 className="size-4 text-[#1B8341] shrink-0" />
-                <span>Nhân viên điều hành gọi lại xác nhận trong vòng 5 phút</span>
+                <span>Nhà xe liên hệ kiểm tra chỗ và xác nhận yêu cầu</span>
               </li>
             </ul>
           </div>
@@ -289,80 +296,101 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
                   )}
                 </div>
 
-                {/* 3. Ngày đi & 4. Điểm đón (2 cột trên màn hình vừa) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label
-                      htmlFor={`${formId}-date`}
-                      className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
-                    >
-                      Ngày đi
-                    </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8C6D58]">
-                        <Calendar className="size-4" />
+                <details className="rounded-xl border border-[#EAD9C6] p-4">
+                  <summary className="cursor-pointer text-sm font-bold text-[#795F55]">
+                    Ngày đi, điểm đón và ghi chú (tùy chọn)
+                  </summary>
+                  <div className="mt-4 space-y-4">
+                    {/* 3. Ngày đi & 4. Điểm đón (2 cột trên màn hình vừa) */}
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <label
+                          htmlFor={`${formId}-date`}
+                          className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
+                        >
+                          Ngày đi
+                        </label>
+                        <div className="relative">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8C6D58]">
+                            <Calendar className="size-4" />
+                          </div>
+                          <input
+                            id={`${formId}-date`}
+                            name="travel_date"
+                            type="date"
+                            autoComplete="off"
+                            value={travelDate}
+                            onChange={(e) => setTravelDate(e.target.value)}
+                            className="w-full rounded-xl border border-[#EAD9C6] bg-white py-3 pl-10 pr-4 text-sm text-[#3A211B] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition"
+                          />
+                        </div>
                       </div>
-                      <input
-                        id={`${formId}-date`}
-                        name="travel_date"
-                        type="date"
-                        autoComplete="off"
-                        value={travelDate}
-                        onChange={(e) => setTravelDate(e.target.value)}
-                        className="w-full rounded-xl border border-[#EAD9C6] bg-white py-3 pl-10 pr-4 text-sm text-[#3A211B] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition"
-                      />
-                    </div>
-                  </div>
 
-                  <div>
-                    <label
-                      htmlFor={`${formId}-pickup`}
-                      className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
-                    >
-                      Điểm đón
-                    </label>
-                    <div className="relative">
-                      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8C6D58]">
-                        <MapPin className="size-4" />
+                      <div>
+                        <label
+                          htmlFor={`${formId}-pickup`}
+                          className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
+                        >
+                          Điểm đón
+                        </label>
+                        <div className="relative">
+                          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8C6D58]">
+                            <MapPin className="size-4" />
+                          </div>
+                          <input
+                            id={`${formId}-pickup`}
+                            name="pickup"
+                            type="text"
+                            autoComplete="street-address"
+                            placeholder="VD: Bến xe Mỹ Đình / Mộc Châu"
+                            value={pickup}
+                            onChange={(e) => setPickup(e.target.value)}
+                            className="w-full rounded-xl border border-[#EAD9C6] bg-white py-3 pl-10 pr-4 text-sm text-[#3A211B] placeholder:text-[#9E8878] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition"
+                          />
+                        </div>
                       </div>
-                      <input
-                        id={`${formId}-pickup`}
-                        name="pickup"
-                        type="text"
-                        autoComplete="street-address"
-                        placeholder="VD: Bến xe Mỹ Đình / Mộc Châu"
-                        value={pickup}
-                        onChange={(e) => setPickup(e.target.value)}
-                        className="w-full rounded-xl border border-[#EAD9C6] bg-white py-3 pl-10 pr-4 text-sm text-[#3A211B] placeholder:text-[#9E8878] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition"
-                      />
                     </div>
-                  </div>
-                </div>
 
-                {/* 5. Ghi chú */}
-                <div>
-                  <label
-                    htmlFor={`${formId}-note`}
-                    className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
-                  >
-                    Ghi chú
-                  </label>
-                  <div className="relative">
-                    <div className="pointer-events-none absolute top-3 left-3.5 text-[#8C6D58]">
-                      <FileText className="size-4" />
+                    {/* 5. Ghi chú */}
+                    <div>
+                      <label
+                        htmlFor={`${formId}-note`}
+                        className="block text-xs font-bold uppercase tracking-wider text-[#3A211B] mb-1.5"
+                      >
+                        Ghi chú
+                      </label>
+                      <div className="relative">
+                        <div className="pointer-events-none absolute top-3 left-3.5 text-[#8C6D58]">
+                          <FileText className="size-4" />
+                        </div>
+                        <textarea
+                          id={`${formId}-note`}
+                          name="note"
+                          autoComplete="off"
+                          rows={2}
+                          placeholder="VD: Muốn nằm tầng dưới cho người lớn tuổi / Có kèm thùng nông sản..."
+                          value={note}
+                          onChange={(e) => setNote(e.target.value)}
+                          className="w-full rounded-xl border border-[#EAD9C6] bg-white py-2.5 pl-10 pr-4 text-sm text-[#3A211B] placeholder:text-[#9E8878] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition resize-none"
+                        />
+                      </div>
                     </div>
-                    <textarea
-                      id={`${formId}-note`}
-                      name="note"
-                      autoComplete="off"
-                      rows={2}
-                      placeholder="VD: Muốn nằm tầng dưới cho người lớn tuổi / Có kèm thùng nông sản..."
-                      value={note}
-                      onChange={(e) => setNote(e.target.value)}
-                      className="w-full rounded-xl border border-[#EAD9C6] bg-white py-2.5 pl-10 pr-4 text-sm text-[#3A211B] placeholder:text-[#9E8878] focus:border-[#D51F26] focus:outline-hidden focus:ring-2 focus:ring-[#D51F26]/20 transition resize-none"
-                    />
                   </div>
-                </div>
+                </details>
+
+                <label className="flex items-start gap-2 text-xs text-[#795F55]">
+                  <input
+                    type="checkbox"
+                    name="consent"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                    required
+                    className="mt-0.5 size-4 shrink-0 accent-[#D51F26]"
+                  />
+                  <span>
+                    Tôi đồng ý để nhà xe sử dụng thông tin trên để liên hệ xác nhận yêu cầu.
+                  </span>
+                </label>
 
                 {/* Button: Đăng ký chuyến đi */}
                 <button
