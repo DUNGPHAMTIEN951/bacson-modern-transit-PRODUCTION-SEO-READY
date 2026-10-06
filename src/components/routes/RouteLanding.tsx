@@ -46,6 +46,9 @@ export function RouteLanding({ route }: Props) {
           {/* 2. Thông tin nhanh 4 thẻ nổi bật */}
           <RouteInfoCards highlights={route.highlights} />
 
+          {/* Form đặt vé đặt gần thông tin tuyến để khách không phải cuộn qua toàn bộ thư viện ảnh. */}
+          <RouteBooking routeTitle={route.title} defaultPickup={route.departure} />
+
           {/* 3. Timeline Lộ trình di chuyển trực quan */}
           <RouteTimeline
             stops={route.stops}
@@ -58,9 +61,6 @@ export function RouteLanding({ route }: Props) {
 
           {/* 5. Trust Section: Uy tín & 2 ảnh giấy tờ pháp lý thật */}
           <RouteTrust />
-
-          {/* 6. Form Giữ chỗ gửi trực tiếp về Google Sheets */}
-          <RouteBooking routeTitle={route.title} defaultPickup={route.departure} />
 
           {/* 7. FAQ Accordion chuẩn SEO */}
           <RouteFAQ faq={route.faq} />

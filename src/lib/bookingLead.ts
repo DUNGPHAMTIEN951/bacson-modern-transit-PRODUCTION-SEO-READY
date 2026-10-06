@@ -1,4 +1,5 @@
 import type { BookingApiResponse, BookingLeadPayload } from "@/types/booking";
+import { trackSavedLead } from "@/lib/adsMeasurement";
 
 /** Chuẩn hóa số điện thoại Việt Nam về dạng 0xxxxxxxxx (10 chữ số). */
 export function normalizeVietnamesePhone(raw: string): string {
@@ -205,8 +206,8 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
   const duplicate = checkDuplicateSubmission(normalizedPhone);
   if (duplicate.isDuplicate) {
     return {
-      success: true,
-      message: `Yêu cầu của bạn đã được tiếp nhận. Nhà xe sẽ liên hệ sớm nhất! (Vui lòng chờ ${duplicate.remainingSeconds}s trước khi gửi lại)`,
+      success: false,
+      message: `Bạn vừa gửi yêu cầu. Vui lòng chờ ${duplicate.remainingSeconds} giây trước khi gửi lại hoặc gọi hotline nếu cần hỗ trợ gấp.`,
     };
   }
 
@@ -259,7 +260,7 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
     }
 
     const data = (await response.json()) as BookingApiResponse;
-    if (!data?.success) {
+    if (data?.success !== true || typeof data.leadId !== "string" || !data.leadId.trim()) {
       return {
         success: false,
         message:
@@ -269,8 +270,8 @@ export async function submitBookingLead(payload: BookingLeadPayload): Promise<Bo
 
     recordSubmission(normalizedPhone);
     const conversionEligible =
-      data.conversionEligible === true ||
-      (data.conversionEligible === undefined && /^LD-/.test(data.leadId || ""));
+      data.conversionEligible !== false && /^LD-\d{8}-\d{6}-\d{4}$/.test(data.leadId);
+    if (conversionEligible) trackSavedLead(data.leadId);
     return {
       success: true,
       leadId: data.leadId,

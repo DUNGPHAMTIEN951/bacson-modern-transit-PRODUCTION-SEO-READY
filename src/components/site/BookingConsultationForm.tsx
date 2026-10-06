@@ -25,7 +25,6 @@ import {
   isValidEmail,
   normalizeVietnamesePhone,
 } from "@/lib/bookingLead";
-import { trackGoogleAdsLeadConversion } from "@/lib/googleAds";
 import type { BookingFormValues, BookingSource, FormState } from "@/types/booking";
 
 const ROUTE_OPTIONS = [
@@ -271,13 +270,6 @@ export function BookingConsultationForm({
       setFormState("success");
       setLeadId(res.leadId || "");
       setServerMessage(res.message || "");
-      if (res.conversionEligible) {
-        trackGoogleAdsLeadConversion({
-          leadId: res.leadId,
-          email: values.email,
-          phone: values.phone,
-        });
-      }
       if (onSuccess) {
         onSuccess();
       }
@@ -607,8 +599,8 @@ export function BookingConsultationForm({
           </div>
         </div>
 
-        {/* HÀNG 3: NGÀY ĐI + EMAIL (OPTIONAL) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+        {/* Ngày đi hiển thị ngay; thông tin bổ sung có thể mở khi cần. */}
+        <div>
           {/* 5. Ngày dự kiến đi */}
           <div>
             <label
@@ -634,7 +626,14 @@ export function BookingConsultationForm({
               />
             </div>
           </div>
-
+        </div>
+        <details
+          className="space-y-3.5 rounded-xl border border-[#E5D7C7] p-3.5"
+          open={!!errors.email}
+        >
+          <summary className="cursor-pointer text-sm font-semibold text-[#795F55]">
+            Thêm email, điểm đón, điểm trả hoặc ghi chú (tùy chọn)
+          </summary>
           {/* 6. Email (optional) */}
           <div>
             <label
@@ -674,127 +673,127 @@ export function BookingConsultationForm({
               </p>
             )}
           </div>
-        </div>
 
-        {/* HÀNG 4: ĐIỂM ĐÓN & ĐIỂM TRẢ (OPTIONAL) */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-          {/* 7. Điểm đón */}
-          <div>
-            <div className="flex items-center justify-between">
+          {/* HÀNG 4: ĐIỂM ĐÓN & ĐIỂM TRẢ (OPTIONAL) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+            {/* 7. Điểm đón */}
+            <div>
+              <div className="flex items-center justify-between">
+                <label
+                  htmlFor={`${formId}-pickup`}
+                  className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
+                >
+                  Điểm đón mong muốn{" "}
+                  <span className="text-[0.68rem] font-normal text-[#8C6D58]">(tùy chọn)</span>
+                </label>
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  disabled={locating}
+                  className="inline-flex items-center gap-1 text-[0.72rem] font-bold text-[#D51F26] hover:text-[#A8171D] hover:underline disabled:opacity-60 transition-colors"
+                  title="Lấy vị trí GPS hiện tại của bạn"
+                >
+                  {locating ? (
+                    <>
+                      <Loader2 className="size-3 animate-spin" aria-hidden="true" />
+                      <span>Đang định vị...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Navigation className="size-3 text-[#D51F26]" aria-hidden="true" />
+                      <span>Lấy vị trí hiện tại</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <div className="relative mt-1.5">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
+                  <MapPin className="size-4" aria-hidden="true" />
+                </div>
+                <input
+                  id={`${formId}-pickup`}
+                  name="pickup"
+                  type="text"
+                  autoComplete="street-address"
+                  value={values.pickup || ""}
+                  onChange={(e) => handleChange("pickup", e.target.value)}
+                  placeholder="Ví dụ: Bến xe Mỹ Đình / Ngã tư..."
+                  className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-9 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
+                  style={{ height: "46px" }}
+                />
+                <button
+                  type="button"
+                  onClick={handleGetLocation}
+                  disabled={locating}
+                  aria-label="Lấy vị trí GPS hiện tại"
+                  className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#D51F26] hover:text-[#A8171D] transition-colors"
+                >
+                  {locating ? (
+                    <Loader2 className="size-4 animate-spin" aria-hidden="true" />
+                  ) : (
+                    <Navigation className="size-4" aria-hidden="true" />
+                  )}
+                </button>
+              </div>
+              {locationStatus && (
+                <p className="mt-1 text-[0.72rem] font-semibold text-[#D51F26] animate-fade-in">
+                  {locationStatus}
+                </p>
+              )}
+            </div>
+
+            {/* 8. Điểm trả */}
+            <div>
               <label
-                htmlFor={`${formId}-pickup`}
+                htmlFor={`${formId}-dropoff`}
                 className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
               >
-                Điểm đón mong muốn{" "}
+                Điểm trả mong muốn{" "}
                 <span className="text-[0.68rem] font-normal text-[#8C6D58]">(tùy chọn)</span>
               </label>
-              <button
-                type="button"
-                onClick={handleGetLocation}
-                disabled={locating}
-                className="inline-flex items-center gap-1 text-[0.72rem] font-bold text-[#D51F26] hover:text-[#A8171D] hover:underline disabled:opacity-60 transition-colors"
-                title="Lấy vị trí GPS hiện tại của bạn"
-              >
-                {locating ? (
-                  <>
-                    <Loader2 className="size-3 animate-spin" aria-hidden="true" />
-                    <span>Đang định vị...</span>
-                  </>
-                ) : (
-                  <>
-                    <Navigation className="size-3 text-[#D51F26]" aria-hidden="true" />
-                    <span>Lấy vị trí hiện tại</span>
-                  </>
-                )}
-              </button>
-            </div>
-            <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
-                <MapPin className="size-4" aria-hidden="true" />
+              <div className="relative mt-1.5">
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
+                  <MapPin className="size-4 text-[#D51F26]" aria-hidden="true" />
+                </div>
+                <input
+                  id={`${formId}-dropoff`}
+                  name="dropoff"
+                  type="text"
+                  autoComplete="off"
+                  value={values.dropoff || ""}
+                  onChange={(e) => handleChange("dropoff", e.target.value)}
+                  placeholder="Ví dụ: TP Sơn La / Mộc Châu..."
+                  className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-3.5 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
+                  style={{ height: "46px" }}
+                />
               </div>
-              <input
-                id={`${formId}-pickup`}
-                name="pickup"
-                type="text"
-                autoComplete="street-address"
-                value={values.pickup || ""}
-                onChange={(e) => handleChange("pickup", e.target.value)}
-                placeholder="Ví dụ: Bến xe Mỹ Đình / Ngã tư..."
-                className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-9 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
-                style={{ height: "46px" }}
-              />
-              <button
-                type="button"
-                onClick={handleGetLocation}
-                disabled={locating}
-                aria-label="Lấy vị trí GPS hiện tại"
-                className="absolute inset-y-0 right-0 flex items-center pr-3 text-[#D51F26] hover:text-[#A8171D] transition-colors"
-              >
-                {locating ? (
-                  <Loader2 className="size-4 animate-spin" aria-hidden="true" />
-                ) : (
-                  <Navigation className="size-4" aria-hidden="true" />
-                )}
-              </button>
             </div>
-            {locationStatus && (
-              <p className="mt-1 text-[0.72rem] font-semibold text-[#D51F26] animate-fade-in">
-                {locationStatus}
-              </p>
-            )}
           </div>
 
-          {/* 8. Điểm trả */}
+          {/* HÀNG 5: GHI CHÚ */}
           <div>
             <label
-              htmlFor={`${formId}-dropoff`}
+              htmlFor={`${formId}-note`}
               className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
             >
-              Điểm trả mong muốn{" "}
+              Ghi chú thêm{" "}
               <span className="text-[0.68rem] font-normal text-[#8C6D58]">(tùy chọn)</span>
             </label>
             <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
-                <MapPin className="size-4 text-[#D51F26]" aria-hidden="true" />
-              </div>
-              <input
-                id={`${formId}-dropoff`}
-                name="dropoff"
-                type="text"
+              <textarea
+                id={`${formId}-note`}
+                name="note"
                 autoComplete="off"
-                value={values.dropoff || ""}
-                onChange={(e) => handleChange("dropoff", e.target.value)}
-                placeholder="Ví dụ: TP Sơn La / Mộc Châu..."
-                className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-3.5 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
-                style={{ height: "46px" }}
+                rows={2}
+                maxLength={500}
+                value={values.note || ""}
+                onChange={(e) => handleChange("note", e.target.value)}
+                placeholder="Ví dụ: Muốn nằm giường dưới gần tài xế, có hành lý cồng kềnh..."
+                className="w-full rounded-xl border border-[#E5D7C7] bg-white p-3 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF] resize-none"
               />
             </div>
           </div>
-        </div>
-
-        {/* HÀNG 5: GHI CHÚ */}
-        <div>
-          <label
-            htmlFor={`${formId}-note`}
-            className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
-          >
-            Ghi chú thêm{" "}
-            <span className="text-[0.68rem] font-normal text-[#8C6D58]">(tùy chọn)</span>
-          </label>
-          <div className="relative mt-1.5">
-            <textarea
-              id={`${formId}-note`}
-              name="note"
-              autoComplete="off"
-              rows={2}
-              maxLength={500}
-              value={values.note || ""}
-              onChange={(e) => handleChange("note", e.target.value)}
-              placeholder="Ví dụ: Muốn nằm giường dưới gần tài xế, có hành lý cồng kềnh..."
-              className="w-full rounded-xl border border-[#E5D7C7] bg-white p-3 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all placeholder:text-[#B5A89E] focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF] resize-none"
-            />
-          </div>
-        </div>
+        </details>
 
         {/* HÀNG 6: CONSENT CHECKBOX & PRIVACY DISCLOSURE */}
         <div className="pt-1">

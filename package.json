@@ -15,7 +15,8 @@
     "typecheck": "tsc --noEmit",
     "seo:check": "node scripts/verify-seo.mjs",
     "apps-script:check": "node scripts/check-apps-script-syntax.mjs",
-    "verify": "npm run typecheck && npm run lint && npm run apps-script:check && npm run build && npm run seo:check"
+    "measurement:check": "node scripts/check-lead-measurement.mjs",
+    "verify": "npm run typecheck && npm run lint && npm run apps-script:check && npm run measurement:check && npm run build && npm run seo:check"
   },
   "overrides": {
     "rolldown": "1.2.1"

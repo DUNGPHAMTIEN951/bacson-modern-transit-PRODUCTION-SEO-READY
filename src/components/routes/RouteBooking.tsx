@@ -19,7 +19,6 @@ import {
   isValidVietnamesePhone,
   normalizeVietnamesePhone,
 } from "@/lib/bookingLead";
-import { trackGoogleAdsLeadConversion } from "@/lib/googleAds";
 
 interface Props {
   routeTitle: string;
@@ -81,12 +80,6 @@ export function RouteBooking({ routeTitle, defaultPickup = "" }: Props) {
       });
 
       if (res.success) {
-        if (res.conversionEligible) {
-          trackGoogleAdsLeadConversion({
-            leadId: res.leadId,
-            phone: cleanPhone,
-          });
-        }
         setSuccess(true);
         setName("");
         setPhone("");
