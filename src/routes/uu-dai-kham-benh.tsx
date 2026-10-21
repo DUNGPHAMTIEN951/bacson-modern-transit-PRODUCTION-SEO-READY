@@ -15,14 +15,14 @@ import { images } from "@/data/images";
 export const Route = createFileRoute("/uu-dai-kham-benh")({
   head: () => ({
     meta: [
-      { title: "Giảm 20% vé xe & hỗ trợ đưa đón bệnh viện | Bắc Sơn Cường Nguyệt" },
+      { title: "Vé xe đi khám bệnh giảm 20% & đưa đón bệnh viện | Bắc Sơn Cường Nguyệt" },
       {
         name: "description",
         content:
           "Bắc Sơn Cường Nguyệt giảm 20% vé mọi chuyến. Khách đi khám bệnh mua vé khứ hồi được hỗ trợ xe đưa đón bệnh viện miễn phí. Gọi hoặc Zalo để xác nhận.",
       },
       { name: "robots", content: "index,follow" },
-      { property: "og:title", content: "Ưu đãi 20% vé xe | Bắc Sơn Cường Nguyệt" },
+      { property: "og:title", content: "Vé khám bệnh khứ hồi giảm 20% | Bắc Sơn Cường Nguyệt" },
       {
         property: "og:description",
         content:
@@ -77,11 +77,12 @@ function MedicalOfferLanding() {
             <HeartHandshake className="size-4" /> ĐỒNG HÀNH CÙNG HÀNH TRÌNH CHĂM SÓC SỨC KHỎE
           </span>
           <h1 className="mt-4 text-[1.85rem] font-black leading-tight sm:text-5xl">
-            Giảm 20% vé xe cho tất cả khách hàng, mọi chuyến
+            Đi khám bệnh khứ hồi giảm 20% vé, hỗ trợ đưa đón bệnh viện miễn phí
           </h1>
           <p className="mt-4 text-base leading-relaxed text-[#5A3828]">
-            Mua vé đi khám bệnh khứ hồi còn được hỗ trợ xe đưa đón tới bệnh viện miễn phí. Hãy liên
-            hệ nhà xe để xác nhận địa điểm, phạm vi và khung giờ đưa đón.
+            Mọi hành khách, mọi chuyến đều được giảm 20% giá vé. Khách đi khám bệnh mua vé khứ
+            hồi còn được hỗ trợ xe đưa đón bệnh viện miễn phí. Nhà xe xác nhận điểm đón, phạm vi
+            và giờ phục vụ trực tiếp qua điện thoại hoặc Zalo.
           </p>
           <a
             href="#dang-ky-uu-dai"
