@@ -14,7 +14,7 @@ export const Route = createFileRoute("/son-la-ha-noi")({
       {
         name: "description",
         content:
-          "Xe Sơn La Hà Nội xe giường nằm 34 chỗ cao cấp, giá vé 380.000đ/vé, lộ trình chi tiết và đăng ký giữ chỗ trực tiếp cùng nhà xe Bắc Sơn Cường Nguyệt.",
+          "Xe Sơn La Hà Nội xe giường nằm 34 chỗ cao cấp, giá vé 304.000đ/vé, giảm 20% từ 380.000đ, lộ trình chi tiết và đăng ký giữ chỗ trực tiếp cùng nhà xe Bắc Sơn Cường Nguyệt.",
       },
       { name: "robots", content: "index,follow" },
     ],
