@@ -86,10 +86,7 @@ try {
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
-    check(
-      `${item.name} operator permit is visible`,
-      content.includes("14230090/GPKDVT"),
-    );
+    check(`${item.name} operator permit is visible`, content.includes("14230090/GPKDVT"));
     check(
       `${item.name} image caption avoids inaccurate landmark`,
       !(await page.locator("#hero-coach-interactive").innerText()).includes("Đèo Pha Đin"),
@@ -305,7 +302,7 @@ try {
       sitemapContent.includes("/uu-dai-kham-benh"),
   );
   await sitemapCheck.close();
-    check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
+  check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
   report.error = String(err.stack || err);
   console.error(report.error);
