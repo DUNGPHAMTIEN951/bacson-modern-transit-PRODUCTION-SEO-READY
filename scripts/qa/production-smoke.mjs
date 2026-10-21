@@ -95,9 +95,17 @@ try {
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
 
     if (item.name === "mobile") {
-      await page.getByRole("button", { name: /Tư vấn ưu đãi/i }).click();
+      const modernHeroCta = page.locator("#hero-quick-booking").getByRole("button", {
+        name: /Chọn chuyến & giữ chỗ/i,
+      });
+      if ((await modernHeroCta.count()) > 0) {
+        check("mobile hero has one primary booking CTA", (await modernHeroCta.count()) === 1);
+        await modernHeroCta.click();
+      } else {
+        await page.getByRole("button", { name: /Tư vấn ưu đãi/i }).click();
+      }
       const dialog = page.getByRole("dialog");
-      check("mobile promotional booking dialog appears", await dialog.isVisible());
+      check("mobile booking dialog appears", await dialog.isVisible());
       check("mobile form has round-trip option", (await dialog.getByText("Khứ hồi").count()) > 0);
       await dialog.getByRole("button", { name: /Đóng cửa sổ/i }).click();
     }
