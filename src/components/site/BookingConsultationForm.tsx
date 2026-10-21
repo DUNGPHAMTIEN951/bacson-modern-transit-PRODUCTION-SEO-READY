@@ -648,7 +648,7 @@ export function BookingConsultationForm({
 
         {/* Ngày đi hiển thị ngay; thông tin bổ sung có thể mở khi cần. */}
         <div>
-          {/* 5. Ngày dự kiến đi */}
+          {/* 5. Ngày đi dự kiến */}
           <div>
             <label
               htmlFor={`${formId}-date`}
