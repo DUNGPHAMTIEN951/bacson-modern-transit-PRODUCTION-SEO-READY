@@ -104,6 +104,6 @@ export const faqs = [
   },
   {
     q: "Xe Hà Nội đi Sơn La giá bao nhiêu?",
-    a: "Mức niêm yết hiện tại cho chặng Hà Nội – Sơn La là 380.000đ. Giá có thể thay đổi theo thời điểm; nên gọi hotline 0848.755.766 - 0384.755.766 để xác nhận trước khi đặt.",
+    a: "Giá sau giảm 20% cho chặng Hà Nội – Sơn La là 304.000đ/vé (giá gốc 380.000đ). Ưu đãi đang áp dụng cho mọi chuyến, mọi khách, chưa có ngày kết thúc; nên gọi hotline 0848.755.766 - 0384.755.766 để xác nhận trước khi đặt.",
   },
 ] as const;
