@@ -67,7 +67,7 @@ export const siteConfig = {
   canonical: "https://xekhachbaccuongnguyet.com/",
   title: "Xe Hà Nội Sơn La – Lịch chạy & Giá vé | Bắc Sơn Cường Nguyệt",
   description:
-    "Xe Bắc Sơn Cường Nguyệt tuyến Hà Nội – Mộc Châu – Sơn La. Xem lịch xe, giá vé, điểm đón trả và dịch vụ gửi hàng. Đặt vé nhanh qua hotline 0848.755.766 - 0384.755.766.",
+    "Xe Bắc Sơn Cường Nguyệt tuyến Hà Nội – Mộc Châu – Sơn La giảm 20% giá vé cho mọi hành khách, mọi chuyến. Khách đi khám bệnh mua vé khứ hồi được tư vấn đưa đón bệnh viện miễn phí. Hotline 0848.755.766 - 0384.755.766.",
   /** Nguồn ảnh hiện tại của project. Có thể thay bằng /images khi đã self-host đủ WebP. */
   assetOrigin: "https://bacson-modern-transit.lovable.app",
   /** Ảnh Open Graph tự host trên domain production để tránh canonical/share phụ thuộc preview. */
