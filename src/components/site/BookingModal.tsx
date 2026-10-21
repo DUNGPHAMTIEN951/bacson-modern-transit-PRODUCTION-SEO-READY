@@ -91,6 +91,8 @@ export function BookingModal() {
           <BookingConsultationForm
             prefillRoute={options.prefillRoute}
             prefillDate={options.prefillDate}
+            prefillRoundTrip={options.prefillRoundTrip}
+            prefillHospitalShuttle={options.prefillHospitalShuttle}
             source={options.source}
             hideHeader={true}
             className="border-0 bg-transparent p-0 shadow-none"
