@@ -100,11 +100,14 @@ try {
       });
       if ((await modernHeroCta.count()) > 0) {
         check("mobile hero has one primary booking CTA", (await modernHeroCta.count()) === 1);
+        // Vite dev/Cloudflare production hydrate at different speeds; wait for hydration.
+        await page.waitForTimeout(1500);
         await modernHeroCta.click();
       } else {
         await page.getByRole("button", { name: /Tư vấn ưu đãi/i }).click();
       }
       const dialog = page.getByRole("dialog");
+      await dialog.waitFor({ state: "visible", timeout: 12000 });
       check("mobile booking dialog appears", await dialog.isVisible());
       check("mobile form has round-trip option", (await dialog.getByText("Khứ hồi").count()) > 0);
       await dialog.getByRole("button", { name: /Đóng cửa sổ/i }).click();
