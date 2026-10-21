@@ -47,10 +47,14 @@ export function Fares() {
                 {f.originalPriceVnd ? (
                   <p className="mt-1 text-sm text-[#795F55]">
                     <s>{formatPriceVnd(f.originalPriceVnd)}</s>{" "}
-                    <span className="ml-2 rounded-full bg-[#FFE7E7] px-2 py-0.5 text-xs font-extrabold text-[#B71F1F]">Giảm {DISCOUNT_PERCENT}%</span>
+                    <span className="ml-2 rounded-full bg-[#FFE7E7] px-2 py-0.5 text-xs font-extrabold text-[#B71F1F]">
+                      Giảm {DISCOUNT_PERCENT}%
+                    </span>
                   </p>
                 ) : (
-                  <p className="mt-1 text-xs font-bold text-[#B71F1F]">Áp dụng giảm {DISCOUNT_PERCENT}% trên giá nhà xe báo</p>
+                  <p className="mt-1 text-xs font-bold text-[#B71F1F]">
+                    Áp dụng giảm {DISCOUNT_PERCENT}% trên giá nhà xe báo
+                  </p>
                 )}
                 <p className="mt-1.5 text-sm text-[#6B635B]">{f.meta}</p>
               </div>

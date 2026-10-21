@@ -3,7 +3,7 @@
  */
 export const DISCOUNT_PERCENT = 20;
 export const discountedPriceVnd = (original: number): number =>
-  Math.round(original * (100 - DISCOUNT_PERCENT) / 100);
+  Math.round((original * (100 - DISCOUNT_PERCENT)) / 100);
 export const formatPriceVnd = (value: number): string =>
   new Intl.NumberFormat("vi-VN").format(value) + "đ";
 
@@ -43,5 +43,5 @@ export const fares: Fare[] = [
 export const fareDisclaimer =
   "Giảm 20% cho mọi hành khách, mọi chuyến xe, chưa ấn định ngày kết thúc. Giá hiển thị là giá tham khảo cho các tuyến đã niêm yết; vui lòng liên hệ nhà xe xác nhận giá, điểm đón và chỗ trống trước khi đi.";
 
-export const priceRange = formatPriceVnd(discountedPriceVnd(300000)) +
-  " - " + formatPriceVnd(discountedPriceVnd(380000));
+export const priceRange =
+  formatPriceVnd(discountedPriceVnd(300000)) + " - " + formatPriceVnd(discountedPriceVnd(380000));

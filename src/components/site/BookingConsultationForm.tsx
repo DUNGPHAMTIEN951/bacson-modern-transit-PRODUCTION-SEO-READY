@@ -95,8 +95,12 @@ export function BookingConsultationForm({
     }
   }, [prefillDate]);
 
-  useEffect(() => { setRoundTrip(prefillRoundTrip); }, [prefillRoundTrip]);
-  useEffect(() => { setHospitalShuttle(prefillHospitalShuttle); }, [prefillHospitalShuttle]);
+  useEffect(() => {
+    setRoundTrip(prefillRoundTrip);
+  }, [prefillRoundTrip]);
+  useEffect(() => {
+    setHospitalShuttle(prefillHospitalShuttle);
+  }, [prefillHospitalShuttle]);
 
   // Validation errors
   const [errors, setErrors] = useState<Partial<Record<keyof BookingFormValues, string>>>({});
@@ -282,7 +286,10 @@ export function BookingConsultationForm({
       roundTrip && returnDate ? `Ngày về: ${returnDate}` : "",
       hospitalShuttle && roundTrip ? "Đi khám bệnh: cần tư vấn đưa đón bệnh viện miễn phí" : "",
       values.note?.trim() || "",
-    ].filter(Boolean).join(" | ").slice(0, 500);
+    ]
+      .filter(Boolean)
+      .join(" | ")
+      .slice(0, 500);
     const res = await submitBookingLead({
       ...values,
       note: campaignNote,
@@ -375,9 +382,19 @@ export function BookingConsultationForm({
                 <span className="font-semibold">Ngày đi:</span> {values.travelDate}
               </p>
             )}
-            <p><span className="font-semibold">Loại vé:</span> {roundTrip ? "Khứ hồi" : "Một chiều"}</p>
-            {roundTrip && returnDate && <p><span className="font-semibold">Ngày về:</span> {returnDate}</p>}
-            {hospitalShuttle && roundTrip && <p><span className="font-semibold">Hỗ trợ:</span> Tư vấn đưa đón bệnh viện miễn phí</p>}
+            <p>
+              <span className="font-semibold">Loại vé:</span> {roundTrip ? "Khứ hồi" : "Một chiều"}
+            </p>
+            {roundTrip && returnDate && (
+              <p>
+                <span className="font-semibold">Ngày về:</span> {returnDate}
+              </p>
+            )}
+            {hospitalShuttle && roundTrip && (
+              <p>
+                <span className="font-semibold">Hỗ trợ:</span> Tư vấn đưa đón bệnh viện miễn phí
+              </p>
+            )}
             <p>
               <span className="font-semibold">Số khách:</span> {values.passengers} người
             </p>
@@ -630,14 +647,64 @@ export function BookingConsultationForm({
         </div>
 
         <fieldset className="rounded-xl border border-[#E5D7C7] bg-[#FFF9F3] p-3.5">
-          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-[#3A211B]">Loại vé & ưu đãi</legend>
-          <p className="mb-3 text-xs font-semibold text-[#B71F1F]">Tất cả hành khách và mọi chuyến được giảm 20% giá vé.</p>
+          <legend className="px-1 text-xs font-bold uppercase tracking-wider text-[#3A211B]">
+            Loại vé & ưu đãi
+          </legend>
+          <p className="mb-3 text-xs font-semibold text-[#B71F1F]">
+            Tất cả hành khách và mọi chuyến được giảm 20% giá vé.
+          </p>
           <div className="flex flex-wrap gap-5">
-            <label className="flex items-center gap-2 text-sm font-medium"><input type="radio" name={`${formId}-journey`} checked={!roundTrip} onChange={() => {setRoundTrip(false);setHospitalShuttle(false);}} /> Một chiều</label>
-            <label className="flex items-center gap-2 text-sm font-medium"><input type="radio" name={`${formId}-journey`} checked={roundTrip} onChange={() => setRoundTrip(true)} /> Khứ hồi</label>
+            <label className="flex items-center gap-2 text-sm font-medium">
+              <input
+                type="radio"
+                name={`${formId}-journey`}
+                checked={!roundTrip}
+                onChange={() => {
+                  setRoundTrip(false);
+                  setHospitalShuttle(false);
+                }}
+              />{" "}
+              Một chiều
+            </label>
+            <label className="flex items-center gap-2 text-sm font-medium">
+              <input
+                type="radio"
+                name={`${formId}-journey`}
+                checked={roundTrip}
+                onChange={() => setRoundTrip(true)}
+              />{" "}
+              Khứ hồi
+            </label>
           </div>
-          {roundTrip && <div className="mt-3"><label htmlFor={`${formId}-return-date`} className="block text-xs font-bold">Ngày về dự kiến (tùy chọn)</label><input id={`${formId}-return-date`} type="date" min={values.travelDate || todayStr} value={returnDate} onChange={e => setReturnDate(e.target.value)} className="mt-1 w-full rounded-xl border border-[#E5D7C7] bg-white px-3 py-2.5 text-sm" /></div>}
-          {roundTrip && <label className="mt-3 flex items-start gap-2 text-sm text-[#5A3828]"><input type="checkbox" checked={hospitalShuttle} onChange={e => setHospitalShuttle(e.target.checked)} className="mt-1" /><span>Tôi đi khám bệnh và muốn được tư vấn xe đưa đón bệnh viện miễn phí. Điểm đón, bệnh viện và giờ phục vụ sẽ được nhà xe xác nhận qua điện thoại hoặc Zalo.</span></label>}
+          {roundTrip && (
+            <div className="mt-3">
+              <label htmlFor={`${formId}-return-date`} className="block text-xs font-bold">
+                Ngày về dự kiến (tùy chọn)
+              </label>
+              <input
+                id={`${formId}-return-date`}
+                type="date"
+                min={values.travelDate || todayStr}
+                value={returnDate}
+                onChange={(e) => setReturnDate(e.target.value)}
+                className="mt-1 w-full rounded-xl border border-[#E5D7C7] bg-white px-3 py-2.5 text-sm"
+              />
+            </div>
+          )}
+          {roundTrip && (
+            <label className="mt-3 flex items-start gap-2 text-sm text-[#5A3828]">
+              <input
+                type="checkbox"
+                checked={hospitalShuttle}
+                onChange={(e) => setHospitalShuttle(e.target.checked)}
+                className="mt-1"
+              />
+              <span>
+                Tôi đi khám bệnh và muốn được tư vấn xe đưa đón bệnh viện miễn phí. Điểm đón, bệnh
+                viện và giờ phục vụ sẽ được nhà xe xác nhận qua điện thoại hoặc Zalo.
+              </span>
+            </label>
+          )}
         </fieldset>
 
         {/* Ngày đi hiển thị ngay; thông tin bổ sung có thể mở khi cần. */}
