@@ -88,7 +88,10 @@ try {
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
     check(
       `${item.name} redesigned hero booking CTA`,
-      (await page.locator("#hero-quick-booking").getByRole("button", { name: /Chọn chuyến & giữ chỗ/i }).count()) === 1,
+      (await page
+        .locator("#hero-quick-booking")
+        .getByRole("button", { name: /Chọn chuyến & giữ chỗ/i })
+        .count()) === 1,
     );
     check(
       `${item.name} promotion jumps to hero booking form`,
@@ -129,7 +132,9 @@ try {
     const landingText = await page.locator("body").innerText();
     check(
       `${item.name} landing has real bus photo`,
-      await page.locator('img[alt="Xe giường nằm thực tế của nhà xe Bắc Sơn Cường Nguyệt"]').evaluate((img) => img.complete && img.naturalWidth > 0),
+      await page
+        .locator('img[alt="Xe giường nằm thực tế của nhà xe Bắc Sơn Cường Nguyệt"]')
+        .evaluate((img) => img.complete && img.naturalWidth > 0),
     );
     check(
       `${item.name} landing has booking jump link`,
