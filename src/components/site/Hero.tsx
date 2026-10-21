@@ -79,7 +79,9 @@ function LocationLabel() {
   return (
     <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm shadow-xs">
       <MapPin className="size-3 text-[#EAB83E] stroke-[2]" aria-hidden="true" />
-      <span className="text-[0.65rem] font-semibold text-white">Đèo Pha Đin, Sơn La</span>
+      <span className="text-[0.65rem] font-semibold text-white">
+        Tuyến Hà Nội – Mộc Châu – Sơn La
+      </span>
     </div>
   );
 }
@@ -265,7 +267,7 @@ export function Hero() {
               <p className="mb-2 text-sm font-extrabold text-[#3A211B]">
                 Chọn chuyến, nhà xe sẽ xác nhận chỗ
               </p>
-              <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto]">
+              <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                 <label className="sr-only" htmlFor="hero-quick-route">
                   Tuyến đi
                 </label>
@@ -301,7 +303,7 @@ export function Hero() {
                 </label>
                 <button
                   type="submit"
-                  className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#D51F26] px-4 text-sm font-black text-white shadow-[0_3px_12px_rgba(213,31,38,0.28)] transition hover:bg-[#A8171D] active:scale-[0.98]"
+                  className="col-span-full inline-flex min-h-12 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#D51F26] px-4 text-sm font-black text-white shadow-[0_3px_12px_rgba(213,31,38,0.2)] transition hover:bg-[#A8171D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A8171D]"
                 >
                   Chọn chuyến & giữ chỗ
                   <ArrowRight className="size-4" aria-hidden="true" />

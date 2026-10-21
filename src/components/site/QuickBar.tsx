@@ -1,5 +1,5 @@
 import { BusFront, MapPin, Clock, PhoneCall, Route } from "lucide-react";
-import { businessInfo } from "@/data/business";
+import { businessInfo, legalInfo } from "@/data/business";
 
 const items = [
   { icon: BusFront, label: "Tuyến xe", value: "Hà Nội ⇄ Sơn La" },
@@ -16,6 +16,10 @@ export function QuickBar() {
       className="border-y border-[#E8DDD0] bg-[#FFF4E8] py-3 sm:py-6"
     >
       <div className="container-page">
+        <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs font-semibold text-[#5A3828] sm:mb-4 sm:text-sm">
+          <span>Đơn vị vận tải: {legalInfo.company}</span>
+          <span>Giấy phép vận tải: {legalInfo.transportLicense}</span>
+        </div>
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {items.map(({ icon: Icon, label, value, tel }) => (
             <li

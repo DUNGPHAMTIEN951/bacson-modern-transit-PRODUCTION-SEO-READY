@@ -131,6 +131,10 @@ try {
     check(`${item.name} medical landing HTTP 200`, landing?.status() === 200, landing?.status());
     const landingText = await page.locator("body").innerText();
     check(
+      `${item.name} medical landing uses intent-specific H1`,
+      (await page.locator("h1").first().innerText()).includes("Đi khám bệnh khứ hồi"),
+    );
+    check(
       `${item.name} landing has real bus photo`,
       await page
         .locator('img[alt="Xe giường nằm thực tế của nhà xe Bắc Sơn Cường Nguyệt"]')
@@ -236,6 +240,45 @@ try {
       expected,
     );
     await ctx.close();
+  }
+  for (const width of [360, 768, 1024, 1280]) {
+    const context = await browser.newContext({
+      viewport: { width, height: 850 },
+      deviceScaleFactor: 1,
+      reducedMotion: "reduce",
+      locale: "vi-VN",
+    });
+    const page = await context.newPage();
+    const response = await page.goto(root + "/", {
+      waitUntil: "domcontentloaded",
+      timeout: 45000,
+    });
+    check(`responsive ${width}px HTTP 200`, response?.status() === 200);
+    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
+    check(`responsive ${width}px no horizontal overflow`, overflow <= 5, `${overflow}px`);
+    const layout = await page.evaluate(() => {
+      const header = document.querySelector("header");
+      const nav = document.querySelector('nav[aria-label="Điều hướng chính"]');
+      const primary = document.querySelector('#hero-quick-booking button[type="submit"]');
+      if (!header || !nav || !primary) return null;
+      const navVisible = getComputedStyle(nav).display !== "none";
+      const buttonStyle = getComputedStyle(primary);
+      const navLinks = Array.from(nav.querySelectorAll("a"));
+      return {
+        buttonNoWrap: buttonStyle.whiteSpace === "nowrap",
+        navVisible,
+        navLinksNoWrap: navLinks.every((a) => getComputedStyle(a).whiteSpace === "nowrap"),
+        navFits: !navVisible || nav.scrollWidth <= nav.clientWidth + 1,
+      };
+    });
+    check(`responsive ${width}px booking CTA does not wrap`, layout?.buttonNoWrap);
+    check(`responsive ${width}px desktop nav fits`, layout?.navFits);
+    check(
+      `responsive ${width}px menu avoids tight desktop breakpoint`,
+      width >= 1280 || !layout?.navVisible,
+    );
+    await screenshot(page, `responsive-${width}-homepage`);
+    await context.close();
   }
   check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
