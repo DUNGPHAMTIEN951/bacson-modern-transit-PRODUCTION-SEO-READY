@@ -4,7 +4,10 @@ import { useBookingModal } from "./BookingModalContext";
 
 export function PromotionBanner() {
   return (
-    <section aria-label="Chương trình ưu đãi vé xe" className="border-b border-[#E6C28A] bg-[#FFF0D5]">
+    <section
+      aria-label="Chương trình ưu đãi vé xe"
+      className="border-b border-[#E6C28A] bg-[#FFF0D5]"
+    >
       <div className="container-page flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:py-4">
         <div className="flex min-w-0 items-start gap-2.5 sm:gap-3">
           <span className="rounded-lg bg-[#D62828] p-2 text-white" aria-hidden="true">
@@ -24,10 +27,16 @@ export function PromotionBanner() {
           </div>
         </div>
         <div className="flex shrink-0 items-center justify-between gap-3 pl-9 sm:pl-0">
-          <a href="#hero-quick-booking" className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white transition hover:bg-[#A8171D] sm:min-h-11">
+          <a
+            href="#hero-quick-booking"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white transition hover:bg-[#A8171D] sm:min-h-11"
+          >
             Chọn chuyến & giữ chỗ <ArrowRight className="size-4" aria-hidden="true" />
           </a>
-          <a href="/uu-dai-kham-benh" className="text-xs font-bold text-[#A8171D] underline underline-offset-4 sm:text-sm">
+          <a
+            href="/uu-dai-kham-benh"
+            className="text-xs font-bold text-[#A8171D] underline underline-offset-4 sm:text-sm"
+          >
             Ưu đãi khám bệnh
           </a>
         </div>

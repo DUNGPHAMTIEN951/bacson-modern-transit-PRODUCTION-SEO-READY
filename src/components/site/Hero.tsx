@@ -218,7 +218,10 @@ export function Hero() {
             </div>
 
             {/* Main editorial typography — 2 tiers with staggered intro */}
-            <h1 className="mt-1 leading-[1.1] sm:mt-4 sm:leading-[1.02]" style={{ fontFamily: "var(--font-serif)" }}>
+            <h1
+              className="mt-1 leading-[1.1] sm:mt-4 sm:leading-[1.02]"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
               <span
                 className="block font-bold text-[#3A211B] intro-slogan-1"
                 style={{
@@ -259,7 +262,9 @@ export function Hero() {
               className="intro-cta mt-3 max-w-[540px] scroll-mt-20 rounded-2xl border border-[#E4CDB5] bg-white/95 p-3.5 shadow-[0_8px_26px_rgba(58,33,27,0.12)] backdrop-blur-sm sm:mt-4"
               aria-label="Chọn nhanh tuyến và ngày đi"
             >
-              <p className="mb-2 text-sm font-extrabold text-[#3A211B]">Chọn chuyến, nhà xe sẽ xác nhận chỗ</p>
+              <p className="mb-2 text-sm font-extrabold text-[#3A211B]">
+                Chọn chuyến, nhà xe sẽ xác nhận chỗ
+              </p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto]">
                 <label className="sr-only" htmlFor="hero-quick-route">
                   Tuyến đi
@@ -302,7 +307,9 @@ export function Hero() {
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </button>
               </div>
-              <p className="mt-2 text-xs leading-relaxed text-[#795F55]">Không cần thanh toán trước · Nhà xe gọi xác nhận lịch và điểm đón</p>
+              <p className="mt-2 text-xs leading-relaxed text-[#795F55]">
+                Không cần thanh toán trước · Nhà xe gọi xác nhận lịch và điểm đón
+              </p>
             </form>
 
             {/* Compact benefit row — 4 items with unified icon containers */}
@@ -340,7 +347,8 @@ export function Hero() {
               rel="noopener noreferrer"
               className="intro-cta mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#0068FF] underline underline-offset-4 sm:mt-5"
             >
-              <MessageCircle className="size-4" aria-hidden="true" /> Cần hỗ trợ? Nhắn Zalo cho nhà xe
+              <MessageCircle className="size-4" aria-hidden="true" /> Cần hỗ trợ? Nhắn Zalo cho nhà
+              xe
             </a>
           </div>
 

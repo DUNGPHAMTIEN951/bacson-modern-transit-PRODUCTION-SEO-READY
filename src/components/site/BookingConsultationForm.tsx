@@ -456,8 +456,8 @@ export function BookingConsultationForm({
             Gửi yêu cầu, nhà xe xác nhận chỗ
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-[#6B635B] leading-relaxed">
-            Điền thông tin liên hệ và chuyến đi. Nhà xe sẽ gọi xác nhận lịch, điểm đón và
-            giá vé sau giảm 20%. Không cần thanh toán trước.
+            Điền thông tin liên hệ và chuyến đi. Nhà xe sẽ gọi xác nhận lịch, điểm đón và giá vé sau
+            giảm 20%. Không cần thanh toán trước.
           </p>
         </div>
       )}

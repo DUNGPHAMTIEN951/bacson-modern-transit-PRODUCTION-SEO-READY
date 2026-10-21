@@ -2,7 +2,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { businessInfo, siteConfig } from "@/data/business";
 import { formatPriceVnd, discountedPriceVnd } from "@/data/fares";
 import { BookingConsultationForm } from "@/components/site/BookingConsultationForm";
-import { PhoneCall, MessageCircle, HeartHandshake, BadgePercent, ArrowLeft, CheckCircle2 } from "lucide-react";
+import {
+  PhoneCall,
+  MessageCircle,
+  HeartHandshake,
+  BadgePercent,
+  ArrowLeft,
+  CheckCircle2,
+} from "lucide-react";
 import { images } from "@/data/images";
 
 export const Route = createFileRoute("/uu-dai-kham-benh")({
@@ -33,16 +40,34 @@ function MedicalOfferLanding() {
     <main id="main" className="min-h-screen bg-[#FFF9F3] text-[#2B2B2B]">
       <header className="border-b border-[#EAD9C6] bg-white">
         <div className="container-page flex items-center justify-between gap-3 py-3 sm:py-4">
-          <a href="/" className="inline-flex min-w-0 items-center gap-2.5 text-[#3A211B]" aria-label="Bắc Sơn Cường Nguyệt - Về trang chủ">
+          <a
+            href="/"
+            className="inline-flex min-w-0 items-center gap-2.5 text-[#3A211B]"
+            aria-label="Bắc Sơn Cường Nguyệt - Về trang chủ"
+          >
             <ArrowLeft className="size-4 shrink-0 text-[#D62828]" aria-hidden="true" />
-            <img src={images.logo.src} width="40" height="42" alt="" className="size-10 shrink-0 rounded-lg border border-[#EAD9C6] object-contain" />
+            <img
+              src={images.logo.src}
+              width="40"
+              height="42"
+              alt=""
+              className="size-10 shrink-0 rounded-lg border border-[#EAD9C6] object-contain"
+            />
             <span className="min-w-0">
-              <span className="block text-sm font-black leading-snug sm:text-base">Bắc Sơn Cường Nguyệt</span>
-              <span className="block text-xs font-medium text-[#795F55]">Hà Nội · Mộc Châu · Sơn La</span>
+              <span className="block text-sm font-black leading-snug sm:text-base">
+                Bắc Sơn Cường Nguyệt
+              </span>
+              <span className="block text-xs font-medium text-[#795F55]">
+                Hà Nội · Mộc Châu · Sơn La
+              </span>
             </span>
           </a>
-          <a href={businessInfo.phoneTel} className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-[#D62828] px-3 text-sm font-bold text-white sm:px-4">
-            <PhoneCall className="size-4" aria-hidden="true" /> <span className="hidden sm:inline">Gọi tư vấn:</span> {businessInfo.phone}
+          <a
+            href={businessInfo.phoneTel}
+            className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-[#D62828] px-3 text-sm font-bold text-white sm:px-4"
+          >
+            <PhoneCall className="size-4" aria-hidden="true" />{" "}
+            <span className="hidden sm:inline">Gọi tư vấn:</span> {businessInfo.phone}
           </a>
         </div>
       </header>
@@ -127,12 +152,20 @@ function MedicalOfferLanding() {
                 "Khách đi khám bệnh khứ hồi được tư vấn xe đưa đón bệnh viện",
               ].map((step, i) => (
                 <li key={step} className="flex items-start gap-2">
-                  <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-[#21834B]" aria-hidden="true" />
-                  <span><strong>Bước {i + 1}:</strong> {step}</span>
+                  <CheckCircle2
+                    className="mt-0.5 size-4 shrink-0 text-[#21834B]"
+                    aria-hidden="true"
+                  />
+                  <span>
+                    <strong>Bước {i + 1}:</strong> {step}
+                  </span>
                 </li>
               ))}
             </ol>
-            <p className="mt-3 text-xs text-[#795F55]">Không thanh toán trên website. Thông tin đưa đón bệnh viện sẽ được xác nhận qua điện thoại/Zalo trước chuyến đi.</p>
+            <p className="mt-3 text-xs text-[#795F55]">
+              Không thanh toán trên website. Thông tin đưa đón bệnh viện sẽ được xác nhận qua điện
+              thoại/Zalo trước chuyến đi.
+            </p>
           </div>
           <BookingConsultationForm
             source="promo_healthcare"
