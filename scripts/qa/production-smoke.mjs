@@ -86,7 +86,7 @@ try {
       await form.locator('input[name="phone"]').fill("0900000000");
       const dateControl = form.locator('input[name="travel_date"]');
       await dateControl.fill(date);
-      const ret = form.locator('input[type="date"]').last();
+      const ret = form.locator('input[id$="-return-date"]');
       await ret.fill(date);
       await form.locator('input[name="contact_consent"]').check();
       await form.getByRole("button", { name: /GỬI YÊU CẦU GỌI LẠI/i }).click();
