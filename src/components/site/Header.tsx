@@ -58,10 +58,10 @@ export function Header() {
       {/* Compact high contrast announcement; one line even on small phones. */}
       <div className="border-b border-[#A8171D] bg-[#C41820] py-1.5 text-center text-white">
         <div className="container-page flex items-center justify-center gap-2 text-[11px] font-bold sm:text-xs">
-          <span aria-hidden="true" className="shrink-0 text-[#F8D56E]">●</span>
-          <span className="min-w-0 truncate">
-            Giảm 20% mọi chuyến · Hà Nội – Mộc Châu – Sơn La
+          <span aria-hidden="true" className="shrink-0 text-[#F8D56E]">
+            ●
           </span>
+          <span className="min-w-0 truncate">Giảm 20% mọi chuyến · Hà Nội – Mộc Châu – Sơn La</span>
         </div>
       </div>
 
@@ -129,7 +129,10 @@ export function Header() {
           </a>
 
           {/* Desktop nav with animated red underline */}
-          <nav className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex" aria-label="Điều hướng chính">
+          <nav
+            className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex"
+            aria-label="Điều hướng chính"
+          >
             {navLinks.map((l) => (
               <a
                 key={l.href}

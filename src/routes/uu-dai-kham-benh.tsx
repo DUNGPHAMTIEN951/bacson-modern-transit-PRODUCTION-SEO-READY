@@ -80,9 +80,9 @@ function MedicalOfferLanding() {
             Đi khám bệnh khứ hồi giảm 20% vé, hỗ trợ đưa đón bệnh viện miễn phí
           </h1>
           <p className="mt-4 text-base leading-relaxed text-[#5A3828]">
-            Mọi hành khách, mọi chuyến đều được giảm 20% giá vé. Khách đi khám bệnh mua vé khứ
-            hồi còn được hỗ trợ xe đưa đón bệnh viện miễn phí. Nhà xe xác nhận điểm đón, phạm vi
-            và giờ phục vụ trực tiếp qua điện thoại hoặc Zalo.
+            Mọi hành khách, mọi chuyến đều được giảm 20% giá vé. Khách đi khám bệnh mua vé khứ hồi
+            còn được hỗ trợ xe đưa đón bệnh viện miễn phí. Nhà xe xác nhận điểm đón, phạm vi và giờ
+            phục vụ trực tiếp qua điện thoại hoặc Zalo.
           </p>
           <a
             href="#dang-ky-uu-dai"

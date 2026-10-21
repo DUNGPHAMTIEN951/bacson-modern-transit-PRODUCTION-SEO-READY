@@ -273,11 +273,14 @@ try {
     });
     check(`responsive ${width}px booking CTA does not wrap`, layout?.buttonNoWrap);
     check(`responsive ${width}px desktop nav fits`, layout?.navFits);
-    check(`responsive ${width}px menu avoids tight desktop breakpoint`, width >= 1280 || !layout?.navVisible);
+    check(
+      `responsive ${width}px menu avoids tight desktop breakpoint`,
+      width >= 1280 || !layout?.navVisible,
+    );
     await screenshot(page, `responsive-${width}-homepage`);
     await context.close();
   }
-    check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
+  check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
   report.error = String(err.stack || err);
   console.error(report.error);

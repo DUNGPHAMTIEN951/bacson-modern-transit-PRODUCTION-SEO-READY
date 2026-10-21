@@ -79,7 +79,9 @@ function LocationLabel() {
   return (
     <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-full bg-black/60 px-3 py-1.5 backdrop-blur-sm shadow-xs">
       <MapPin className="size-3 text-[#EAB83E] stroke-[2]" aria-hidden="true" />
-      <span className="text-[0.65rem] font-semibold text-white">Tuyến Hà Nội – Mộc Châu – Sơn La</span>
+      <span className="text-[0.65rem] font-semibold text-white">
+        Tuyến Hà Nội – Mộc Châu – Sơn La
+      </span>
     </div>
   );
 }
