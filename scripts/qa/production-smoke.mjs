@@ -86,6 +86,11 @@ try {
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
+    check(`${item.name} operator permit is visible`, content.includes("14230090/GPKDVT"));
+    check(
+      `${item.name} image caption avoids inaccurate landmark`,
+      !(await page.locator("#hero-coach-interactive").innerText()).includes("Đèo Pha Đin"),
+    );
     check(
       `${item.name} redesigned hero booking CTA`,
       (await page
@@ -130,6 +135,10 @@ try {
     });
     check(`${item.name} medical landing HTTP 200`, landing?.status() === 200, landing?.status());
     const landingText = await page.locator("body").innerText();
+    check(
+      `${item.name} healthcare SEO title matches search intent`,
+      (await page.title()).includes("Vé xe đi khám bệnh giảm 20%"),
+    );
     check(
       `${item.name} medical landing uses intent-specific H1`,
       (await page.locator("h1").first().innerText()).includes("Đi khám bệnh khứ hồi"),
@@ -280,6 +289,19 @@ try {
     await screenshot(page, `responsive-${width}-homepage`);
     await context.close();
   }
+  const sitemapCheck = await browser.newPage();
+  const sitemapResponse = await sitemapCheck.goto(root + "/sitemap.xml", {
+    waitUntil: "domcontentloaded",
+    timeout: 45000,
+  });
+  check("sitemap accessible", sitemapResponse?.status() === 200);
+  const sitemapContent = await sitemapResponse?.text();
+  check(
+    "sitemap healthcare landing lastmod updated",
+    sitemapContent?.includes("<lastmod>2026-10-21</lastmod>") &&
+      sitemapContent.includes("/uu-dai-kham-benh"),
+  );
+  await sitemapCheck.close();
   check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
   report.error = String(err.stack || err);
