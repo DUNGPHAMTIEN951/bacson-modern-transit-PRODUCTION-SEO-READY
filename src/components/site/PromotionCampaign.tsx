@@ -8,13 +8,13 @@ export function PromotionBanner() {
       aria-label="Chương trình ưu đãi vé xe"
       className="border-b border-[#E6C28A] bg-[#FFF0D5]"
     >
-      <div className="container-page flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:py-4">
+      <div className="container-page flex flex-col gap-2 py-2.5 sm:flex-row sm:items-center sm:justify-between sm:gap-4 sm:py-3">
         <div className="flex min-w-0 items-start gap-2.5 sm:gap-3">
           <span className="rounded-lg bg-[#D62828] p-2 text-white" aria-hidden="true">
             <BadgePercent className="size-5" />
           </span>
           <div className="min-w-0">
-            <p className="text-base font-black leading-snug text-[#A8171D] sm:text-xl">
+            <p className="text-sm font-black leading-snug text-[#A8171D] sm:text-lg">
               GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH
             </p>
             <p className="mt-0.5 text-sm text-[#5A3828]">
@@ -26,10 +26,10 @@ export function PromotionBanner() {
             </p>
           </div>
         </div>
-        <div className="flex shrink-0 items-center justify-between gap-3 pl-9 sm:pl-0">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-3 gap-y-2 pl-9 sm:shrink-0 sm:pl-0">
           <a
             href="#hero-quick-booking"
-            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white transition hover:bg-[#A8171D] sm:min-h-11"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 whitespace-nowrap rounded-xl bg-[#D62828] px-3 text-xs font-bold text-white transition hover:bg-[#A8171D] sm:min-h-11 sm:px-4 sm:text-sm"
           >
             Chọn chuyến & giữ chỗ <ArrowRight className="size-4" aria-hidden="true" />
           </a>
