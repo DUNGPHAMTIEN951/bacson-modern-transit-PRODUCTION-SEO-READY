@@ -12,7 +12,9 @@ export type BookingSource =
   | "mobile_sticky"
   | "final_cta"
   | "route_landing"
-  | "direct";
+  | "direct"
+  | "promo_general"
+  | "promo_healthcare";
 
 export interface BookingFormValues {
   name: string;
@@ -58,6 +60,8 @@ export type FormState = "idle" | "submitting" | "success" | "error";
 export interface BookingModalOptions {
   prefillRoute?: string | undefined;
   prefillDate?: string | undefined;
+  prefillRoundTrip?: boolean | undefined;
+  prefillHospitalShuttle?: boolean | undefined;
   source?: BookingSource | undefined;
 }
 
