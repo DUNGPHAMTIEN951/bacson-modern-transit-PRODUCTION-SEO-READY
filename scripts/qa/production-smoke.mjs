@@ -335,6 +335,18 @@ try {
       .locator('#hanh-trinh-thuc-te figcaption a[href*="commons.wikimedia.org"]')
       .count()) === 3,
   );
+  for (const destinationPhoto of await actualPhotoPage.locator("#hanh-trinh-thuc-te figure img").all()) {
+    await destinationPhoto.scrollIntoViewIfNeeded();
+    const imageLoaded = await destinationPhoto.evaluate(async (img) => {
+      try {
+        await img.decode();
+        return img.naturalWidth > 0;
+      } catch {
+        return false;
+      }
+    });
+    check("licensed real destination photo decodes", imageLoaded);
+  }
   await actualPhotoPage.close();
   check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
