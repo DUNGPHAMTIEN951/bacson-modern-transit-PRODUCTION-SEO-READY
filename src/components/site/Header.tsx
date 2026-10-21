@@ -55,72 +55,12 @@ export function Header() {
         />
       </div>
 
-      {/* Evergreen route announcement top bar */}
-      <div
-        className="relative overflow-hidden border-b border-[#A8171D] py-2 text-center text-xs font-semibold text-white intro-topbar select-none"
-        style={{ background: "linear-gradient(90deg, #C41820 0%, #D51F26 45%, #C41820 100%)" }}
-      >
-        {/* Decorative radial firework — left */}
-        <svg
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 opacity-30 hidden sm:block"
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
-          fill="none"
-          aria-hidden="true"
-        >
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-            <line
-              key={deg}
-              x1="14"
-              y1="14"
-              x2={14 + 11 * Math.cos((deg * Math.PI) / 180)}
-              y2={14 + 11 * Math.sin((deg * Math.PI) / 180)}
-              stroke="#F4C84A"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-            />
-          ))}
-          <circle cx="14" cy="14" r="2.5" fill="#F4C84A" />
-        </svg>
-        {/* Decorative radial firework — right */}
-        <svg
-          className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 opacity-30 hidden sm:block"
-          width="28"
-          height="28"
-          viewBox="0 0 28 28"
-          fill="none"
-          aria-hidden="true"
-        >
-          {[0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330].map((deg) => (
-            <line
-              key={deg}
-              x1="14"
-              y1="14"
-              x2={14 + 11 * Math.cos((deg * Math.PI) / 180)}
-              y2={14 + 11 * Math.sin((deg * Math.PI) / 180)}
-              stroke="#F4C84A"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-            />
-          ))}
-          <circle cx="14" cy="14" r="2.5" fill="#F4C84A" />
-        </svg>
-        <div
-          className="flex items-center justify-center gap-2"
-          style={{ fontFamily: "var(--font-sans)" }}
-        >
-          <span className="text-[#F4C84A] text-base leading-none star-twinkle" aria-hidden="true">
-            ★
-          </span>
-          <span className="tracking-wide" style={{ letterSpacing: "0.03em" }}>
-            HÀ NỘI – MỘC CHÂU – SƠN LA • NHIỀU CHUYẾN MỖI NGÀY
-          </span>
-          <span
-            className="text-[#F4C84A] text-base leading-none star-twinkle hidden sm:inline"
-            aria-hidden="true"
-          >
-            ★
+      {/* Compact high contrast announcement; one line even on small phones. */}
+      <div className="border-b border-[#A8171D] bg-[#C41820] py-1.5 text-center text-white">
+        <div className="container-page flex items-center justify-center gap-2 text-[11px] font-bold sm:text-xs">
+          <span aria-hidden="true" className="shrink-0 text-[#F8D56E]">●</span>
+          <span className="min-w-0 truncate">
+            Giảm 20% mọi chuyến · Hà Nội – Mộc Châu – Sơn La
           </span>
         </div>
       </div>
@@ -164,11 +104,11 @@ export function Header() {
           scrolled ? "h-14 shadow-[0_4px_20px_rgba(58,33,27,0.08)]" : "h-16 shadow-xs",
         )}
       >
-        <div className="container-page flex h-full items-center justify-between gap-4">
+        <div className="container-page flex h-full items-center justify-between gap-2 xl:gap-4">
           {/* Logo */}
           <a
             href="#top"
-            className="flex items-center gap-2.5 group"
+            className="group flex min-w-0 shrink-0 items-center gap-2 xl:gap-2.5"
             aria-label={`${businessInfo.shortName} — về đầu trang`}
           >
             <img
@@ -189,12 +129,12 @@ export function Header() {
           </a>
 
           {/* Desktop nav with animated red underline */}
-          <nav className="hidden items-center gap-1 lg:flex" aria-label="Điều hướng chính">
+          <nav className="hidden min-w-0 items-center justify-center gap-0.5 xl:flex" aria-label="Điều hướng chính">
             {navLinks.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
-                className="nav-link-animated rounded-md px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-[#3A211B] transition-colors duration-200 hover:text-[#D51F26]"
+                className="nav-link-animated whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] font-bold uppercase tracking-normal text-[#3A211B] transition-colors duration-200 hover:text-[#D51F26] 2xl:px-3 2xl:tracking-wide"
                 style={{ fontFamily: "var(--font-sans)" }}
               >
                 {l.label}
@@ -202,11 +142,11 @@ export function Header() {
             ))}
           </nav>
 
-          <div className="flex items-center gap-2.5">
+          <div className="flex shrink-0 items-center gap-2">
             {/* Desktop hotline CTA with phone wobble */}
             <a
               href={businessInfo.phoneTel}
-              className="group hidden min-h-10 items-center gap-2 rounded-lg bg-[#D51F26] px-4 text-xs font-black text-white shadow-[0_2px_8px_rgba(213,31,38,0.22)] transition-all duration-[220ms] ease-out hover:-translate-y-0.5 hover:bg-[#A8171D] hover:shadow-[0_6px_18px_rgba(213,31,38,0.32)] active:scale-[0.98] btn-primary btn-pulse animate-cta-shimmer sm:inline-flex"
+              className="group hidden min-h-10 shrink-0 items-center gap-1.5 whitespace-nowrap rounded-lg bg-[#D51F26] px-3 text-[11px] font-black text-white shadow-sm transition-colors hover:bg-[#A8171D] sm:inline-flex 2xl:px-4 2xl:text-xs"
               style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.02em" }}
             >
               <PhoneCall className="size-3.5 stroke-[2] phone-wobble" aria-hidden="true" />
@@ -216,7 +156,7 @@ export function Header() {
             {/* Mobile hamburger */}
             <button
               type="button"
-              className="grid size-10 place-items-center rounded-lg border border-[#EAD9C6] text-[#3A211B] transition hover:bg-[#FFF4E8] lg:hidden"
+              className="grid size-10 shrink-0 place-items-center rounded-lg border border-[#EAD9C6] text-[#3A211B] transition hover:bg-[#FFF4E8] xl:hidden"
               aria-label={open ? "Đóng menu" : "Mở menu"}
               aria-expanded={open}
               aria-controls="mobile-menu"
@@ -234,7 +174,7 @@ export function Header() {
 
       {/* Mobile menu overlay */}
       {open ? (
-        <div className="fixed inset-0 z-[70] lg:hidden">
+        <div className="fixed inset-0 z-[70] xl:hidden">
           <button
             type="button"
             aria-label="Đóng menu"
