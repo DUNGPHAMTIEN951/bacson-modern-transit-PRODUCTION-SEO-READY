@@ -1,5 +1,5 @@
 import { Info, PhoneIncoming } from "lucide-react";
-import { fares, fareDisclaimer } from "@/data/fares";
+import { fares, fareDisclaimer, DISCOUNT_PERCENT, formatPriceVnd } from "@/data/fares";
 import { Section, SectionHead, CallButton, ZaloButton } from "./primitives";
 import { useBookingModal } from "./BookingModalContext";
 import { cn } from "@/lib/utils";
@@ -10,9 +10,9 @@ export function Fares() {
   return (
     <Section id="gia-ve" tone="alt">
       <SectionHead
-        eyebrow="Bảng giá niêm yết"
-        title="Giá vé xe Hà Nội – Sơn La"
-        sub="Mức giá dưới đây theo nội dung niêm yết hiện tại của nhà xe. Gọi trước để xác nhận giá và chỗ trống."
+        eyebrow="Ưu đãi toàn tuyến · Giảm 20%"
+        title="Giá vé xe sau giảm 20%"
+        sub="Mọi hành khách, mọi chuyến đều được hưởng ưu đãi. Hà Nội – Sơn La từ 380.000đ còn 304.000đ/vé. Chương trình chưa ấn định ngày kết thúc."
       />
 
       <div className="mt-8 grid gap-5 md:grid-cols-3">
@@ -44,6 +44,14 @@ export function Fares() {
                 >
                   {f.price}
                 </p>
+                {f.originalPriceVnd ? (
+                  <p className="mt-1 text-sm text-[#795F55]">
+                    <s>{formatPriceVnd(f.originalPriceVnd)}</s>{" "}
+                    <span className="ml-2 rounded-full bg-[#FFE7E7] px-2 py-0.5 text-xs font-extrabold text-[#B71F1F]">Giảm {DISCOUNT_PERCENT}%</span>
+                  </p>
+                ) : (
+                  <p className="mt-1 text-xs font-bold text-[#B71F1F]">Áp dụng giảm {DISCOUNT_PERCENT}% trên giá nhà xe báo</p>
+                )}
                 <p className="mt-1.5 text-sm text-[#6B635B]">{f.meta}</p>
               </div>
 
