@@ -1,0 +1,30 @@
+name: Format promotion branch
+on:
+  push:
+    branches:
+      - feat/bscn-universal-20pct-hospital-roundtrip-20261021
+permissions:
+  contents: write
+jobs:
+  format:
+    if: github.event.head_commit.message != 'chore: apply prettier to promotion changes'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - name: Format updated code
+        run: npx prettier --write src/components/site/PromotionCampaign.tsx src/components/site/BookingConsultationForm.tsx src/components/site/BookingModal.tsx src/components/site/Fares.tsx src/data/fares.ts src/data/business.ts src/types/booking.ts src/routes/index.tsx src/routes/uu-dai-kham-benh.tsx
+      - name: Commit formatted source
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add src/
+          if ! git diff --cached --quiet; then
+            git commit -m "chore: apply prettier to promotion changes"
+            git push origin HEAD:feat/bscn-universal-20pct-hospital-roundtrip-20261021
+          fi
