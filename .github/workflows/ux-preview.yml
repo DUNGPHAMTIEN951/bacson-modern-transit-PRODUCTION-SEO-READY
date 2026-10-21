@@ -21,10 +21,10 @@ jobs:
       - name: Build safe local preview
         run: npm run build
         env:
-          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/CI_PLACEHOLDER/exec
+          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/QA_ONLY_NO_REAL_SCRIPT_EXISTS/exec
       - name: Launch local UX test server
         env:
-          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/CI_PLACEHOLDER/exec
+          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/QA_ONLY_NO_REAL_SCRIPT_EXISTS/exec
         run: |
           nohup npx vite dev --host 127.0.0.1 --port 4173 > /tmp/vite-preview.log 2>&1 &
           for i in $(seq 1 40); do
