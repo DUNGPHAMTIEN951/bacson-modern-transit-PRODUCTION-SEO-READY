@@ -93,12 +93,17 @@ try {
         .locator('img[alt="Hình ảnh thật đội xe Bắc Sơn Cường Nguyệt"]')
         .evaluate((img) => img.complete && img.naturalWidth > 0),
     );
-    check(
-      `${item.name} original consultant portrait loads`,
-      await page
-        .locator('img[alt="Ảnh thật tư vấn viên Trần Anh Đức"]')
-        .evaluate((img) => img.complete && img.naturalWidth > 0),
-    );
+    const consultantPhoto = page.locator('img[alt="Ảnh thật tư vấn viên Trần Anh Đức"]');
+    await consultantPhoto.scrollIntoViewIfNeeded();
+    const consultantPhotoValid = await consultantPhoto.evaluate(async (img) => {
+      try {
+        await img.decode();
+        return img.naturalWidth > 0;
+      } catch {
+        return false;
+      }
+    });
+    check(`${item.name} original consultant portrait loads`, consultantPhotoValid);
     check(`${item.name} operator permit is visible`, content.includes("14230090/GPKDVT"));
     check(
       `${item.name} image caption avoids inaccurate landmark`,
