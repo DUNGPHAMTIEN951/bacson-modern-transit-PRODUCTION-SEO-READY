@@ -83,6 +83,12 @@ function MedicalOfferLanding() {
             Mua vé đi khám bệnh khứ hồi còn được hỗ trợ xe đưa đón tới bệnh viện miễn phí. Hãy liên
             hệ nhà xe để xác nhận địa điểm, phạm vi và khung giờ đưa đón.
           </p>
+          <a
+            href="#dang-ky-uu-dai"
+            className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white shadow-sm sm:w-auto"
+          >
+            Đăng ký tư vấn vé ưu đãi <span className="ml-2" aria-hidden="true">↓</span>
+          </a>
           <figure className="mt-5 overflow-hidden rounded-2xl border border-[#EAD9C6] bg-white shadow-sm">
             <img
               src={images.heroBus.src}
@@ -167,11 +173,13 @@ function MedicalOfferLanding() {
               thoại/Zalo trước chuyến đi.
             </p>
           </div>
-          <BookingConsultationForm
-            source="promo_healthcare"
-            prefillRoundTrip
-            prefillHospitalShuttle
-          />
+          <div id="dang-ky-uu-dai" className="scroll-mt-4">
+            <BookingConsultationForm
+              source="promo_healthcare"
+              prefillRoundTrip
+              prefillHospitalShuttle
+            />
+          </div>
         </section>
       </div>
       <footer className="border-t border-[#EAD9C6] py-6 text-center text-xs text-[#795F55]">
