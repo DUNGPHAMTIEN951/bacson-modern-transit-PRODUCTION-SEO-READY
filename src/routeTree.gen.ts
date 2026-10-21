@@ -13,7 +13,13 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as HaNoiMocChauRouteImport } from './routes/ha-noi-moc-chau'
 import { Route as LienHeRouteImport } from './routes/lien-he'
 import { Route as SonLaHaNoiRouteImport } from './routes/son-la-ha-noi'
+import { Route as UuDaiKhamBenhRouteImport } from './routes/uu-dai-kham-benh'
 
+const UuDaiKhamBenhRoute = UuDaiKhamBenhRouteImport.update({
+  id: '/uu-dai-kham-benh',
+  path: '/uu-dai-kham-benh',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -37,12 +43,14 @@ const SonLaHaNoiRoute = SonLaHaNoiRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/uu-dai-kham-benh': typeof UuDaiKhamBenhRoute
   '/ha-noi-moc-chau': typeof HaNoiMocChauRoute
   '/lien-he': typeof LienHeRoute
   '/son-la-ha-noi': typeof SonLaHaNoiRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/uu-dai-kham-benh': typeof UuDaiKhamBenhRoute
   '/ha-noi-moc-chau': typeof HaNoiMocChauRoute
   '/lien-he': typeof LienHeRoute
   '/son-la-ha-noi': typeof SonLaHaNoiRoute
@@ -50,20 +58,22 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/uu-dai-kham-benh': typeof UuDaiKhamBenhRoute
   '/ha-noi-moc-chau': typeof HaNoiMocChauRoute
   '/lien-he': typeof LienHeRoute
   '/son-la-ha-noi': typeof SonLaHaNoiRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
+  fullPaths: '/uu-dai-kham-benh' | '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
-  id: '__root__' | '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
+  to: '/uu-dai-kham-benh' | '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
+  id: '__root__' | '/uu-dai-kham-benh' | '/' | '/ha-noi-moc-chau' | '/lien-he' | '/son-la-ha-noi'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  UuDaiKhamBenhRoute: typeof UuDaiKhamBenhRoute
   HaNoiMocChauRoute: typeof HaNoiMocChauRoute
   LienHeRoute: typeof LienHeRoute
   SonLaHaNoiRoute: typeof SonLaHaNoiRoute
@@ -71,6 +81,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/uu-dai-kham-benh': {
+      id: '/uu-dai-kham-benh'
+      path: '/uu-dai-kham-benh'
+      fullPath: '/uu-dai-kham-benh'
+      preLoaderRoute: typeof UuDaiKhamBenhRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -104,6 +121,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  UuDaiKhamBenhRoute: UuDaiKhamBenhRoute,
   HaNoiMocChauRoute: HaNoiMocChauRoute,
   LienHeRoute: LienHeRoute,
   SonLaHaNoiRoute: SonLaHaNoiRoute,
