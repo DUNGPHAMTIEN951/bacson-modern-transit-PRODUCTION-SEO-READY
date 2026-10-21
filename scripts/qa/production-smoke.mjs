@@ -87,6 +87,17 @@ try {
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
     check(
+      `${item.name} redesigned hero booking CTA`,
+      (await page
+        .locator("#hero-quick-booking")
+        .getByRole("button", { name: /Chọn chuyến & giữ chỗ/i })
+        .count()) === 1,
+    );
+    check(
+      `${item.name} promotion jumps to hero booking form`,
+      (await page.locator('a[href="#hero-quick-booking"]').count()) >= 1,
+    );
+    check(
       `${item.name} offer has no fixed expiry date`,
       content.includes("chưa ấn định ngày kết thúc"),
     );
@@ -119,6 +130,16 @@ try {
     });
     check(`${item.name} medical landing HTTP 200`, landing?.status() === 200, landing?.status());
     const landingText = await page.locator("body").innerText();
+    check(
+      `${item.name} landing has real bus photo`,
+      await page
+        .locator('img[alt="Xe giường nằm thực tế của nhà xe Bắc Sơn Cường Nguyệt"]')
+        .evaluate((img) => img.complete && img.naturalWidth > 0),
+    );
+    check(
+      `${item.name} landing has booking jump link`,
+      (await page.locator('a[href="#dang-ky-uu-dai"]').count()) === 1,
+    );
     check(
       `${item.name} medical transfer offer present`,
       landingText.includes("đưa đón") && landingText.includes("miễn phí"),
