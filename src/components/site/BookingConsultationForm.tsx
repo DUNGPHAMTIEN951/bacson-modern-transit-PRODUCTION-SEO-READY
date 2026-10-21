@@ -116,7 +116,7 @@ export function BookingConsultationForm({
   const consentRef = useRef<HTMLInputElement>(null);
 
   // Lấy ngày hôm nay theo format YYYY-MM-DD để chặn chọn ngày quá khứ
-  const todayStr = new Date().toISOString().split("T")[0];
+  const todayStr = new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split("T")[0];
 
   // GPS Định vị vị trí hiện tại
   const [locating, setLocating] = useState(false);
@@ -646,6 +646,34 @@ export function BookingConsultationForm({
           </div>
         </div>
 
+        {/* Ngày đi hiển thị ngay; thông tin bổ sung có thể mở khi cần. */}
+        <div>
+          {/* 5. Ngày đi dự kiến */}
+          <div>
+            <label
+              htmlFor={`${formId}-date`}
+              className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
+            >
+              Ngày dự kiến đi
+            </label>
+            <div className="relative mt-1.5">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
+                <Calendar className="size-4" aria-hidden="true" />
+              </div>
+              <input
+                id={`${formId}-date`}
+                name="travel_date"
+                type="date"
+                autoComplete="off"
+                min={todayStr}
+                value={values.travelDate || ""}
+                onChange={(e) => handleChange("travelDate", e.target.value)}
+                className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-3.5 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
+                style={{ height: "46px" }}
+              />
+            </div>
+          </div>
+        </div>
         <fieldset className="rounded-xl border border-[#E5D7C7] bg-[#FFF9F3] p-3.5">
           <legend className="px-1 text-xs font-bold uppercase tracking-wider text-[#3A211B]">
             Loại vé & ưu đãi
@@ -707,34 +735,6 @@ export function BookingConsultationForm({
           )}
         </fieldset>
 
-        {/* Ngày đi hiển thị ngay; thông tin bổ sung có thể mở khi cần. */}
-        <div>
-          {/* 5. Ngày dự kiến đi */}
-          <div>
-            <label
-              htmlFor={`${formId}-date`}
-              className="block text-xs font-bold uppercase tracking-wider text-[#3A211B]"
-            >
-              Ngày dự kiến đi
-            </label>
-            <div className="relative mt-1.5">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-[#9E8E84]">
-                <Calendar className="size-4" aria-hidden="true" />
-              </div>
-              <input
-                id={`${formId}-date`}
-                name="travel_date"
-                type="date"
-                autoComplete="off"
-                min={todayStr}
-                value={values.travelDate || ""}
-                onChange={(e) => handleChange("travelDate", e.target.value)}
-                className="w-full rounded-xl border border-[#E5D7C7] bg-white pl-9 pr-3.5 py-2.5 text-sm text-[#2B2B2B] shadow-xs outline-none transition-all focus:border-[#EAB83E] focus:ring-2 focus:ring-[#EAB83E]/25 hover:border-[#D5C2AF]"
-                style={{ height: "46px" }}
-              />
-            </div>
-          </div>
-        </div>
         <details
           className="space-y-3.5 rounded-xl border border-[#E5D7C7] p-3.5"
           open={!!errors.email}
