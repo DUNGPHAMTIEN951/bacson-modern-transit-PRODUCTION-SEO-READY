@@ -72,8 +72,8 @@ export const sonLaHaNoiRoute: TransportRoute = {
   slug: "son-la-ha-noi",
   title: "Xe Sơn La Hà Nội",
   subtitle: "Hành trình kết nối Tây Bắc · An toàn - tiện nghi - đúng giờ",
-  price: "380.000đ/vé",
-  priceValue: 380000,
+  price: "304.000đ/vé",
+  priceValue: 304000,
   vehicle: "Xe giường nằm 34 chỗ",
   departure: "Sơn La",
   destination: "Hà Nội",
@@ -121,7 +121,7 @@ export const sonLaHaNoiRoute: TransportRoute = {
       iconName: "badgeDollarSign",
       title: "Giá vé",
       desc: "Minh bạch",
-      sub: "380.000đ/vé – Không phát sinh phụ thu",
+      sub: "304.000đ/vé sau giảm 20% – Gọi xác nhận giá",
     },
     {
       iconName: "clock",
@@ -169,7 +169,7 @@ export const sonLaHaNoiRoute: TransportRoute = {
     {
       question: "Giá vé xe Sơn La Hà Nội bao nhiêu và có phụ thu ngày lễ không?",
       answer:
-        "Giá vé niêm yết hiện tại là 380.000đ/vé cho xe giường nằm 34 chỗ cao cấp. Nhà xe cam kết thu đúng giá niêm yết, không phụ thu bất hợp lý.",
+        "Giá vé sau giảm 20% là 304.000đ/vé cho xe giường nằm 34 chỗ cao cấp. Nhà xe cam kết thu đúng giá niêm yết, không phụ thu bất hợp lý.",
     },
     {
       question: "Xe đón trả tại những điểm nào ở Hà Nội và Sơn La?",
@@ -188,8 +188,8 @@ export const haNoiMocChauRoute: TransportRoute = {
   slug: "ha-noi-moc-chau",
   title: "Xe Hà Nội Mộc Châu",
   subtitle: "Hành trình kết nối Tây Bắc · An toàn - tiện nghi - đúng giờ",
-  price: "300.000đ/vé",
-  priceValue: 300000,
+  price: "240.000đ/vé",
+  priceValue: 240000,
   vehicle: "Xe giường nằm cao cấp",
   departure: "Hà Nội",
   destination: "Mộc Châu",
@@ -232,7 +232,7 @@ export const haNoiMocChauRoute: TransportRoute = {
       iconName: "badgeDollarSign",
       title: "Giá vé",
       desc: "Minh bạch",
-      sub: "300.000đ/vé – Cam kết không chèn ép giá",
+      sub: "240.000đ/vé sau giảm 20% – Gọi xác nhận giá",
     },
     {
       iconName: "clock",
@@ -280,7 +280,7 @@ export const haNoiMocChauRoute: TransportRoute = {
     {
       question: "Giá vé xe Hà Nội - Mộc Châu bao nhiêu một người?",
       answer:
-        "Giá vé tham khảo hiện tại là 300.000đ/vé cho 1 giường nằm 34 chỗ chất lượng cao, bao gồm bảo hiểm hành khách, nước suối và khăn lạnh.",
+        "Giá vé sau giảm 20% là 240.000đ/vé cho 1 giường nằm 34 chỗ chất lượng cao, bao gồm bảo hiểm hành khách, nước suối và khăn lạnh.",
     },
     {
       question: "Nhà xe có trả khách tại các khách sạn hay resort ở Mộc Châu không?",
