@@ -87,7 +87,10 @@ function MedicalOfferLanding() {
             href="#dang-ky-uu-dai"
             className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white shadow-sm sm:w-auto"
           >
-            Đăng ký tư vấn vé ưu đãi <span className="ml-2" aria-hidden="true">↓</span>
+            Đăng ký tư vấn vé ưu đãi{" "}
+            <span className="ml-2" aria-hidden="true">
+              ↓
+            </span>
           </a>
           <figure className="mt-5 overflow-hidden rounded-2xl border border-[#EAD9C6] bg-white shadow-sm">
             <img
