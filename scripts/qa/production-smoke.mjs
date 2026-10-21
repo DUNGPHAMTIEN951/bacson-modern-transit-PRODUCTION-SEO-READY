@@ -86,6 +86,10 @@ try {
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
+    check(
+      `${item.name} offer has no fixed expiry date`,
+      content.includes("chưa ấn định ngày kết thúc"),
+    );
     await screenshot(page, `${item.name}-homepage`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
@@ -118,9 +122,17 @@ try {
     );
     const form = page.locator("form").first();
     const fieldLabels = await form.locator("label").allTextContents();
-    const departing = fieldLabels.findIndex((label) => label.includes("Ngày đi dự kiến"));
-    const returning = fieldLabels.findIndex((label) => label.includes("Ngày về dự kiến"));
-    check(`${item.name} departure date before return date`, departing >= 0 && returning > departing);
+    await screenshot(page, `${item.name}-medical-form-order`);
+    const orderDetail = fieldLabels.filter((label) => label.includes("Ngày")).join(" | ");
+    const orderOkay = await form.evaluate((element) => {
+      const departure = element.querySelector('input[name="travel_date"]');
+      const returning = element.querySelector('input[id$="-return-date"]');
+      if (!departure || !returning) return false;
+      return (
+        (departure.compareDocumentPosition(returning) & Node.DOCUMENT_POSITION_FOLLOWING) !== 0
+      );
+    });
+    check(`${item.name} departure date before return date`, orderOkay, orderDetail);
     check(
       `${item.name} round-trip prefilled`,
       (await form.locator('input[type="radio"][value="roundtrip"]').count()) > 0
