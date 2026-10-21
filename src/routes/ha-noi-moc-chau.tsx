@@ -10,11 +10,11 @@ import { siteConfig } from "@/data/business";
 export const Route = createFileRoute("/ha-noi-moc-chau")({
   head: () => ({
     meta: [
-      { title: "Xe Hà Nội Mộc Châu | Giá vé 300.000đ | Bắc Sơn Cường Nguyệt" },
+      { title: "Xe Hà Nội Mộc Châu | Giảm 20% còn 240.000đ | Bắc Sơn Cường Nguyệt" },
       {
         name: "description",
         content:
-          "Xe Hà Nội đi Mộc Châu xe giường nằm 34 chỗ cao cấp. Thông tin giá vé 300.000đ, lộ trình và đăng ký giữ chỗ uy tín cùng nhà xe Bắc Sơn Cường Nguyệt.",
+          "Xe Hà Nội đi Mộc Châu xe giường nằm 34 chỗ cao cấp. Thông tin giá vé 240.000đ, lộ trình và đăng ký giữ chỗ uy tín cùng nhà xe Bắc Sơn Cường Nguyệt.",
       },
       { name: "robots", content: "index,follow" },
     ],

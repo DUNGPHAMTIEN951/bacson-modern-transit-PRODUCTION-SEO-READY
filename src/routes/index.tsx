@@ -9,6 +9,7 @@ import { Hero } from "@/components/site/Hero";
 import { QuickBar } from "@/components/site/QuickBar";
 import { Schedule } from "@/components/site/Schedule";
 import { Fares } from "@/components/site/Fares";
+import { PromotionBanner, MedicalTransferOffer } from "@/components/site/PromotionCampaign";
 import { ImmersiveViewerProvider } from "@/components/site/ImmersiveImageViewer";
 import { ContactDock } from "@/components/site/ContactDock";
 import { Footer } from "@/components/site/Footer";
@@ -158,10 +159,12 @@ function Index() {
         </a>
         <Header />
         <main id="main">
+          <PromotionBanner />
           <Hero />
           <QuickBar />
           <Schedule />
           <Fares />
+          <MedicalTransferOffer />
           <BookingConsultationSection />
           <Suspense fallback={<div className="min-h-[1200px] bg-[#FFF8EE]" aria-hidden="true" />}>
             <DeferredHomeContent />
