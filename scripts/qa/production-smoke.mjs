@@ -86,6 +86,7 @@ try {
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
+    check(`${item.name} offer has no fixed expiry date`, content.includes("chưa ấn định ngày kết thúc"));
     await screenshot(page, `${item.name}-homepage`);
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
