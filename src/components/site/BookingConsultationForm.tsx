@@ -453,11 +453,11 @@ export function BookingConsultationForm({
             className="mt-2 text-xl sm:text-2xl font-black text-[#2B2B2B]"
             style={{ fontFamily: "var(--font-serif)" }}
           >
-            Để nhà xe gọi lại tư vấn
+            Gửi yêu cầu, nhà xe xác nhận chỗ
           </h3>
           <p className="mt-1 text-xs sm:text-sm text-[#6B635B] leading-relaxed">
-            Để lại số điện thoại và hành trình dự kiến. Nhà xe sẽ liên hệ để tư vấn lịch chạy, điểm
-            đón và giá vé phù hợp.
+            Điền thông tin liên hệ và chuyến đi. Nhà xe sẽ gọi xác nhận lịch, điểm đón và giá vé sau
+            giảm 20%. Không cần thanh toán trước.
           </p>
         </div>
       )}

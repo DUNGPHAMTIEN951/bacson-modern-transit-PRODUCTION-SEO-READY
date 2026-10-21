@@ -11,13 +11,16 @@ const items = [
 
 export function QuickBar() {
   return (
-    <section aria-label="Thông tin nhanh" className="border-y border-[#E8DDD0] bg-[#FFF4E8] py-6">
+    <section
+      aria-label="Thông tin nhanh"
+      className="border-y border-[#E8DDD0] bg-[#FFF4E8] py-3 sm:py-6"
+    >
       <div className="container-page">
         <ul className="grid grid-cols-2 gap-3 md:grid-cols-5">
           {items.map(({ icon: Icon, label, value, tel }) => (
             <li
               key={label}
-              className="rounded-xl border border-[#E8DDD0] bg-white p-3.5 shadow-[0_1px_3px_rgba(43,43,43,0.04)]"
+              className={`rounded-xl border border-[#E8DDD0] bg-white p-3 shadow-[0_1px_3px_rgba(43,43,43,0.04)] sm:p-3.5 ${tel ? "col-span-2 md:col-span-1" : ""}`}
             >
               <span className="flex items-center gap-1.5 text-[0.7rem] font-bold uppercase tracking-wider text-[#6B635B]">
                 <Icon className="size-3.5 text-[#D62828]" aria-hidden="true" />

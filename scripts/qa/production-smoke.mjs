@@ -95,9 +95,20 @@ try {
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
 
     if (item.name === "mobile") {
-      await page.getByRole("button", { name: /Tư vấn ưu đãi/i }).click();
+      const modernHeroCta = page.locator("#hero-quick-booking").getByRole("button", {
+        name: /Chọn chuyến & giữ chỗ/i,
+      });
+      if ((await modernHeroCta.count()) > 0) {
+        check("mobile hero has one primary booking CTA", (await modernHeroCta.count()) === 1);
+        // Vite dev/Cloudflare production hydrate at different speeds; wait for hydration.
+        await page.waitForTimeout(1500);
+        await modernHeroCta.click();
+      } else {
+        await page.getByRole("button", { name: /Tư vấn ưu đãi/i }).click();
+      }
       const dialog = page.getByRole("dialog");
-      check("mobile promotional booking dialog appears", await dialog.isVisible());
+      await dialog.waitFor({ state: "visible", timeout: 12000 });
+      check("mobile booking dialog appears", await dialog.isVisible());
       check("mobile form has round-trip option", (await dialog.getByText("Khứ hồi").count()) > 0);
       await dialog.getByRole("button", { name: /Đóng cửa sổ/i }).click();
     }
@@ -154,6 +165,8 @@ try {
     );
 
     if (item.name === "desktop") {
+      // Wait for React event handlers in dev and production before filling the form.
+      await page.waitForTimeout(1600);
       const date = new Date(Date.now() + 86400000 * 4).toISOString().slice(0, 10);
       await form.locator('input[name="name"]').fill("KIEM THU E2E KHONG DAT VE");
       await form.locator('input[name="phone"]').fill("0900000000");
@@ -163,7 +176,8 @@ try {
       await ret.fill(date);
       await form.locator('input[name="contact_consent"]').check();
       await form.getByRole("button", { name: /GỬI YÊU CẦU GỌI LẠI/i }).click();
-      await page.waitForTimeout(1800);
+      await page.waitForTimeout(2200);
+
       check(
         "mocked CRM request intercepted; NO REAL LEAD CREATED",
         Boolean(report.mockedLead),

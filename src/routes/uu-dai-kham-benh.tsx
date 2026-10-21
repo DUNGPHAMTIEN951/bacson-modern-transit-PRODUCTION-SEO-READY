@@ -2,7 +2,15 @@ import { createFileRoute } from "@tanstack/react-router";
 import { businessInfo, siteConfig } from "@/data/business";
 import { formatPriceVnd, discountedPriceVnd } from "@/data/fares";
 import { BookingConsultationForm } from "@/components/site/BookingConsultationForm";
-import { PhoneCall, MessageCircle, HeartHandshake, BadgePercent } from "lucide-react";
+import {
+  PhoneCall,
+  MessageCircle,
+  HeartHandshake,
+  BadgePercent,
+  ArrowLeft,
+  CheckCircle2,
+} from "lucide-react";
+import { images } from "@/data/images";
 
 export const Route = createFileRoute("/uu-dai-kham-benh")({
   head: () => ({
@@ -30,32 +38,76 @@ export const Route = createFileRoute("/uu-dai-kham-benh")({
 function MedicalOfferLanding() {
   return (
     <main id="main" className="min-h-screen bg-[#FFF9F3] text-[#2B2B2B]">
-      <div className="border-b border-[#EAD9C6] bg-white">
-        <div className="container-page flex flex-wrap items-center justify-between gap-3 py-4">
-          <a href="/" className="text-lg font-black text-[#B71F1F]">
-            ← Bắc Sơn Cường Nguyệt
+      <header className="border-b border-[#EAD9C6] bg-white">
+        <div className="container-page flex items-center justify-between gap-3 py-3 sm:py-4">
+          <a
+            href="/"
+            className="inline-flex min-w-0 items-center gap-2.5 text-[#3A211B]"
+            aria-label="Bắc Sơn Cường Nguyệt - Về trang chủ"
+          >
+            <ArrowLeft className="size-4 shrink-0 text-[#D62828]" aria-hidden="true" />
+            <img
+              src={images.logo.src}
+              width="40"
+              height="42"
+              alt=""
+              className="size-10 shrink-0 rounded-lg border border-[#EAD9C6] object-contain"
+            />
+            <span className="min-w-0">
+              <span className="block text-sm font-black leading-snug sm:text-base">
+                Bắc Sơn Cường Nguyệt
+              </span>
+              <span className="block text-xs font-medium text-[#795F55]">
+                Hà Nội · Mộc Châu · Sơn La
+              </span>
+            </span>
           </a>
           <a
             href={businessInfo.phoneTel}
-            className="inline-flex min-h-11 items-center gap-2 rounded-xl bg-[#D62828] px-4 font-bold text-white"
+            className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-xl bg-[#D62828] px-3 text-sm font-bold text-white sm:px-4"
           >
-            <PhoneCall className="size-4" /> {businessInfo.phone}
+            <PhoneCall className="size-4" aria-hidden="true" />{" "}
+            <span className="hidden sm:inline">Gọi tư vấn:</span> {businessInfo.phone}
           </a>
         </div>
-      </div>
-      <div className="container-page grid gap-8 py-10 lg:grid-cols-2 lg:items-start lg:py-16">
+      </header>
+      <div className="container-page grid gap-7 py-7 lg:grid-cols-2 lg:items-start lg:gap-10 lg:py-14">
         <section>
           <span className="inline-flex items-center gap-2 rounded-full bg-[#FFE7E7] px-3 py-1.5 text-sm font-bold text-[#B71F1F]">
             <HeartHandshake className="size-4" /> ĐỒNG HÀNH CÙNG HÀNH TRÌNH CHĂM SÓC SỨC KHỎE
           </span>
-          <h1 className="mt-5 text-3xl font-black leading-tight sm:text-5xl">
+          <h1 className="mt-4 text-[1.85rem] font-black leading-tight sm:text-5xl">
             Giảm 20% vé xe cho tất cả khách hàng, mọi chuyến
           </h1>
           <p className="mt-4 text-base leading-relaxed text-[#5A3828]">
             Mua vé đi khám bệnh khứ hồi còn được hỗ trợ xe đưa đón tới bệnh viện miễn phí. Hãy liên
             hệ nhà xe để xác nhận địa điểm, phạm vi và khung giờ đưa đón.
           </p>
-          <div className="mt-7 rounded-2xl border border-[#EAD9C6] bg-white p-6">
+          <a
+            href="#dang-ky-uu-dai"
+            className="mt-4 inline-flex min-h-11 w-full items-center justify-center rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white shadow-sm sm:w-auto"
+          >
+            Đăng ký tư vấn vé ưu đãi{" "}
+            <span className="ml-2" aria-hidden="true">
+              ↓
+            </span>
+          </a>
+          <figure className="mt-5 overflow-hidden rounded-2xl border border-[#EAD9C6] bg-white shadow-sm">
+            <img
+              src={images.heroBus.src}
+              srcSet="/images/optimized/hero-bus-480.webp 480w, /images/optimized/hero-bus-800.webp 800w, /images/optimized/hero-bus.webp 1200w"
+              sizes="(max-width: 640px) calc(100vw - 32px), 560px"
+              alt="Xe giường nằm thực tế của nhà xe Bắc Sơn Cường Nguyệt"
+              width={1200}
+              height={800}
+              loading="eager"
+              className="aspect-[16/8] w-full object-cover object-center"
+            />
+            <figcaption className="px-3 py-2 text-xs font-medium text-[#795F55]">
+              Hình ảnh xe thực tế · Tuyến Hà Nội – Mộc Châu – Sơn La
+            </figcaption>
+          </figure>
+          <div className="mt-5 rounded-2xl border border-[#EAD9C6] bg-white p-5 sm:p-6">
             <div className="flex items-center gap-2 text-sm font-bold text-[#A8171D]">
               <BadgePercent className="size-5" /> ƯU ĐÃI ĐANG ÁP DỤNG
             </div>
@@ -99,12 +151,38 @@ function MedicalOfferLanding() {
             </a>
           </div>
         </section>
-        <section aria-label="Đăng ký tư vấn ưu đãi">
-          <BookingConsultationForm
-            source="promo_healthcare"
-            prefillRoundTrip
-            prefillHospitalShuttle
-          />
+        <section aria-label="Đăng ký tư vấn ưu đãi" className="space-y-4">
+          <div className="rounded-2xl border border-[#EAD9C6] bg-white px-5 py-4">
+            <h2 className="text-base font-extrabold text-[#3A211B]">Đặt vé như thế nào?</h2>
+            <ol className="mt-3 grid gap-2.5 text-sm text-[#5A3828]">
+              {[
+                "Chọn tuyến, ngày đi và để lại số điện thoại",
+                "Nhà xe gọi xác nhận chỗ, giá ưu đãi và điểm đón",
+                "Khách đi khám bệnh khứ hồi được tư vấn xe đưa đón bệnh viện",
+              ].map((step, i) => (
+                <li key={step} className="flex items-start gap-2">
+                  <CheckCircle2
+                    className="mt-0.5 size-4 shrink-0 text-[#21834B]"
+                    aria-hidden="true"
+                  />
+                  <span>
+                    <strong>Bước {i + 1}:</strong> {step}
+                  </span>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-3 text-xs text-[#795F55]">
+              Không thanh toán trên website. Thông tin đưa đón bệnh viện sẽ được xác nhận qua điện
+              thoại/Zalo trước chuyến đi.
+            </p>
+          </div>
+          <div id="dang-ky-uu-dai" className="scroll-mt-4">
+            <BookingConsultationForm
+              source="promo_healthcare"
+              prefillRoundTrip
+              prefillHospitalShuttle
+            />
+          </div>
         </section>
       </div>
       <footer className="border-t border-[#EAD9C6] py-6 text-center text-xs text-[#795F55]">

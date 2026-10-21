@@ -3,41 +3,39 @@ import { businessInfo } from "@/data/business";
 import { useBookingModal } from "./BookingModalContext";
 
 export function PromotionBanner() {
-  const { openBookingModal } = useBookingModal();
   return (
     <section
       aria-label="Chương trình ưu đãi vé xe"
       className="border-b border-[#E6C28A] bg-[#FFF0D5]"
     >
-      <div className="container-page flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex items-start gap-3">
-          <span className="rounded-xl bg-[#D62828] p-2 text-white">
-            <BadgePercent className="size-6" aria-hidden="true" />
+      <div className="container-page flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between sm:gap-5 sm:py-4">
+        <div className="flex min-w-0 items-start gap-2.5 sm:gap-3">
+          <span className="rounded-lg bg-[#D62828] p-2 text-white" aria-hidden="true">
+            <BadgePercent className="size-5" />
           </span>
-          <div>
-            <p className="text-lg font-black leading-tight text-[#A8171D] sm:text-xl">
+          <div className="min-w-0">
+            <p className="text-base font-black leading-snug text-[#A8171D] sm:text-xl">
               GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH
             </p>
-            <p className="mt-1 text-sm text-[#5A3828]">
-              Áp dụng mọi chuyến xe · Hà Nội – Sơn La chỉ còn <strong>304.000đ</strong> thay vì{" "}
-              <s>380.000đ</s>
+            <p className="mt-0.5 text-sm text-[#5A3828]">
+              Hà Nội – Sơn La: <strong>304.000đ</strong> <s>380.000đ</s>
+              <span className="hidden sm:inline"> · Mọi chuyến xe đều áp dụng</span>
             </p>
-            <p className="mt-1 text-xs text-[#795F55]">
-              Chương trình đang áp dụng, chưa ấn định ngày kết thúc. Liên hệ nhà xe để xác nhận chỗ.
+            <p className="mt-0.5 text-xs text-[#795F55]">
+              Mọi hành khách · Chưa ấn định ngày kết thúc
             </p>
           </div>
         </div>
-        <div className="flex shrink-0 flex-wrap items-center gap-2">
-          <button
-            type="button"
-            onClick={() => openBookingModal({ source: "promo_general" })}
-            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white transition hover:bg-[#A8171D]"
+        <div className="flex shrink-0 items-center justify-between gap-3 pl-9 sm:pl-0">
+          <a
+            href="#hero-quick-booking"
+            className="inline-flex min-h-10 items-center justify-center gap-1.5 rounded-xl bg-[#D62828] px-4 text-sm font-bold text-white transition hover:bg-[#A8171D] sm:min-h-11"
           >
-            Tư vấn ưu đãi <ArrowRight className="size-4" aria-hidden="true" />
-          </button>
+            Chọn chuyến & giữ chỗ <ArrowRight className="size-4" aria-hidden="true" />
+          </a>
           <a
             href="/uu-dai-kham-benh"
-            className="inline-flex min-h-11 items-center justify-center rounded-xl border border-[#D62828] bg-white px-4 text-sm font-bold text-[#A8171D] hover:bg-[#FFF9F3]"
+            className="text-xs font-bold text-[#A8171D] underline underline-offset-4 sm:text-sm"
           >
             Ưu đãi khám bệnh
           </a>

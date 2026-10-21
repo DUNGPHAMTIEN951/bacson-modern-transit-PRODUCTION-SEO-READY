@@ -1,6 +1,5 @@
 import {
   PhoneCall,
-  PhoneIncoming,
   MessageCircle,
   BusFront,
   Route,
@@ -115,7 +114,7 @@ export function Hero() {
       className="relative overflow-hidden border-b border-[#EAD9C6]"
       style={{
         background: `linear-gradient(112deg, #FFF3DC 0%, #FFEBC8 35%, #FFE0B0 65%, #FFD49A 100%)`,
-        minHeight: "clamp(520px, 80vh, 760px)",
+        minHeight: "auto",
       }}
     >
       {/* ── LAYER 1: Mountain landscape background with slow scroll parallax ── */}
@@ -170,8 +169,8 @@ export function Hero() {
         }}
       />
 
-      <div className="container-page relative z-10 flex min-h-[clamp(520px,80vh,760px)] items-center py-10 md:py-14">
-        <div className="grid w-full items-center gap-8 lg:grid-cols-11 lg:gap-6">
+      <div className="container-page relative z-10 flex items-center py-5 sm:py-10 lg:min-h-[650px] lg:py-14">
+        <div className="grid w-full items-center gap-5 sm:gap-8 lg:grid-cols-11 lg:gap-6">
           {/* ══════════════════════════════════════════════════
               LEFT: Narrative, 2-Tier Slogan, Benefits + CTAs
               ══════════════════════════════════════════════════ */}
@@ -182,7 +181,7 @@ export function Hero() {
             }}
           >
             {/* Double ribbon badge — matching reference with intro animation */}
-            <div className="flex flex-wrap items-center gap-2 intro-badge">
+            <div className="hidden flex-wrap items-center gap-2 intro-badge sm:flex">
               <div
                 className="inline-flex items-center gap-1.5 px-3 py-1 shadow-xs"
                 style={{
@@ -219,11 +218,14 @@ export function Hero() {
             </div>
 
             {/* Main editorial typography — 2 tiers with staggered intro */}
-            <h1 className="mt-4 leading-[1.02]" style={{ fontFamily: "var(--font-serif)" }}>
+            <h1
+              className="mt-1 leading-[1.1] sm:mt-4 sm:leading-[1.02]"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
               <span
                 className="block font-bold text-[#3A211B] intro-slogan-1"
                 style={{
-                  fontSize: "clamp(2.25rem, 5.7vw, 4.7rem)",
+                  fontSize: "clamp(1.9rem, 5.5vw, 4.7rem)",
                   letterSpacing: "-0.02em",
                 }}
               >
@@ -232,7 +234,7 @@ export function Hero() {
               <span
                 className="block font-semibold text-[#D51F26] intro-slogan-2"
                 style={{
-                  fontSize: "clamp(2rem, 5vw, 4rem)",
+                  fontSize: "clamp(1.85rem, 5vw, 4rem)",
                   letterSpacing: "-0.01em",
                 }}
               >
@@ -242,13 +244,13 @@ export function Hero() {
 
             {/* Supporting line */}
             <p
-              className="mt-4 max-w-xl text-base leading-snug text-[#5A3828] sm:text-lg intro-slogan-2"
+              className="mt-2 max-w-xl text-sm leading-snug text-[#5A3828] sm:mt-4 sm:text-lg intro-slogan-2"
               style={{ fontFamily: "var(--font-sans)", fontWeight: 500 }}
             >
               Xe giường nằm, đón trả dọc Quốc lộ 6. Chọn tuyến và ngày đi để nhà xe kiểm tra chỗ.
             </p>
             <p
-              className="mt-1.5 max-w-xl text-sm leading-relaxed text-[#795F55] intro-slogan-2"
+              className="mt-1.5 hidden max-w-xl text-sm leading-relaxed text-[#795F55] intro-slogan-2 sm:block"
               style={{ fontFamily: "var(--font-sans)" }}
             >
               Gọi trực tiếp hoặc gửi yêu cầu — không cần thanh toán trước.
@@ -256,9 +258,13 @@ export function Hero() {
 
             <form
               onSubmit={handleQuickBooking}
-              className="intro-cta mt-4 max-w-[540px] rounded-2xl border border-[#E4CDB5] bg-white/95 p-3 shadow-[0_8px_26px_rgba(58,33,27,0.12)] backdrop-blur-sm"
+              id="hero-quick-booking"
+              className="intro-cta mt-3 max-w-[540px] scroll-mt-20 rounded-2xl border border-[#E4CDB5] bg-white/95 p-3.5 shadow-[0_8px_26px_rgba(58,33,27,0.12)] backdrop-blur-sm sm:mt-4"
               aria-label="Chọn nhanh tuyến và ngày đi"
             >
+              <p className="mb-2 text-sm font-extrabold text-[#3A211B]">
+                Chọn chuyến, nhà xe sẽ xác nhận chỗ
+              </p>
               <div className="grid grid-cols-1 gap-2 sm:grid-cols-[1.4fr_1fr_auto]">
                 <label className="sr-only" htmlFor="hero-quick-route">
                   Tuyến đi
@@ -286,7 +292,7 @@ export function Hero() {
                     id="hero-quick-date"
                     name="travel_date"
                     type="date"
-                    min={new Date().toISOString().split("T")[0]}
+                    min={new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split("T")[0]}
                     value={quickDate}
                     onChange={(event) => setQuickDate(event.target.value)}
                     autoComplete="off"
@@ -297,10 +303,13 @@ export function Hero() {
                   type="submit"
                   className="inline-flex min-h-11 items-center justify-center gap-1.5 rounded-xl bg-[#D51F26] px-4 text-sm font-black text-white shadow-[0_3px_12px_rgba(213,31,38,0.28)] transition hover:bg-[#A8171D] active:scale-[0.98]"
                 >
-                  Đặt nhanh
+                  Chọn chuyến & giữ chỗ
                   <ArrowRight className="size-4" aria-hidden="true" />
                 </button>
               </div>
+              <p className="mt-2 text-xs leading-relaxed text-[#795F55]">
+                Không cần thanh toán trước · Nhà xe gọi xác nhận lịch và điểm đón
+              </p>
             </form>
 
             {/* Compact benefit row — 4 items with unified icon containers */}
@@ -331,55 +340,16 @@ export function Hero() {
               ))}
             </div>
 
-            {/* CTA group — 3 actions with balanced hierarchy */}
-            <div className="mt-4 flex flex-wrap items-center gap-2.5 intro-cta sm:mt-6 sm:gap-3">
-              {/* Primary: Hotline */}
-              <a
-                href={businessInfo.phoneTel}
-                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg bg-[#D9232E] px-5 text-[0.88rem] font-black text-white shadow-[0_2px_10px_rgba(217,35,46,0.28)] transition-all duration-[220ms] ease-out hover:-translate-y-0.5 hover:bg-[#A8171D] hover:shadow-[0_6px_20px_rgba(217,35,46,0.38)] active:scale-[0.98] btn-primary btn-pulse animate-cta-shimmer"
-                style={{ fontFamily: "var(--font-sans)", letterSpacing: "0.02em" }}
-              >
-                <PhoneCall
-                  className="size-4 shrink-0 stroke-[2] phone-wobble text-white"
-                  aria-hidden="true"
-                />
-                <span>
-                  GỌI ĐẶT VÉ
-                  <span className="block text-[0.65rem] font-semibold opacity-90">
-                    {businessInfo.phone}
-                  </span>
-                </span>
-              </a>
-
-              {/* Secondary: Yêu cầu gọi lại */}
-              <button
-                type="button"
-                onClick={() => openBookingModal({ source: "hero_callback" })}
-                className="inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border-[1.5px] border-[#EAD9C6] bg-white px-5 text-[0.88rem] font-bold text-[#D9232E] shadow-[0_2px_8px_rgba(43,43,43,0.04)] backdrop-blur-sm transition-all duration-[220ms] hover:-translate-y-0.5 hover:border-[#D9232E] hover:bg-[#FFF4E8] hover:shadow-[0_4px_14px_rgba(217,35,46,0.15)] active:scale-[0.98]"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                <PhoneIncoming
-                  className="size-4 shrink-0 stroke-[2] text-[#D9232E]"
-                  aria-hidden="true"
-                />
-                <span>Yêu cầu gọi lại</span>
-              </button>
-
-              {/* Tertiary: Zalo */}
-              <a
-                href={businessInfo.zaloUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex min-h-12 items-center justify-center gap-2 rounded-lg border-[1.5px] border-[#EAD9C6] bg-white/80 px-4 text-[0.88rem] font-bold text-[#3A211B] backdrop-blur-sm transition-all duration-[220ms] hover:-translate-y-0.5 hover:border-[#0068FF] hover:bg-[#EEF5FF] active:scale-[0.98]"
-                style={{ fontFamily: "var(--font-sans)" }}
-              >
-                <MessageCircle
-                  className="size-4 shrink-0 stroke-[2] text-[#0068FF] transition-transform duration-200 group-hover:translate-x-0.5"
-                  aria-hidden="true"
-                />
-                Chat Zalo
-              </a>
-            </div>
+            {/* Zalo is a secondary option; mobile retains a single primary booking action. */}
+            <a
+              href={businessInfo.zaloUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="intro-cta mt-3 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#0068FF] underline underline-offset-4 sm:mt-5"
+            >
+              <MessageCircle className="size-4" aria-hidden="true" /> Cần hỗ trợ? Nhắn Zalo cho nhà
+              xe
+            </a>
           </div>
 
           {/* ══════════════════════════════════════════════════
@@ -456,7 +426,7 @@ export function Hero() {
               </div>
 
               {/* Route badge — overlapping coach top-right */}
-              <div className="absolute -right-3 top-4 z-20 drop-shadow-xl pointer-events-none">
+              <div className="pointer-events-none absolute -right-3 top-4 z-20 hidden drop-shadow-xl sm:block">
                 <RouteBadge />
               </div>
 
@@ -496,7 +466,7 @@ export function Hero() {
       </div>
 
       {/* Bottom breathing room for route card */}
-      <div className="pb-8 md:pb-10" aria-hidden="true" />
+      <div className="pb-6 md:pb-10" aria-hidden="true" />
     </section>
   );
 }

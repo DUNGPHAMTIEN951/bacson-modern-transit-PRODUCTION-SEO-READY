@@ -1,0 +1,63 @@
+name: UX preview screenshots
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - '.github/workflows/ux-preview.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Build safe local preview
+        run: npm run build
+        env:
+          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/QA_ONLY_NO_REAL_SCRIPT_EXISTS/exec
+      - name: Launch local UX test server
+        env:
+          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/QA_ONLY_NO_REAL_SCRIPT_EXISTS/exec
+        run: |
+          nohup npx vite dev --host 127.0.0.1 --port 4173 > /tmp/vite-preview.log 2>&1 &
+          for i in $(seq 1 40); do
+            if curl --fail --silent http://127.0.0.1:4173/ >/dev/null; then
+              echo "Preview server ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/vite-preview.log
+          exit 1
+      - name: Detect Chrome
+        id: chrome
+        shell: bash
+        run: |
+          if command -v google-chrome >/dev/null; then
+            echo "binary=$(command -v google-chrome)" >> "$GITHUB_OUTPUT"
+          elif command -v chromium >/dev/null; then
+            echo "binary=$(command -v chromium)" >> "$GITHUB_OUTPUT"
+          else
+            npx playwright-core install chromium
+            echo "binary=$(find "$HOME/.cache/ms-playwright" -type f \( -name chrome -o -name chrome-headless-shell \) | head -1)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Playwright UI and mocked CRM E2E
+        run: node scripts/qa/production-smoke.mjs
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.binary }}
+          PROD_BASE_URL: http://127.0.0.1:4173
+      - name: Upload preview screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bscn-ui-preview
+          path: qa-results/
+          retention-days: 7
+          if-no-files-found: warn
