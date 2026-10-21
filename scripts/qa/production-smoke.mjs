@@ -117,6 +117,10 @@ try {
       (await page.locator('a[href*="zalo.me/"]').count()) >= 1,
     );
     const form = page.locator("form").first();
+    const fieldLabels = await form.locator("label").allTextContents();
+    const departing = fieldLabels.findIndex((label) => label.includes("Ngày đi dự kiến"));
+    const returning = fieldLabels.findIndex((label) => label.includes("Ngày về dự kiến"));
+    check(`${item.name} departure date before return date`, departing >= 0 && returning > departing);
     check(
       `${item.name} round-trip prefilled`,
       (await form.locator('input[type="radio"][value="roundtrip"]').count()) > 0
