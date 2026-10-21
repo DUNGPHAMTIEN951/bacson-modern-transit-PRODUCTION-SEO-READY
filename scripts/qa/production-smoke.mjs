@@ -326,10 +326,12 @@ try {
   );
   check(
     "all destinations have source and license links",
-    (await actualPhotoPage.locator('#hanh-trinh-thuc-te figcaption a[href*="commons.wikimedia.org"]').count()) === 3,
+    (await actualPhotoPage
+      .locator('#hanh-trinh-thuc-te figcaption a[href*="commons.wikimedia.org"]')
+      .count()) === 3,
   );
   await actualPhotoPage.close();
-    check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
+  check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
   report.error = String(err.stack || err);
   console.error(report.error);
