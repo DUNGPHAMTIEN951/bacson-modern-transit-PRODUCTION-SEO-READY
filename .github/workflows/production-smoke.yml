@@ -1,0 +1,47 @@
+name: Production smoke / screenshots
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - 'scripts/qa/production-smoke.mjs'
+      - '.github/workflows/production-smoke.yml'
+permissions:
+  contents: read
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - name: Check Chrome installation
+        id: chrome
+        shell: bash
+        run: |
+          if command -v google-chrome >/dev/null; then
+            echo "binary=$(command -v google-chrome)" >> "$GITHUB_OUTPUT"
+          elif command -v chromium >/dev/null; then
+            echo "binary=$(command -v chromium)" >> "$GITHUB_OUTPUT"
+          else
+            npx playwright-core install chromium
+            echo "binary=$(find "$HOME/.cache/ms-playwright" -type f -name chrome -o -name chrome-headless-shell | head -1)" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Production smoke (POST mocked, no real booking)
+        run: node scripts/qa/production-smoke.mjs
+        env:
+          CHROME_BIN: ${{ steps.chrome.outputs.binary }}
+          PROD_BASE_URL: https://xekhachbaccuongnguyet.com
+      - name: Upload screenshots and QA report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bscn-production-smoke
+          path: qa-results/
+          if-no-files-found: warn
+          retention-days: 7
