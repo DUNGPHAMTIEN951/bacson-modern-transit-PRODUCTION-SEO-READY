@@ -23,6 +23,8 @@ jobs:
         env:
           VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/CI_PLACEHOLDER/exec
       - name: Launch local UX test server
+        env:
+          VITE_BOOKING_FORM_ENDPOINT: https://script.google.com/macros/s/CI_PLACEHOLDER/exec
         run: |
           nohup npx vite dev --host 127.0.0.1 --port 4173 > /tmp/vite-preview.log 2>&1 &
           for i in $(seq 1 40); do
