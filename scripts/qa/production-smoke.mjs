@@ -165,6 +165,8 @@ try {
     );
 
     if (item.name === "desktop") {
+      // Wait for React event handlers in dev and production before filling the form.
+      await page.waitForTimeout(1600);
       const date = new Date(Date.now() + 86400000 * 4).toISOString().slice(0, 10);
       await form.locator('input[name="name"]').fill("KIEM THU E2E KHONG DAT VE");
       await form.locator('input[name="phone"]').fill("0900000000");
@@ -174,7 +176,15 @@ try {
       await ret.fill(date);
       await form.locator('input[name="contact_consent"]').check();
       await form.getByRole("button", { name: /GỬI YÊU CẦU GỌI LẠI/i }).click();
-      await page.waitForTimeout(1800);
+      await page.waitForTimeout(2200);
+      if (!report.mockedLead) {
+        console.log("QA FORM DIAGNOSTICS", JSON.stringify({
+          alerts: await page.locator('[role="alert"]').allTextContents(),
+          textTail: (await page.locator("body").innerText()).slice(-600),
+          browserErrors: report.browserErrors,
+        }));
+        await screenshot(page, "desktop-form-submit-diagnostic");
+      }
       check(
         "mocked CRM request intercepted; NO REAL LEAD CREATED",
         Boolean(report.mockedLead),
