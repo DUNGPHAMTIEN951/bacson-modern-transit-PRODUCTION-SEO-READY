@@ -97,14 +97,14 @@ export function TravelTrust() {
         </div>
         <div className="mt-7 grid gap-4 lg:grid-cols-[1fr_1.15fr]">
           <article className="flex flex-col gap-4 rounded-[22px] border border-[#E8D7CC] bg-white p-5 shadow-[0_8px_25px_rgba(55,30,25,0.06)] sm:flex-row sm:items-center">
-            <div className="shrink-0 overflow-hidden rounded-[17px] border border-[#F0E0D7] bg-[#F5F0EB] sm:w-[150px]">
+            <div className="w-[170px] shrink-0 overflow-hidden rounded-[17px] border border-[#F0E0D7] bg-[#F5F0EB]">
               <img
                 src="/images/team/tran-anh-duc.webp"
                 width={220}
                 height={284}
                 alt="Ảnh thật tư vấn viên Trần Anh Đức"
                 loading="lazy"
-                className="h-[176px] w-full object-cover object-top sm:h-[188px]"
+                className="h-[205px] w-full object-contain object-center"
               />
             </div>
             <div className="min-w-0 flex-1">
