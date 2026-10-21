@@ -112,7 +112,7 @@ export function Hero() {
             </div>
             <button
               type="submit"
-              className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-[#C81925] px-4 text-sm font-extrabold text-white transition hover:bg-[#A6171E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A6171E]"
+              className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#C81925] px-4 text-sm font-extrabold text-white transition hover:bg-[#A6171E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A6171E]"
             >
               Chọn chuyến & giữ chỗ <ArrowRight className="size-4" aria-hidden="true" />
             </button>
