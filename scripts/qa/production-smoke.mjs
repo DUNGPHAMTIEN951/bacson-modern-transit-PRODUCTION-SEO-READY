@@ -335,7 +335,9 @@ try {
       .locator('#hanh-trinh-thuc-te figcaption a[href*="commons.wikimedia.org"]')
       .count()) === 3,
   );
-  for (const destinationPhoto of await actualPhotoPage.locator("#hanh-trinh-thuc-te figure img").all()) {
+  for (const destinationPhoto of await actualPhotoPage
+    .locator("#hanh-trinh-thuc-te figure img")
+    .all()) {
     await destinationPhoto.scrollIntoViewIfNeeded();
     const imageLoaded = await destinationPhoto.evaluate(async (img) => {
       try {
