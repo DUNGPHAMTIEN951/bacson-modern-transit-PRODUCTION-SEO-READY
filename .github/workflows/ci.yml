@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -34,17 +32,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Format conversion UI source (temporary)
-        if: github.event_name == 'pull_request' && github.head_ref == 'feat/bscn-mobile-conversion-ui-20261021'
-        run: |
-          npx prettier --write src/components/site/Hero.tsx src/components/site/PromotionCampaign.tsx src/components/site/QuickBar.tsx src/components/site/BookingConsultationForm.tsx src/routes/uu-dai-kham-benh.tsx
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/
-          if ! git diff --cached --quiet; then
-            git commit -m "style: format mobile conversion UI"
-            git push origin HEAD:feat/bscn-mobile-conversion-ui-20261021
-          fi
       - name: Verify
         run: npm run verify
         env:
