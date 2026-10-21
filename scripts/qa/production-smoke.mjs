@@ -177,14 +177,7 @@ try {
       await form.locator('input[name="contact_consent"]').check();
       await form.getByRole("button", { name: /GỬI YÊU CẦU GỌI LẠI/i }).click();
       await page.waitForTimeout(2200);
-      if (!report.mockedLead) {
-        console.log("QA FORM DIAGNOSTICS", JSON.stringify({
-          alerts: await page.locator('[role="alert"]').allTextContents(),
-          textTail: (await page.locator("body").innerText()).slice(-600),
-          browserErrors: report.browserErrors,
-        }));
-        await screenshot(page, "desktop-form-submit-diagnostic");
-      }
+
       check(
         "mocked CRM request intercepted; NO REAL LEAD CREATED",
         Boolean(report.mockedLead),
