@@ -9,31 +9,18 @@ on:
       - 'scripts/qa/production-smoke.mjs'
       - '.github/workflows/production-smoke.yml'
 permissions:
-  contents: write
+  contents: read
 jobs:
   smoke:
     runs-on: ubuntu-latest
     timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
           cache: npm
       - run: npm ci
-      - name: Format QA script (one-time)
-        if: github.event_name == 'pull_request' && github.head_ref == 'qa/production-e2e-20261021'
-        run: |
-          npx prettier --write scripts/qa/production-smoke.mjs
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add scripts/qa/production-smoke.mjs
-          if ! git diff --cached --quiet; then
-            git commit -m "style: format smoke E2E test"
-            git push origin HEAD:qa/production-e2e-20261021
-          fi
       - name: Check Chrome installation
         id: chrome
         shell: bash
