@@ -13,6 +13,7 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { businessInfo } from "../data/business";
 import { installContactMeasurement } from "../lib/adsMeasurement";
+import { VietnamLoadingScreen } from "../components/site/VietnamLoadingScreen";
 
 function NotFoundComponent() {
   return (
@@ -90,6 +91,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "manifest", href: "/site.webmanifest" },
+      { rel: "preload", href: "/images/vietnamese-crane-loading.webp", as: "image", type: "image/webp" },
     ],
     scripts: [
       {
@@ -118,6 +120,7 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
+        <noscript><style>{"[data-vietnam-loading-screen]{display:none!important}"}</style></noscript>
         <Scripts />
       </body>
     </html>
@@ -130,6 +133,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <VietnamLoadingScreen />
       <Outlet />
     </QueryClientProvider>
   );
