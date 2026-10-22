@@ -399,6 +399,7 @@ export function VietnamLoadingScreen() {
 
   return (
     <aside
+      data-vietnam-loading-screen
       aria-label="Màn hình tải văn hóa Việt Nam"
       aria-live="polite"
       aria-hidden={isExiting}

@@ -83,6 +83,29 @@ try {
 
     const home = await page.goto(root + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
     check(`${item.name} homepage HTTP 200`, home?.status() === 200, home?.status());
+    // Check the restored crane loading screen only on the modified local preview
+    // (production retains the previous release until this PR is deployed).
+    if (root.includes("127.0.0.1") || process.env.EXPECT_CRANE_LOADER === "1") {
+      const loader = page.locator("[data-vietnam-loading-screen]");
+      await loader.waitFor({ state: "visible", timeout: 5000 });
+      check(`${item.name} Vietnamese crane loading screen appears`, await loader.isVisible());
+      check(
+        `${item.name} authentic crane and Dong Son branding`,
+        (await loader.locator('img[src="/images/vietnamese-crane-loading.png"]').count()) === 1 &&
+          (await loader.getByText("Đang tải hành trình...").count()) === 1,
+      );
+      const craneImageLoaded = await loader.locator("img").evaluate(async (img) => {
+        try {
+          await img.decode();
+          return img.naturalWidth > 0;
+        } catch {
+          return false;
+        }
+      });
+      check(`${item.name} crane picture decodes correctly`, craneImageLoaded);
+      await loader.waitFor({ state: "hidden", timeout: 8000 });
+      check(`${item.name} loading screen exits automatically`, !(await loader.isVisible()));
+    }
     if (root.includes("127.0.0.1") || process.env.EXPECT_DEMO_LAYOUT === "1") {
       const headingContrast = await page
         .locator("h1")
