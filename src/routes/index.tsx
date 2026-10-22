@@ -160,10 +160,10 @@ function Index() {
         </a>
         <Header />
         <main id="main">
-          <PromotionBanner />
           <Hero />
-          <QuickBar />
+          <PromotionBanner />
           <TravelTrust />
+          <QuickBar />
           <Schedule />
           <Fares />
           <MedicalTransferOffer />
