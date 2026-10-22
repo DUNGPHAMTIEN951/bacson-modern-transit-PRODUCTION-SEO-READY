@@ -1,6 +1,7 @@
 /**
  * Production smoke/E2E validation (read-only, except mocked booking POST).
  * Never sends a synthetic passenger to the real Google Apps Script/CRM.
+ * Release verification: official main-branch Worker #190 with configured booking endpoint.
  */
 import { chromium } from "playwright-core";
 import { mkdir, writeFile } from "node:fs/promises";
