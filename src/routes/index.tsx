@@ -11,7 +11,6 @@ import { Schedule } from "@/components/site/Schedule";
 import { Fares } from "@/components/site/Fares";
 import { PromotionBanner, MedicalTransferOffer } from "@/components/site/PromotionCampaign";
 import { ImmersiveViewerProvider } from "@/components/site/ImmersiveImageViewer";
-import { ContactDock } from "@/components/site/ContactDock";
 import { Footer } from "@/components/site/Footer";
 import { StickyCta } from "@/components/site/StickyCta";
 import { BookingModalProvider } from "@/components/site/BookingModalContext";
@@ -171,7 +170,6 @@ function Index() {
           </Suspense>
         </main>
         <Footer />
-        <ContactDock />
         <StickyCta />
         <BookingModal />
       </BookingModalProvider>
