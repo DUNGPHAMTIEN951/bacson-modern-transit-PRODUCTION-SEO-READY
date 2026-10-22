@@ -38,6 +38,7 @@ jobs:
         env:
           CHROME_BIN: ${{ steps.chrome.outputs.binary }}
           PROD_BASE_URL: https://xekhachbaccuongnguyet.com
+          EXPECT_DEMO_LAYOUT: "1"
       - name: Upload screenshots and QA report
         if: always()
         uses: actions/upload-artifact@v4
