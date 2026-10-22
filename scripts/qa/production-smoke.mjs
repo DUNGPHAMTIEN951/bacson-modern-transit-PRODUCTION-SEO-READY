@@ -86,6 +86,24 @@ try {
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
+    check(`${item.name} adviser name Trần Anh Đức`, content.includes("Trần Anh Đức"));
+    check(
+      `${item.name} authentic bus photo`,
+      await page
+        .locator('img[alt="Hình ảnh thật đội xe Bắc Sơn Cường Nguyệt"]')
+        .evaluate((img) => img.complete && img.naturalWidth > 0),
+    );
+    const consultantPhoto = page.locator('img[alt="Ảnh thật tư vấn viên Trần Anh Đức"]');
+    await consultantPhoto.scrollIntoViewIfNeeded();
+    const consultantPhotoValid = await consultantPhoto.evaluate(async (img) => {
+      try {
+        await img.decode();
+        return img.naturalWidth > 0;
+      } catch {
+        return false;
+      }
+    });
+    check(`${item.name} original consultant portrait loads`, consultantPhotoValid);
     check(`${item.name} operator permit is visible`, content.includes("14230090/GPKDVT"));
     check(
       `${item.name} image caption avoids inaccurate landmark`,
@@ -302,6 +320,36 @@ try {
       sitemapContent.includes("/uu-dai-kham-benh"),
   );
   await sitemapCheck.close();
+  const actualPhotoPage = await browser.newPage();
+  await actualPhotoPage.goto(root + "/#hanh-trinh-thuc-te", {
+    waitUntil: "domcontentloaded",
+    timeout: 45000,
+  });
+  check(
+    "real destination photo cards exist",
+    (await actualPhotoPage.locator("#hanh-trinh-thuc-te figure").count()) === 3,
+  );
+  check(
+    "all destinations have source and license links",
+    (await actualPhotoPage
+      .locator('#hanh-trinh-thuc-te figcaption a[href*="commons.wikimedia.org"]')
+      .count()) === 3,
+  );
+  for (const destinationPhoto of await actualPhotoPage
+    .locator("#hanh-trinh-thuc-te figure img")
+    .all()) {
+    await destinationPhoto.scrollIntoViewIfNeeded();
+    const imageLoaded = await destinationPhoto.evaluate(async (img) => {
+      try {
+        await img.decode();
+        return img.naturalWidth > 0;
+      } catch {
+        return false;
+      }
+    });
+    check("licensed real destination photo decodes", imageLoaded);
+  }
+  await actualPhotoPage.close();
   check("no client JS errors", report.browserErrors.length === 0, report.browserErrors.join("; "));
 } catch (err) {
   report.error = String(err.stack || err);
