@@ -234,10 +234,10 @@ export function TravelTrust() {
           <article className="flex flex-col overflow-hidden rounded-[22px] border border-[#E6CFC5] bg-white shadow-[0_12px_32px_rgba(56,26,20,.08)] sm:flex-row lg:flex-col xl:flex-row">
             <div className="w-full shrink-0 overflow-hidden bg-[#F2EAE5] sm:w-[175px] lg:w-full xl:w-[175px]">
               <img
-                src="/images/team/tran-anh-duc.webp"
+                src="/images/team/tran-anh-duc-hd-v2.webp"
                 alt="Ảnh thật tư vấn viên Trần Anh Đức"
-                width={220}
-                height={284}
+                width={420}
+                height={560}
                 loading="lazy"
                 className="h-[220px] w-full object-cover object-center sm:h-full lg:h-[190px] xl:h-full"
               />
