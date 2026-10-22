@@ -91,7 +91,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.png", type: "image/png" },
       { rel: "manifest", href: "/site.webmanifest" },
-      { rel: "preload", href: "/images/vietnamese-crane-loading.webp", as: "image", type: "image/webp" },
+      {
+        rel: "preload",
+        href: "/images/vietnamese-crane-loading.webp",
+        as: "image",
+        type: "image/webp",
+      },
     ],
     scripts: [
       {
@@ -120,7 +125,9 @@ function RootShell({ children }: { children: ReactNode }) {
       </head>
       <body>
         {children}
-        <noscript><style>{"[data-vietnam-loading-screen]{display:none!important}"}</style></noscript>
+        <noscript>
+          <style>{"[data-vietnam-loading-screen]{display:none!important}"}</style>
+        </noscript>
         <Scripts />
       </body>
     </html>
