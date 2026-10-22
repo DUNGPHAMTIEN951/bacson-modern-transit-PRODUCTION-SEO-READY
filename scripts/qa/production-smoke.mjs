@@ -87,6 +87,7 @@ try {
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
     check(`${item.name} fare 240000`, content.includes("240.000đ"));
     check(`${item.name} adviser name Trần Anh Đức`, content.includes("Trần Anh Đức"));
+    check(`${item.name} actual operator name remains correct`, content.includes("Bắc Sơn Cường Nguyệt"));
     check(
       `${item.name} authentic bus photo`,
       await page
