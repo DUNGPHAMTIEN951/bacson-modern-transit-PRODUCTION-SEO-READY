@@ -1,12 +1,5 @@
 import { useState, type FormEvent } from "react";
-import {
-  ArrowRight,
-  CalendarDays,
-  CheckCircle2,
-  MapPin,
-  PhoneCall,
-  TicketPercent,
-} from "lucide-react";
+import { ArrowRight, CalendarDays, CheckCircle2, Clock3, HeartHandshake, MapPin, PhoneCall, ShieldCheck, TicketPercent } from "lucide-react";
 import { businessInfo, legalInfo } from "@/data/business";
 import { images } from "@/data/images";
 import { image360Registry } from "@/data/image360";
@@ -29,167 +22,101 @@ export function Hero() {
   };
 
   return (
-    <section id="top" className="relative overflow-hidden border-b border-[#EBDDD1] bg-[#FFFAF4]">
-      <div className="container-page grid gap-7 py-7 sm:py-10 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] lg:items-center lg:gap-10 lg:py-16">
-        <div className="order-2 min-w-0 lg:order-1">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#F1DAD1] bg-white px-3 py-1.5 text-xs font-bold text-[#B71F1F]">
-            <CheckCircle2 className="size-4" aria-hidden="true" />
-            Chuyên tuyến Hà Nội – Mộc Châu – Sơn La
-          </div>
-          <h1
-            className="mt-4 max-w-[630px] text-3xl font-bold leading-[1.14] tracking-[-0.03em] text-[#382720] sm:text-5xl lg:text-[3.35rem]"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            Xe giường nằm <span className="text-[#BE1821]">Bắc Sơn Cường Nguyệt</span>
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-[#5A483D]">
-            Di chuyển Hà Nội – Mộc Châu – Sơn La bằng xe giường nằm. Chọn chuyến và ngày đi, nhà xe
-            liên hệ xác nhận chỗ trước hành trình.
-          </p>
-          <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-semibold text-[#55443B] sm:text-sm">
-            <span className="inline-flex items-center gap-1.5">
-              <TicketPercent className="size-4 text-[#B71F1F]" aria-hidden="true" /> Giảm 20% mọi
-              chuyến
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <CheckCircle2 className="size-4 text-[#B71F1F]" aria-hidden="true" />{" "}
-              {legalInfo.transportLicense.split(" — ")[0]}
-            </span>
-          </div>
-          <form
-            id="hero-quick-booking"
-            onSubmit={handleQuickBooking}
-            aria-label="Chọn nhanh tuyến và ngày đi"
-            className="mt-6 scroll-mt-24 rounded-[22px] border border-[#E5D5C9] bg-white p-4 shadow-[0_16px_48px_rgba(55,32,26,0.09)] sm:p-5"
-          >
-            <p className="mb-4 text-lg font-extrabold text-[#3A211B]">Chọn chuyến & giữ chỗ</p>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <label
-                className="block text-sm font-semibold text-[#4C3C33]"
-                htmlFor="hero-quick-route"
-              >
-                <span className="mb-1.5 block">Tuyến đường</span>
-                <span className="relative block">
-                  <MapPin
-                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#C11E29]"
-                    aria-hidden="true"
-                  />
-                  <select
-                    id="hero-quick-route"
-                    name="route"
-                    value={quickRoute}
-                    onChange={(event) => setQuickRoute(event.target.value)}
-                    className="min-h-12 w-full appearance-none rounded-xl border border-[#E6DAD1] bg-[#FFFCF8] pl-9 pr-3 text-sm font-semibold text-[#382720] focus:border-[#B71F1F] focus:outline-none focus:ring-2 focus:ring-[#B71F1F]/15"
-                  >
-                    <option>Hà Nội → Sơn La</option>
-                    <option>Hà Nội → Mộc Châu</option>
-                    <option>Sơn La → Hà Nội</option>
-                    <option>Mộc Châu → Hà Nội</option>
-                  </select>
-                </span>
-              </label>
-              <label
-                className="block text-sm font-semibold text-[#4C3C33]"
-                htmlFor="hero-quick-date"
-              >
-                <span className="mb-1.5 block">Ngày đi</span>
-                <span className="relative block">
-                  <CalendarDays
-                    className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#C11E29]"
-                    aria-hidden="true"
-                  />
-                  <input
-                    id="hero-quick-date"
-                    name="travel_date"
-                    type="date"
-                    min={new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split("T")[0]}
-                    value={quickDate}
-                    onChange={(event) => setQuickDate(event.target.value)}
-                    className="min-h-12 w-full rounded-xl border border-[#E6DAD1] bg-[#FFFCF8] pl-9 pr-3 text-sm font-semibold text-[#382720] focus:border-[#B71F1F] focus:outline-none focus:ring-2 focus:ring-[#B71F1F]/15"
-                  />
-                </span>
-              </label>
-            </div>
-            <button
-              type="submit"
-              className="mt-4 inline-flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#C81925] px-4 text-sm font-extrabold text-white transition hover:bg-[#A6171E] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A6171E]"
+    <section id="top" aria-label="Đặt vé xe Bắc Sơn Cường Nguyệt" className="relative bg-[#FFF9F3]">
+      <div className="relative min-h-[455px] overflow-hidden bg-[#392923] sm:min-h-[500px] lg:min-h-[575px]">
+        <button
+          id="hero-coach-interactive"
+          type="button"
+          onClick={() => openImmersive(image360Registry.heroBus)}
+          className="absolute inset-0 block h-full w-full cursor-zoom-in text-left focus-visible:outline focus-visible:outline-4 focus-visible:outline-offset-[-4px] focus-visible:outline-white"
+          aria-label="Khám phá ảnh thật xe Bắc Sơn Cường Nguyệt"
+        >
+          <img
+            src={images.heroBus.src}
+            srcSet="/images/optimized/hero-bus-480.webp 480w, /images/optimized/hero-bus-800.webp 800w, /images/optimized/hero-bus.webp 1200w"
+            sizes="100vw"
+            alt="Hình ảnh thật đội xe Bắc Sơn Cường Nguyệt"
+            width={1200}
+            height={800}
+            loading="eager"
+            fetchPriority="high"
+            className="absolute inset-0 h-full w-full object-cover object-center"
+          />
+          <span className="absolute inset-0 bg-gradient-to-r from-[#201915]/95 via-[#2B211A]/75 to-[#201915]/25 sm:from-[#201915]/95 sm:via-[#2B211A]/65 sm:to-[#201915]/10" aria-hidden="true" />
+          <span className="absolute inset-0 bg-gradient-to-t from-[#201915]/60 via-transparent to-transparent" aria-hidden="true" />
+        </button>
+
+        <div className="container-page pointer-events-none relative z-10 flex min-h-[455px] items-center py-10 pb-20 sm:min-h-[500px] sm:pb-24 lg:min-h-[575px] lg:pb-28">
+          <div className="max-w-[755px] text-white">
+            <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/35 bg-white/15 px-3 py-1.5 text-xs font-bold tracking-wide text-white backdrop-blur-sm sm:text-sm">
+              <CheckCircle2 className="size-4" aria-hidden="true" />
+              Chuyên tuyến Hà Nội – Mộc Châu – Sơn La
+            </p>
+            <h1
+              className="max-w-[720px] text-[2.35rem] font-bold leading-[1.09] tracking-[-0.025em] sm:text-5xl lg:text-[4.15rem]"
+              style={{ fontFamily: "var(--font-serif)" }}
             >
+              Xe giường nằm
+              <span className="mt-1 block text-[#FFE2AD]">Bắc Sơn Cường Nguyệt</span>
+            </h1>
+            <p className="mt-4 max-w-xl text-base leading-relaxed text-white/90 sm:text-lg">
+              Hành trình Hà Nội – Mộc Châu – Sơn La. Giữ chỗ thuận tiện, nhân viên xác nhận lịch xe và điểm đón trước chuyến đi.
+            </p>
+            <div className="mt-5 flex max-w-xl flex-wrap items-center gap-x-5 gap-y-2 text-xs font-semibold text-white/95 sm:text-sm">
+              <span className="inline-flex items-center gap-1.5"><TicketPercent className="size-4 text-[#FFE2AD]" aria-hidden="true" /> Giảm 20% mọi chuyến</span>
+              <span className="inline-flex items-center gap-1.5"><ShieldCheck className="size-4 text-[#FFE2AD]" aria-hidden="true" /> Giấy phép {legalInfo.transportLicense.split(" — ")[0]}</span>
+            </div>
+            <p className="mt-5 text-xs font-medium text-white/75">Ảnh đoàn xe thực tế của nhà xe · Chạm vào ảnh để khám phá</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="container-page relative z-20 -mt-14 pb-5 sm:-mt-[76px] lg:-mt-[86px]">
+        <div className="overflow-hidden rounded-[22px] border border-[#E7D8CE] bg-white shadow-[0_20px_55px_rgba(53,30,25,0.19)]">
+          <nav aria-label="Lựa chọn dịch vụ" className="flex overflow-x-auto border-b border-[#ECDDD2] bg-[#FFFCF8]">
+            <a href="#hero-quick-booking" className="inline-flex min-h-12 shrink-0 items-center gap-2 border-b-[3px] border-[#BD1823] bg-white px-4 text-sm font-extrabold text-[#AE1924] sm:px-6">
+              <MapPin className="size-4" aria-hidden="true" /> Đặt vé xe
+            </a>
+            <a href="#lich-chay" className="inline-flex min-h-12 shrink-0 items-center gap-2 px-4 text-sm font-semibold text-[#64544C] transition hover:bg-white hover:text-[#AE1924] sm:px-6">
+              <Clock3 className="size-4" aria-hidden="true" /> Lịch chạy
+            </a>
+            <a href="#diem-don" className="inline-flex min-h-12 shrink-0 items-center gap-2 px-4 text-sm font-semibold text-[#64544C] transition hover:bg-white hover:text-[#AE1924] sm:px-6">
+              <MapPin className="size-4" aria-hidden="true" /> Điểm đón
+            </a>
+            <a href="/uu-dai-kham-benh" className="inline-flex min-h-12 shrink-0 items-center gap-2 px-4 text-sm font-semibold text-[#64544C] transition hover:bg-white hover:text-[#AE1924] sm:px-6">
+              <HeartHandshake className="size-4" aria-hidden="true" /> Ưu đãi khám bệnh
+            </a>
+          </nav>
+          <form id="hero-quick-booking" onSubmit={handleQuickBooking} aria-label="Chọn nhanh tuyến và ngày đi" className="grid scroll-mt-24 gap-3 p-4 sm:p-5 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)_minmax(200px,.9fr)] lg:items-end lg:gap-4 lg:p-6">
+            <label className="block min-w-0 text-sm font-bold text-[#40342F]" htmlFor="hero-quick-route">
+              <span className="mb-1.5 block">Tuyến đường</span>
+              <span className="relative block">
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#C51A27]" aria-hidden="true" />
+                <select id="hero-quick-route" name="route" value={quickRoute} onChange={(event) => setQuickRoute(event.target.value)} className="min-h-12 w-full appearance-none rounded-xl border border-[#E5D6CA] bg-[#FFFCF9] pl-10 pr-3 text-sm font-semibold text-[#382720] focus:border-[#BA1A24] focus:outline-none focus:ring-2 focus:ring-[#BA1A24]/15">
+                  <option>Hà Nội → Sơn La</option>
+                  <option>Hà Nội → Mộc Châu</option>
+                  <option>Sơn La → Hà Nội</option>
+                  <option>Mộc Châu → Hà Nội</option>
+                </select>
+              </span>
+            </label>
+            <label className="block min-w-0 text-sm font-bold text-[#40342F]" htmlFor="hero-quick-date">
+              <span className="mb-1.5 block">Ngày đi</span>
+              <span className="relative block">
+                <CalendarDays className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-[#C51A27]" aria-hidden="true" />
+                <input id="hero-quick-date" name="travel_date" type="date"
+                  min={new Date(Date.now() + 7 * 60 * 60 * 1000).toISOString().split("T")[0]}
+                  value={quickDate} onChange={(event) => setQuickDate(event.target.value)}
+                  className="min-h-12 w-full rounded-xl border border-[#E5D6CA] bg-[#FFFCF9] pl-10 pr-3 text-sm font-semibold text-[#382720] focus:border-[#BA1A24] focus:outline-none focus:ring-2 focus:ring-[#BA1A24]/15" />
+              </span>
+            </label>
+            <button type="submit" className="inline-flex min-h-12 w-full items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#C21825] px-3 text-sm font-extrabold text-white shadow-sm transition hover:bg-[#A8171D] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#A8171D]">
               Chọn chuyến & giữ chỗ <ArrowRight className="size-4" aria-hidden="true" />
             </button>
-            <p className="mt-3 text-center text-xs leading-relaxed text-[#77655B]">
-              Không cần thanh toán trước · Nhân viên gọi xác nhận giá, lịch và điểm đón
+            <p className="text-center text-xs leading-snug text-[#7C6C62] lg:col-span-3">
+              Không thanh toán trước trên website · Nhà xe gọi xác nhận giá vé, lịch và điểm đón · <a href={businessInfo.phoneTel} className="font-bold text-[#B71F1F] underline underline-offset-2">Hotline {businessInfo.phone}</a>
             </p>
           </form>
-          <a
-            href={businessInfo.phoneTel}
-            className="mt-4 inline-flex min-h-11 items-center gap-2 text-sm font-bold text-[#B71F1F] underline underline-offset-4"
-          >
-            <PhoneCall className="size-4" aria-hidden="true" /> Cần đặt nhanh? Gọi{" "}
-            {businessInfo.phone}
-          </a>
-        </div>
-        <div className="order-1 min-w-0 lg:order-2">
-          <div
-            id="hero-coach-interactive"
-            role="button"
-            tabIndex={0}
-            aria-label="Khám phá xe khách Bắc Sơn Cường Nguyệt"
-            onClick={() => openImmersive(image360Registry.heroBus)}
-            onKeyDown={(event) => {
-              if (event.key === "Enter" || event.key === " ") {
-                event.preventDefault();
-                openImmersive(image360Registry.heroBus);
-              }
-            }}
-            className="group relative cursor-pointer overflow-hidden rounded-[24px] border-[5px] border-white bg-[#F4EBE1] shadow-[0_22px_58px_rgba(54,32,27,0.14)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#B71F1F]"
-          >
-            <img
-              src={images.heroBus.src}
-              srcSet="/images/optimized/hero-bus-480.webp 480w, /images/optimized/hero-bus-800.webp 800w, /images/optimized/hero-bus.webp 1200w"
-              sizes="(max-width: 1023px) 100vw, 48vw"
-              alt="Hình ảnh thật đội xe Bắc Sơn Cường Nguyệt"
-              width={1200}
-              height={800}
-              loading="eager"
-              fetchPriority="high"
-              className="aspect-[16/10] w-full object-cover transition-transform duration-500 group-hover:scale-[1.02] lg:aspect-[4/4]"
-            />
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent px-5 pb-5 pt-16 text-white sm:px-7 sm:pb-7">
-              <span className="block text-xs font-bold uppercase tracking-widest text-[#FFE1A8]">
-                Hình ảnh xe thực tế
-              </span>
-              <span className="mt-1 block text-xl font-extrabold sm:text-2xl">
-                Hà Nội ⇄ Mộc Châu ⇄ Sơn La
-              </span>
-              <span className="mt-1 block text-xs text-white/90">
-                Chạm vào ảnh để khám phá không gian xe
-              </span>
-            </div>
-          </div>
-          <div className="mt-3 grid grid-cols-2 gap-3">
-            <div className="overflow-hidden rounded-2xl border border-[#E5D5C9] bg-white p-2">
-              <img
-                src={images.cabinWindow.src}
-                width="600"
-                height="360"
-                loading="lazy"
-                alt="Ảnh thật khu vực giường nằm cạnh cửa sổ trên xe"
-                className="aspect-[16/8] w-full rounded-xl object-cover"
-              />
-              <p className="px-1 pt-2 text-xs font-bold text-[#47372F]">Không gian giường nằm</p>
-            </div>
-            <div className="overflow-hidden rounded-2xl border border-[#E5D5C9] bg-white p-2">
-              <img
-                src={images.interior.src}
-                width="600"
-                height="360"
-                loading="lazy"
-                alt="Ảnh thật nội thất nhà xe Bắc Sơn Cường Nguyệt"
-                className="aspect-[16/8] w-full rounded-xl object-cover"
-              />
-              <p className="px-1 pt-2 text-xs font-bold text-[#47372F]">Nội thất xe thực tế</p>
-            </div>
-          </div>
         </div>
       </div>
     </section>
