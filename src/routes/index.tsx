@@ -6,13 +6,11 @@ import { priceRange } from "@/data/fares";
 import { faqs } from "@/data/content";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
-import { QuickBar } from "@/components/site/QuickBar";
 import { TravelTrust } from "@/components/site/TravelTrust";
 import { Schedule } from "@/components/site/Schedule";
 import { Fares } from "@/components/site/Fares";
 import { PromotionBanner, MedicalTransferOffer } from "@/components/site/PromotionCampaign";
 import { ImmersiveViewerProvider } from "@/components/site/ImmersiveImageViewer";
-import { ContactDock } from "@/components/site/ContactDock";
 import { Footer } from "@/components/site/Footer";
 import { StickyCta } from "@/components/site/StickyCta";
 import { BookingModalProvider } from "@/components/site/BookingModalContext";
@@ -160,9 +158,8 @@ function Index() {
         </a>
         <Header />
         <main id="main">
-          <PromotionBanner />
           <Hero />
-          <QuickBar />
+          <PromotionBanner />
           <TravelTrust />
           <Schedule />
           <Fares />
@@ -173,7 +170,6 @@ function Index() {
           </Suspense>
         </main>
         <Footer />
-        <ContactDock />
         <StickyCta />
         <BookingModal />
       </BookingModalProvider>

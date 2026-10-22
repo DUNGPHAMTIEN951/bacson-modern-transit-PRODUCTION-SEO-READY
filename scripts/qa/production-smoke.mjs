@@ -82,6 +82,37 @@ try {
 
     const home = await page.goto(root + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
     check(`${item.name} homepage HTTP 200`, home?.status() === 200, home?.status());
+    if (root.includes("127.0.0.1") || process.env.EXPECT_DEMO_LAYOUT === "1") {
+      const headingContrast = await page
+        .locator("h1")
+        .evaluate((element) => getComputedStyle(element).color);
+      check(
+        `${item.name} hero heading is white over dark photo`,
+        headingContrast === "rgb(255, 255, 255)",
+        headingContrast,
+      );
+
+      const heroPhotoBox = await page.locator("#hero-coach-interactive").boundingBox();
+      const floatingBookingBox = await page.locator("#hero-quick-booking").boundingBox();
+      check(
+        `${item.name} full-width photographic hero`,
+        heroPhotoBox && heroPhotoBox.width >= item.viewport.width - 3,
+      );
+      check(
+        `${item.name} booking bar overlaps photographic hero`,
+        heroPhotoBox &&
+          floatingBookingBox &&
+          floatingBookingBox.y < heroPhotoBox.y + heroPhotoBox.height &&
+          floatingBookingBox.y + floatingBookingBox.height > heroPhotoBox.y + heroPhotoBox.height,
+      );
+      check(
+        `${item.name} three demo-style information columns`,
+        (await page
+          .locator("#hanh-trinh-thuc-te .container-page > div:first-child > article")
+          .count()) === 3,
+      );
+    }
+
     const content = await page.locator("body").innerText();
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
@@ -129,6 +160,14 @@ try {
       content.includes("chưa ấn định ngày kết thúc"),
     );
     await screenshot(page, `${item.name}-homepage`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(200);
+    await page.screenshot({
+      path: `${resultsDir}/${item.name}-first-screen.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
+
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
 
