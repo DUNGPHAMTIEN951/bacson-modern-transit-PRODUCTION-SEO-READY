@@ -82,8 +82,14 @@ try {
 
     const home = await page.goto(root + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
     check(`${item.name} homepage HTTP 200`, home?.status() === 200, home?.status());
-    const headingContrast = await page.locator("h1").evaluate((element) => getComputedStyle(element).color);
-    check(`${item.name} hero heading is white over dark photo`, headingContrast === "rgb(255, 255, 255)", headingContrast);
+    const headingContrast = await page
+      .locator("h1")
+      .evaluate((element) => getComputedStyle(element).color);
+    check(
+      `${item.name} hero heading is white over dark photo`,
+      headingContrast === "rgb(255, 255, 255)",
+      headingContrast,
+    );
 
     const heroPhotoBox = await page.locator("#hero-coach-interactive").boundingBox();
     const floatingBookingBox = await page.locator("#hero-quick-booking").boundingBox();
