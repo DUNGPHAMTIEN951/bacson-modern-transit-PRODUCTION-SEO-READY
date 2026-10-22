@@ -82,6 +82,23 @@ try {
 
     const home = await page.goto(root + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
     check(`${item.name} homepage HTTP 200`, home?.status() === 200, home?.status());
+    const heroPhotoBox = await page.locator("#hero-coach-interactive").boundingBox();
+    const floatingBookingBox = await page.locator("#hero-quick-booking").boundingBox();
+    check(
+      `${item.name} full-width photographic hero`,
+      heroPhotoBox && heroPhotoBox.width >= item.viewport.width - 3,
+    );
+    check(
+      `${item.name} booking bar overlaps photographic hero`,
+      heroPhotoBox && floatingBookingBox &&
+        floatingBookingBox.y < heroPhotoBox.y + heroPhotoBox.height &&
+        floatingBookingBox.y + floatingBookingBox.height > heroPhotoBox.y + heroPhotoBox.height,
+    );
+    check(
+      `${item.name} three demo-style information columns`,
+      (await page.locator("#hanh-trinh-thuc-te .container-page > div:first-child > article").count()) === 3,
+    );
+
     const content = await page.locator("body").innerText();
     check(`${item.name} banner 20%`, content.includes("GIẢM 20% GIÁ VÉ CHO TẤT CẢ HÀNH KHÁCH"));
     check(`${item.name} fare 304000`, content.includes("304.000đ"));
