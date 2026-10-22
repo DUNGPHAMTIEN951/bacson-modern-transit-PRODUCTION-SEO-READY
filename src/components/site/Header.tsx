@@ -55,53 +55,11 @@ export function Header() {
         />
       </div>
 
-      {/* Compact high contrast announcement; one line even on small phones. */}
-      <div className="border-b border-[#A8171D] bg-[#C41820] py-1.5 text-center text-white">
-        <div className="container-page flex items-center justify-center gap-2 text-[11px] font-bold sm:text-xs">
-          <span aria-hidden="true" className="shrink-0 text-[#F8D56E]">
-            ●
-          </span>
-          <span className="min-w-0 truncate">Giảm 20% mọi chuyến · Hà Nội – Mộc Châu – Sơn La</span>
-        </div>
-      </div>
-
-      {/* Sub-topbar Contact Info */}
-      <div className="hidden border-b border-[#EAD9C6] bg-[#FFF4E8] text-xs text-[#795F55] md:block intro-header">
-        <div className="container-page flex items-center justify-between py-2">
-          <span className="font-semibold text-[#5A3828]">{businessInfo.tagline}</span>
-          <span className="flex items-center gap-1.5">
-            Hotline:{" "}
-            <a
-              href={businessInfo.phoneTel}
-              className="font-black text-[#D51F26] transition hover:text-[#A8171D] hover:underline"
-            >
-              {businessInfo.phone}
-            </a>{" "}
-            ·{" "}
-            <a
-              href={businessInfo.phone2Tel}
-              className="font-bold text-[#C96A3D] transition hover:text-[#B55A30] hover:underline"
-            >
-              {businessInfo.phone2}
-            </a>{" "}
-            · Zalo:{" "}
-            <a
-              href={businessInfo.zaloUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-bold text-[#0068FF] transition hover:underline"
-            >
-              {businessInfo.zalo}
-            </a>
-          </span>
-        </div>
-      </div>
-
       {/* Main sticky header with smooth dynamic height & blur */}
       <header
         className={cn(
           "sticky top-0 z-50 border-b border-[#EAD9C6] bg-white/95 backdrop-blur-md transition-all duration-300 ease-out",
-          scrolled ? "h-14 shadow-[0_4px_20px_rgba(58,33,27,0.08)]" : "h-16 shadow-xs",
+          scrolled ? "h-14 shadow-[0_4px_20px_rgba(58,33,27,0.08)]" : "h-[72px] shadow-xs",
         )}
       >
         <div className="container-page flex h-full items-center justify-between gap-2 xl:gap-4">
