@@ -239,7 +239,7 @@ export function TravelTrust() {
                 width={220}
                 height={284}
                 loading="lazy"
-                className="h-[220px] w-full object-cover object-top sm:h-full lg:h-[190px] xl:h-full"
+                className="h-[220px] w-full object-cover object-center sm:h-full lg:h-[190px] xl:h-full"
               />
             </div>
             <div className="flex min-w-0 flex-1 flex-col justify-center p-5">
