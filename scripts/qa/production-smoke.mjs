@@ -82,6 +82,9 @@ try {
 
     const home = await page.goto(root + "/", { waitUntil: "domcontentloaded", timeout: 45000 });
     check(`${item.name} homepage HTTP 200`, home?.status() === 200, home?.status());
+    const headingContrast = await page.locator("h1").evaluate((element) => getComputedStyle(element).color);
+    check(`${item.name} hero heading is white over dark photo`, headingContrast === "rgb(255, 255, 255)", headingContrast);
+
     const heroPhotoBox = await page.locator("#hero-coach-interactive").boundingBox();
     const floatingBookingBox = await page.locator("#hero-quick-booking").boundingBox();
     check(
@@ -149,6 +152,14 @@ try {
       content.includes("chưa ấn định ngày kết thúc"),
     );
     await screenshot(page, `${item.name}-homepage`);
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await page.waitForTimeout(200);
+    await page.screenshot({
+      path: `${resultsDir}/${item.name}-first-screen.png`,
+      fullPage: false,
+      animations: "disabled",
+    });
+
     const overflow = await page.evaluate(() => document.documentElement.scrollWidth - innerWidth);
     check(`${item.name} no horizontal overflow`, overflow <= 5, `${overflow}px`);
 
