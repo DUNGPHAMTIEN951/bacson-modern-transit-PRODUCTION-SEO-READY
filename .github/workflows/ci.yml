@@ -7,7 +7,7 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
@@ -22,8 +22,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.head_ref || github.ref_name }}
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -34,17 +32,6 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Format authentic homepage (temporary PR-only)
-        if: github.event_name == 'pull_request' && github.head_ref == 'feat/bscn-authentic-brand-tran-anh-duc-20261022'
-        run: |
-          npx prettier --write src/components/site/Hero.tsx src/components/site/TravelTrust.tsx src/routes/index.tsx scripts/qa/production-smoke.mjs
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add src/ scripts/qa/
-          if ! git diff --cached --quiet; then
-            git commit -m "style: format authentic homepage"
-            git push origin HEAD:feat/bscn-authentic-brand-tran-anh-duc-20261022
-          fi
       - name: Verify
         run: npm run verify
         env:
