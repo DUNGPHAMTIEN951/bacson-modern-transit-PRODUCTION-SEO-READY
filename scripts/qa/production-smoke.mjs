@@ -90,13 +90,16 @@ try {
     );
     check(
       `${item.name} booking bar overlaps photographic hero`,
-      heroPhotoBox && floatingBookingBox &&
+      heroPhotoBox &&
+        floatingBookingBox &&
         floatingBookingBox.y < heroPhotoBox.y + heroPhotoBox.height &&
         floatingBookingBox.y + floatingBookingBox.height > heroPhotoBox.y + heroPhotoBox.height,
     );
     check(
       `${item.name} three demo-style information columns`,
-      (await page.locator("#hanh-trinh-thuc-te .container-page > div:first-child > article").count()) === 3,
+      (await page
+        .locator("#hanh-trinh-thuc-te .container-page > div:first-child > article")
+        .count()) === 3,
     );
 
     const content = await page.locator("body").innerText();
