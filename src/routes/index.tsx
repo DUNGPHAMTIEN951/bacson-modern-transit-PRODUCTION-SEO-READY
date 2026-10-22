@@ -6,7 +6,6 @@ import { priceRange } from "@/data/fares";
 import { faqs } from "@/data/content";
 import { Header } from "@/components/site/Header";
 import { Hero } from "@/components/site/Hero";
-import { QuickBar } from "@/components/site/QuickBar";
 import { TravelTrust } from "@/components/site/TravelTrust";
 import { Schedule } from "@/components/site/Schedule";
 import { Fares } from "@/components/site/Fares";
@@ -163,7 +162,6 @@ function Index() {
           <Hero />
           <PromotionBanner />
           <TravelTrust />
-          <QuickBar />
           <Schedule />
           <Fares />
           <MedicalTransferOffer />
