@@ -69,7 +69,7 @@ export function Hero() {
               Chuyên tuyến Hà Nội – Mộc Châu – Sơn La
             </p>
             <h1
-              className="max-w-[720px] text-[2.35rem] font-bold leading-[1.09] tracking-[-0.025em] sm:text-5xl lg:text-[4.15rem]"
+              className="max-w-[720px] text-[2.35rem] font-bold leading-[1.09] tracking-[-0.025em] text-white sm:text-5xl lg:text-[4.15rem]"
               style={{ fontFamily: "var(--font-serif)" }}
             >
               Xe giường nằm
