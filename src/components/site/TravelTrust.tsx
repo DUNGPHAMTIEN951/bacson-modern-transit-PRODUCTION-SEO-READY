@@ -203,7 +203,7 @@ export function TravelTrust() {
                 Không gian xe thực tế
               </span>
               <h2
-                className="mt-3 text-3xl font-bold leading-tight sm:text-4xl"
+                className="mt-3 text-3xl font-bold leading-tight text-white sm:text-4xl"
                 style={{ fontFamily: "var(--font-serif)" }}
               >
                 Hành trình dễ chịu hơn với xe giường nằm
